@@ -1,11 +1,18 @@
 from creation import create_hero
 from classes.ennemy import Enemy
 from splashes import splash
+from menu import main_menu
 import questionary
 
 def main():
     
     splash()
+    print("")
+    choice = main_menu()
+    if choice == "exit":
+        print("Thanks for playing!")
+        return
+
     hero = create_hero()
 
     print(f"Hero {hero.name} created with {hero.health} health and {hero.strength} strength.")
