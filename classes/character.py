@@ -13,8 +13,6 @@ class Character:
         for item in self.inventory.equipped_items.values():
             if item and item.type == "Weapon":
                 damage = item.make_damage(self, target)
-            
-            if damage:
                 dealt = target.take_damage(damage.amount)
                 return dealt
                 
@@ -40,4 +38,5 @@ class Character:
         else:
             amount = max(amount, 0)
         self.health -= amount
+        self.health = max(self.health, 0) 
         return amount

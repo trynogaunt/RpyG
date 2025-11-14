@@ -1,9 +1,9 @@
 from classes import item
 
 COMMON_WEAPON = [
-    item.Weapon("Rusty Sword", "An old and rusty sword.", 5, allowed_parts=["right_hand", "left_hand"]),
-    item.Weapon("Wooden Bow", "A simple wooden bow.", 4, allowed_parts=["right_hand", "left_hand"]),
-    item.Weapon("Stone Dagger", "A dagger made of stone.", 3, allowed_parts=["right_hand", "left_hand"])
+    item.Weapon("Rusty Sword", "An old and rusty sword.", 5, allowed_parts=["right_hand", "left_hand"], damage_type="Physical", ignore_defense=False),
+    item.Weapon("Wooden Bow", "A simple wooden bow.", 4, allowed_parts=["right_hand", "left_hand"], damage_type="Physical", ignore_defense=False),
+    item.Weapon("Stone Dagger", "A dagger made of stone.", 3, allowed_parts=["right_hand", "left_hand"], damage_type="Physical", ignore_defense=False)
 
 ]
 

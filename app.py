@@ -21,10 +21,10 @@ def main():
 
         if action == "Attack":
             result = hero.attack(goblin)
-            print(result)
+            print(f"{hero.name} dealt {result} damage to {goblin.name}!")
             if goblin.is_alive():
                 enemy_result = goblin.attack(hero)
-                print(enemy_result)
+                print(f"{goblin.name} dealt {enemy_result} damage to {hero.name}!")
             else:
                 print(f"{goblin.name} has been defeated!")
         elif action == "Use Item":
