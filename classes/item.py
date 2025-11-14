@@ -18,13 +18,13 @@ class Weapon(Item):
         damage (int): The damage this weapon can inflict.
         type (str): The type of the item, set to "Weapon".
     """
-    def __init__(self, name: str, description: str, damage: int, damage_type: str, ignore_defense=False, allowed_parts=None, slots =1):
+    def __init__(self, name: str, description: str, damage: int, damage_type: str, ignore_defense=False, allowed_parts=None, two_handed=False):
         super().__init__(name, description, allowed_parts)
         self.damage = damage
         self.damage_type = damage_type
         self.type = "Weapon"
         self.ignore_defense = ignore_defense
-        self.slots = slots
+        self.two_handed = two_handed
     def __str__(self):
         return f"{self.name}"
 
