@@ -21,9 +21,9 @@ def apply_action(player, action, parameter=None):
     room = player.current_room
     if action == "move":
         from ui_console import show_room, ask_direction 
+        direction = parameter
         while True:
-            direction = parameter
-            moved = player.move(parameter)
+            moved = player.move(direction)
             if moved:
                 break
             show_room(player, "No exit in that direction.")

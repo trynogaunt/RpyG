@@ -30,6 +30,7 @@ def main():
             game_logic.apply_action(hero, choosen_action, direction)
         else:
             game_logic.apply_action(hero, choosen_action, None)
+            
         
 
 
