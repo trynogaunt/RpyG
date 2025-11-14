@@ -13,8 +13,11 @@ class Hero(character.Character):
     
     def move(self, direction):
         if self.current_room and direction in self.current_room.exits:
-            self.change_room(self.current_room.exits[direction])
-            return True
+                if self.current_room.exits[direction] == None:
+                    return False
+                else:
+                    self.change_room(self.current_room.exits[direction])
+                    return True
         return False
 
     def is_alive(self):

@@ -1,6 +1,6 @@
 from creation import create_hero
 from classes.ennemy import Enemy
-from ui_console import splash, main_menu
+from ui_console import splash, main_menu, ask_direction, ask_player_action
 import combat
 import questionary
 import game_logic
@@ -21,22 +21,15 @@ def main():
         hero.change_room(starting_room, cause="start")
     
     while hero.is_alive():
-        if hero.current_room.enemies:
-            enemy = hero.current_room.enemies[0]
-            print(f"A wild {enemy.name} appears!")
-            combat.run_combat(hero, enemy)
-            if not hero.is_alive():
-                print("Game Over!")
-                break
-            else:
-                hero.current_room.enemies.remove(enemy)
+        actions = game_logic.get_actions(hero)
+        choosen_action = ask_player_action(hero, actions)
+        if choosen_action is "move":
+            direction = ask_direction(hero.current_room)
+            if direction is None:
+                continue
+            game_logic.apply_action(hero, choosen_action, direction)
         else:
-            print(f"You are in the {hero.current_room.name}.")
-            direction = questionary.select(
-                "Where do you want to go?",
-                choices=list(hero.current_room.exits.keys())
-            ).ask()
-            hero.move(direction)
+            game_logic.apply_action(hero, choosen_action, None)
         
 
 

@@ -117,6 +117,24 @@ def show_combat(hero, enemy):
 def show_inventory(hero):
     pass # To be implemented
 
+def show_room(player, msg = None):
+    room = player.current_room
+    os.system("cls" if os.name == "nt" else "clear")
+    lines = [
+        f"{room.name}",
+        room.description,
+    ]
+    max_line_length = max(len(line) for line in lines)
+
+    print("=" * (max_line_length + 4))
+    for line in lines:
+        print(f"| {line.ljust(max_line_length)} |")
+    print("=" * (max_line_length + 4))
+    if msg:
+        print(msg)
+    
+    time.sleep(2)
+
 def on_enter_room(player):
     room = player.current_room
     os.system("cls" if os.name == "nt" else "clear")
@@ -133,6 +151,11 @@ def on_enter_room(player):
 
     time.sleep(2)
 
+def no_changed_room(player):
+    on_enter_room(player)
+    print("No exist exit in that direction.")
+    time.sleep(2)
+
 def show_room_ennemies(room):
     if room.enemies:
         print("Enemies present in the room:")
@@ -141,7 +164,22 @@ def show_room_ennemies(room):
     else:
         print("No enemies in this room.")
     time.sleep(2)
-    
+
+def ask_player_action(player, actions):
+    choice = questionary.select(
+        "Choose your action:",
+        choices=actions
+    ).ask()
+    return choice
+
+def ask_direction(room) -> str:
+    directions = list(room.exits.keys())
+    choice = questionary.select(
+        "Choose a direction to move:",
+        choices=directions
+    ).ask()
+    return choice
+
 def show_victory(hero, enemy, loot: list):
     os.system("cls" if os.name == "nt" else "clear")
     lines = [
