@@ -166,7 +166,7 @@ def show_combat_ui(hero, enemy, log_lines, actions):
         line = left_col[i].ljust(left_col_max_width) + " " * space_between_cols + right_col[i]
         print(line)
     
-    if not log_lines:
+    if len(log_lines) == 0:
         last_logs = ["Combat just started."]
     else:
         last_logs = log_lines[-5:]

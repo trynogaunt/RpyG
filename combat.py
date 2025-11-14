@@ -9,6 +9,7 @@ def run_combat(player, enemy):
         if choice == "Attack":
             damage_dealt = player.attack(enemy)
             log_lines.append(log_attack(player, enemy, damage_dealt))
+            
             if enemy.health <= 0:
                 show_combat_ui(player, enemy, log_lines, actions)
                 loot = enemy.inventory.items

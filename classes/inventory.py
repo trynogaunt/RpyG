@@ -11,6 +11,21 @@ class Inventory:
         self.items = []
 
     def equip_item(self, item, slot):
+        if item.type not in ["Weapon", "Armor"]:
+            raise ValueError("Only weapons and armor can be equipped.")
+        
+        if item.type == "Weapon" and slot not in ["left_hand", "right_hand"]:
+            raise ValueError("Weapons can only be equipped in left_hand or right_hand slots.")
+        
+        if item.type == "Armor" and slot not in item.allowed_parts:
+            raise ValueError(f"{item.name} cannot be equipped in the {slot} slot.")
+        
+        if item.type == "Weapon" and item.slots > 1:
+            self.add_item(self.equipped_items["left_hand"])  
+            self.add_item(self.equipped_items["right_hand"]) 
+            self.equipped_items["right_hand"] = None
+            self.equipped_items["left_hand"] = None
+        
         if slot in self.equipped_items:
             self.add_item(self.equipped_items[slot])  # Unequip current item
             self.equipped_items[slot] = item # Equip new item
@@ -29,6 +44,9 @@ class Inventory:
     
     def get_equipped_item(self, slot):
         return self.equipped_items.get(slot, None)
+
+    def get_equipped_weapons(self):
+        return [item for item in self.equipped_items.values() if item and item.type == "Weapon"]
     
     def list_equipped_items(self):
         return {slot: item.name if item else "Empty" for slot, item in self.equipped_items.items()}
