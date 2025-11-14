@@ -3,6 +3,7 @@ from classes.ennemy import Enemy
 from ui_console import splash, main_menu
 import combat
 import questionary
+import game_logic
 from classes import room
 
 def main():
@@ -19,6 +20,23 @@ def main():
     if hero.current_room is None:
         hero.change_room(starting_room, cause="start")
     
+    while hero.is_alive():
+        if hero.current_room.enemies:
+            enemy = hero.current_room.enemies[0]
+            print(f"A wild {enemy.name} appears!")
+            combat.run_combat(hero, enemy)
+            if not hero.is_alive():
+                print("Game Over!")
+                break
+            else:
+                hero.current_room.enemies.remove(enemy)
+        else:
+            print(f"You are in the {hero.current_room.name}.")
+            direction = questionary.select(
+                "Where do you want to go?",
+                choices=list(hero.current_room.exits.keys())
+            ).ask()
+            hero.move(direction)
         
 
 

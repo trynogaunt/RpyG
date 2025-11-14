@@ -5,7 +5,7 @@ class Room:
         self.exits = {"north": None, "south": None, "east": None, "west": None}
         self.items = []
         self.chests = []
-        self.ennemies = []
+        self.enemies = []
 
     def add_item(self, item):
         self.items.append(item)
@@ -13,11 +13,11 @@ class Room:
     def remove_item(self, item):
         self.items.remove(item)
 
-    def add_ennemie(self, ennemie):
-        self.ennemies.append(ennemie)
+    def add_enemy(self, enemy):
+        self.enemies.append(enemy)
 
-    def remove_ennemie(self, ennemie):
-        self.ennemies.remove(ennemie)
+    def remove_enemy(self, enemy):
+        self.enemies.remove(enemy)
 
     def __str__(self):
         return f"{self.name}: {self.description}"

@@ -132,12 +132,16 @@ def on_enter_room(player):
     print("=" * (max_line_length + 4))
 
     time.sleep(2)
-    if room.enemies:
-        print("Enemies present:")
-        for enemy in room.enemies:
-            print(f"- {enemy.name}")
-        time.sleep(2)
 
+def show_room_ennemies(room):
+    if room.enemies:
+        print("Enemies present in the room:")
+        for enemy in room.enemies:
+            print(f"- {enemy.name} (Health: {enemy.health}, Strength: {enemy.strength})")
+    else:
+        print("No enemies in this room.")
+    time.sleep(2)
+    
 def show_victory(hero, enemy, loot: list):
     os.system("cls" if os.name == "nt" else "clear")
     lines = [
