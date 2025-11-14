@@ -101,13 +101,13 @@ hero.attack(enemy)
 ### Current — Playable Prototype
 - [x] Basic character creation
 - [] Weapon & armor system
-- [] Turn-based combat
+- [x] Turn-based combat
 - [] Minimal inventory
 
 ### Next Steps — Combat Enhancements
 - [ ] Dodge system based on Speed
 - [ ] Critical hit system based on Luck
-- [ ] Two-handed weapon handling
+- [x] Two-handed weapon handling
 - [ ] Improved battle UI (interactive menus)
 
 ### Loot & Progression
@@ -117,7 +117,7 @@ hero.attack(enemy)
 
 ### Quality of Life
 - [ ] Save / Load system
-- [ ] Combat log
+- [x] Combat log
 - [ ] Unit testing
 
 ### Future ideas

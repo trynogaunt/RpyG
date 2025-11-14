@@ -98,7 +98,7 @@ hero.attack(enemy)
 ### 🟢 Version actuelle — Prototype jouable
 - [x] Création de personnage basique
 - [ ] Système d’armes et d’armures
-- [ ] Combat au tour par tour
+- [x] Combat au tour par tour
 - [ ] Inventaire minimal
 
 ---
@@ -106,7 +106,7 @@ hero.attack(enemy)
 ### 🔜 Prochaine étape — Amélioration du combat
 - [ ] Système d’esquive basé sur la Vitesse
 - [ ] Coups critiques basés sur la Chance
-- [ ] Gestion des armes à deux mains
+- [x] Gestion des armes à deux mains
 - [ ] Interface de combat plus ergonomique (menus interactifs)
 
 ---
@@ -120,7 +120,7 @@ hero.attack(enemy)
 
 ### 💾 Qualité de vie
 - [ ] Système de sauvegarde / chargement
-- [ ] Journal des actions en combat
+- [x] Journal des actions en combat
 - [ ] Tests unitaires sur les modules principaux
 
 ---
