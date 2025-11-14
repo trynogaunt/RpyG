@@ -4,6 +4,7 @@ class Character:
     def __init__(self, name, health=10, strength=1, luck=0):
         self.name = name
         self.health = health
+        self.max_health = health
         self.strength = strength
         self.effects = []
         self.luck = luck

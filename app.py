@@ -1,7 +1,6 @@
 from creation import create_hero
 from classes.ennemy import Enemy
-from splashes import splash
-from menu import main_menu
+from ui_console import splash, main_menu
 import questionary
 
 def main():

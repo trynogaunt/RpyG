@@ -5,6 +5,20 @@ import questionary
 POINTS_TO_DISTRIBUTE = 10
 
 def create_hero():
+
+    lines = [
+        "Hero Creation",
+        "Distribute your stat points and choose a starting weapon.",    
+    ]
+
+    max_line_length = max(len(line) for line in lines)
+    border = "=" * (max_line_length + 4)
+    print(border)
+    for line in lines:
+        print(f"| {line.ljust(max_line_length)} |")
+    print(border)
+    print("")
+
     name = questionary.text("Enter your hero's name:").ask()
     stats = {"health": 10, "strength": 5, "luck": 1, "reset": 0}
     points_left = POINTS_TO_DISTRIBUTE
