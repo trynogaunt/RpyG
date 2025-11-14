@@ -41,3 +41,11 @@ class Character:
         self.health -= amount
         self.health = max(self.health, 0) 
         return amount
+    
+    @property
+    def defense(self):
+        total_defense = sum(
+            item.defense for item in self.inventory.equipped_items.values()
+            if item and item.type == "Armor"
+        )
+        return total_defense
