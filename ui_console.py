@@ -141,10 +141,10 @@ def show_defeat():
 def show_combat_ui(hero, enemy, log_lines, actions):
     header = f"=========== Combat: {hero.name} vs {enemy.name} ==========="
     stats_hero = {
-        "Name": f"{hero.name}", "HP": f"{hero.health}/{hero.max_health}", "STR": f"{hero.strength}", "DEF" : f"{sum(item.defense for item in hero.inventory.equipped_items.values() if item and item.type == 'Armor')}", "LCK": f"{hero.luck}"
+        "Name": f"{hero.name}", "HP": f"{hero.health}/{hero.max_health}", "STR": f"{hero.strength}", "DEF" : f"{hero.defense}", "LCK": f"{hero.luck}"
     }
     stats_enemy = {
-        "Name": f"{enemy.name}", "HP": f"{enemy.health}/{enemy.max_health}", "STR": f"{enemy.strength}", "DEF" : f"{sum(item.defense for item in enemy.inventory.equipped_items.values() if item and item.type == 'Armor')}", "LCK": f"{enemy.luck}"
+        "Name": f"{enemy.name}", "HP": f"{enemy.health}/{enemy.max_health}", "STR": f"{enemy.strength}", "DEF" : f"{enemy.defense}", "LCK": f"{enemy.luck}"
     }
 
     hero_hp_ratio = hero.health / hero.max_health if hero.max_health > 0 else 0
