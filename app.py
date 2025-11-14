@@ -1,8 +1,11 @@
 from creation import create_hero
 from classes.ennemy import Enemy
+from splashes import splash
 import questionary
 
 def main():
+    
+    splash()
     hero = create_hero()
 
     print(f"Hero {hero.name} created with {hero.health} health and {hero.strength} strength.")
