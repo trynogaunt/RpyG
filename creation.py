@@ -20,6 +20,8 @@ def create_hero():
     print("")
 
     name = questionary.text("Enter your hero's name:").ask()
+    if name.strip().lower() == "yes king":
+        print("You have chosen the legendary name 'Yes King'! Your hero shall be mighty!")
     stats = {"health": 10, "strength": 5, "luck": 1, "reset": 0}
     points_left = POINTS_TO_DISTRIBUTE
     while points_left > 0:

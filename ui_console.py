@@ -140,12 +140,44 @@ def show_defeat():
 
 def show_combat_ui(hero, enemy, log_lines, actions):
     header = f"=========== Combat: {hero.name} vs {enemy.name} ==========="
-    stats_view = (
-        f"{hero.name} - Health: {hero.health}, Strength: {hero.strength}\n"
-        f"{enemy.name} - Health: {enemy.health}, Strength: {enemy.strength}\n"
-    )
+    stats_hero = {
+        "Name": f"{hero.name}", "HP": f"{hero.health}/{hero.max_health}", "STR": f"{hero.strength}", "DEF" : f"{sum(item.defense for item in hero.inventory.equipped_items.values() if item and item.type == 'Armor')}", "LCK": f"{hero.luck}"
+    }
+    stats_enemy = {
+        "Name": f"{enemy.name}", "HP": f"{enemy.health}/{enemy.max_health}", "STR": f"{enemy.strength}", "DEF" : f"{sum(item.defense for item in enemy.inventory.equipped_items.values() if item and item.type == 'Armor')}", "LCK": f"{enemy.luck}"
+    }
+
+    hero_hp_ratio = hero.health / hero.max_health if hero.max_health > 0 else 0
+    enemy_hp_ratio = enemy.health / enemy.max_health if enemy.max_health > 0 else 0
+
+    hero_filled_length = int(20 * hero_hp_ratio)
+    enemy_filled_length = int(20 * enemy_hp_ratio)
+
+    filled_bar_hero = "█" * hero_filled_length + "░" * (20 - hero_filled_length)
+    filled_bar_enemy = "█" * enemy_filled_length + "░" * (20 - enemy_filled_length)
+
+    left_col = [stats_hero["Name"], f"HP: {filled_bar_hero} {stats_hero['HP']}", f"STR: {stats_hero['STR']}", f"DEF: {stats_hero['DEF']}", f"LCK: {stats_hero['LCK']}"]
+    right_col = [stats_enemy["Name"], f"HP: {filled_bar_enemy} {stats_enemy['HP']}", f"STR: {stats_enemy['STR']}", f"DEF: {stats_enemy['DEF']}", f"LCK: {stats_enemy['LCK']}"]
+
+    left_col_max_width = max(len(line) for line in left_col)
+    print(header)
+    for i in range(len(left_col)):
+        line = left_col[i].ljust(left_col_max_width) + right_col[i]
+        print(line)
+    
     last_logs = log_lines[-5:]  # Show last 5 log lines
 
-    print(header)
+    print("\n--- Combat Log ---")
+    for log in last_logs:
+        print(log)
+    print("\n--- Actions ---")
+    questionary.select(
+        "Choose your action:",
+        choices=actions
+    ).ask()        
+
+    return choices
+
+    
     
 
