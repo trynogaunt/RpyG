@@ -1,5 +1,6 @@
 from classes import inventory
 from classes.damages import Damage
+from ui_console import on_enter_room
 class Character:
     def __init__(self, name, health=10, strength=1, luck=0):
         self.name = name
@@ -9,7 +10,6 @@ class Character:
         self.effects = []
         self.luck = luck
         self.inventory = inventory.Inventory()
-        self.current_room = None
     
     def attack(self, target):
         weapons = self.inventory.get_equipped_weapons()
@@ -45,13 +45,6 @@ class Character:
         self.health -= amount
         self.health = max(self.health, 0) 
         return amount
-    
-    def move(self, direction):
-        if self.current_room and direction in self.current_room.exits:
-            self.current_room = self.current_room.exits[direction]
-            
-            return True
-        return False
     
     @property
     def defense(self):
