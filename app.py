@@ -15,6 +15,7 @@ def main():
 
     hero = create_hero()
     enemy = Enemy("Goblin", health=20, strength=4)
+    
     print(f"\nA wild {enemy.name} appears!")
     input("Press Enter to start combat...")
     combat.run_combat(hero, enemy)

@@ -12,11 +12,15 @@ class Character:
     
     def attack(self, target):
         weapons = self.inventory.get_equipped_weapons()
-        for weapon in weapons:
-            damage = weapon.make_damage(self, target)
+        if not weapons:
+            damage = Damage(self.strength, "physical", self.name)
             actual_damage = target.take_damage(damage)
             return actual_damage
-
+        else:
+            for weapon in weapons:
+                damage = weapon.make_damage(self, target)
+                actual_damage = target.take_damage(damage)
+                return actual_damage
 
     def apply_effect(self, effect):
         self.effects.append(effect)
