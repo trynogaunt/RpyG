@@ -107,6 +107,7 @@ def splash():
 
 def log_attack(attacker, target, damage_dealt):
     print(f"{attacker.name} dealt {damage_dealt} damage to {target.name}!")
+    return f"{attacker.name} dealt {damage_dealt} damage to {target.name}!"
 
 def show_combat(hero, enemy):
     print(f"{hero.name} - Health: {hero.health}, Strength: {hero.strength}")
@@ -139,6 +140,7 @@ def show_defeat():
 
 
 def show_combat_ui(hero, enemy, log_lines, actions):
+    os.system("cls" if os.name == "nt" else "clear")
     header = f"=========== Combat: {hero.name} vs {enemy.name} ==========="
     stats_hero = {
         "Name": f"{hero.name}", "HP": f"{hero.health}/{hero.max_health}", "STR": f"{hero.strength}", "DEF" : f"{hero.defense}", "LCK": f"{hero.luck}"
@@ -153,27 +155,37 @@ def show_combat_ui(hero, enemy, log_lines, actions):
     filled_bar_hero = "█" * hero_filled_length + "░" * (20 - hero_filled_length)
     filled_bar_enemy = "█" * enemy_filled_length + "░" * (20 - enemy_filled_length)
 
+    space_between_cols = 5
+
     left_col = [stats_hero["Name"], f"HP: {filled_bar_hero} {stats_hero['HP']}", f"STR: {stats_hero['STR']}", f"DEF: {stats_hero['DEF']}", f"LCK: {stats_hero['LCK']}"]
     right_col = [stats_enemy["Name"], f"HP: {filled_bar_enemy} {stats_enemy['HP']}", f"STR: {stats_enemy['STR']}", f"DEF: {stats_enemy['DEF']}", f"LCK: {stats_enemy['LCK']}"]
 
     left_col_max_width = max(len(line) for line in left_col)
     print(header)
     for i in range(len(left_col)):
-        line = left_col[i].ljust(left_col_max_width) + right_col[i]
+        line = left_col[i].ljust(left_col_max_width) + " " * space_between_cols + right_col[i]
         print(line)
     
-    last_logs = log_lines[-5:]  # Show last 5 log lines
+    if not log_lines:
+        last_logs = ["Combat just started."]
+    else:
+        last_logs = log_lines[-5:]
 
     print("\n--- Combat Log ---")
     for log in last_logs:
         print(log)
     print("\n--- Actions ---")
-    questionary.select(
+    next_action = questionary.select(
         "Choose your action:",
         choices=actions
     ).ask()        
 
-    return choices
+    return next_action
+
+if __name__ == "__main__":
+    hero = type("Hero", (), {"name": "Hero", "health": 15, "max_health": 20, "strength": 5, "defense": 2, "luck": 1, "hp_ratio": 0.75})()
+    enemy = type("Enemy", (), {"name": "Goblin", "health": 8, "max_health": 15, "strength": 3, "defense": 1, "luck": 0, "hp_ratio": 0.53})()
+    show_combat_ui(hero, enemy, ["Hero attacks Goblin for 3 damage!", "Goblin attacks Hero for 2 damage!"], ["Attack", "Use Item", "Flee"])
 
     
     

@@ -29,7 +29,7 @@ class Weapon(Item):
 
     def make_damage(self, user, target) -> Damage:
         return Damage(
-            amount=self.damage * user.strength,
+            amount=self.damage,
             damage_type=self.damage_type,
             source=user.name,
             ignore_defense=self.ignore_defense

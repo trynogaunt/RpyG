@@ -1,25 +1,30 @@
-def start_combat(player, enemy):
-    print(f"A wild {enemy.name} appears!")
+from ui_console import show_combat_ui, log_attack, show_victory, show_defeat
+
+def run_combat(player, enemy):
+    log_lines = []
     while player.health > 0 and enemy.health > 0:
-        action = questionary.select(
-            "Choose your action:",
-            choices=["Attack", "Use Item", "Flee"]
-        ).ask()
+        actions = ["Attack", "Use Item", "Flee"]
+        choice = show_combat_ui(player, enemy, log_lines, actions)
 
-        if action == "Attack":
+        if choice == "Attack":
             damage_dealt = player.attack(enemy)
-            print(f"You dealt {damage_dealt} damage to {enemy.name}!")
-        elif action == "Use Item":
-            print("Item usage not implemented yet.")
-        elif action == "Flee":
-            print("You fled the combat!")
-            return
-
-        if enemy.health > 0:
-            damage_received = enemy.attack(player)
-            print(f"{enemy.name} dealt {damage_received} damage to you!")
-
-    if player.health <= 0:
-        print("You have been defeated!")
-    else:
-        print(f"You defeated {enemy.name}!")
+            log_lines.append(log_attack(player, enemy, damage_dealt))
+            if enemy.health <= 0:
+                show_combat_ui(player, enemy, log_lines, actions)
+                loot = enemy.inventory.items
+                show_victory(player, enemy, loot)
+                for item in loot:
+                    player.inventory.add_item(item)
+                return True
+            else:
+                damage_dealt = enemy.attack(player)
+                log_lines.append(log_attack(enemy, player, damage_dealt))
+                if player.health <= 0:
+                    show_combat_ui(player, enemy, log_lines, actions)
+                    show_defeat()
+                    return False
+        elif choice == "Use Item":
+            pass  
+        elif choice == "Flee":
+            print(f"{player.name} fled from combat!")
+            return False

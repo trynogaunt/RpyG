@@ -8,13 +8,16 @@ class Character:
         self.strength = strength
         self.effects = []
         self.luck = luck
-        self.inventory = inventory.Inventory()  # To be assigned an Inventory instance
+        self.inventory = inventory.Inventory() 
     
     def attack(self, target):
+        if not self.inventory.equipped_items: # Gestion attaques sans armes
+            dealt = target.take_damage(Damage(amount=self.strength, damage_type="Physical", source=self.name))
+            return dealt
         for item in self.inventory.equipped_items.values():
             if item and item.type == "Weapon":
                 damage = item.make_damage(self, target)
-                dealt = target.take_damage(damage.amount)
+                dealt = target.take_damage(damage)
                 return dealt
                 
 
