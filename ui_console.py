@@ -147,15 +147,8 @@ def show_combat_ui(hero, enemy, log_lines, actions):
         "Name": f"{enemy.name}", "HP": f"{enemy.health}/{enemy.max_health}", "STR": f"{enemy.strength}", "DEF" : f"{enemy.defense}", "LCK": f"{enemy.luck}"
     }
 
-    hero_hp_ratio = hero.health / hero.max_health if hero.max_health > 0 else 0
-    enemy_hp_ratio = enemy.health / enemy.max_health if enemy.max_health > 0 else 0
-
-    hero_hp_ratio = max(0, min(1, hero_hp_ratio))
-    enemy_hp_ratio = max(0, min(1, enemy_hp_ratio))
-
-
-    hero_filled_length = int(20 * hero_hp_ratio)
-    enemy_filled_length = int(20 * enemy_hp_ratio)
+    hero_filled_length = int(20 * hero.hp_ratio)
+    enemy_filled_length = int(20 * enemy.hp_ratio)
 
     filled_bar_hero = "█" * hero_filled_length + "░" * (20 - hero_filled_length)
     filled_bar_enemy = "█" * enemy_filled_length + "░" * (20 - enemy_filled_length)

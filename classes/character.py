@@ -49,3 +49,7 @@ class Character:
             if item and item.type == "Armor"
         )
         return total_defense
+    
+    @property
+    def hp_ratio(self):
+        return max(0, min(1, self.health / self.max_health)) if self.max_health > 0 else 0
