@@ -3,9 +3,22 @@
 [![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue?logo=python&logoColor=white)](#)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-An RPG (Role-Playing Game) developed in Python with a combat system, inventory management, and character progression.
+## Table of Contents
 
-## 📋 Description
+- [Description](#description)
+- [Installation](#installation)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Technologies](#technologies)
+- [Roadmap](#roadmap)
+- [Contribution](#contribution)
+- [License](#license)
+- [Author](#author)
+
+## Description
+
+An RPG (Role-Playing Game) developed in Python with a combat system, inventory management, and character progression.
 
 This project is a text-based RPG game where the player embodies a hero who can:
 - Fight enemies
@@ -13,7 +26,7 @@ This project is a text-based RPG game where the player embodies a hero who can:
 - Progress in level and improve statistics
 - Equip different types of items
 
-## 🚀 Installation
+## Installation
 
 1. Clone this repository:
 ```bash
@@ -31,7 +44,7 @@ python --version
 python app.py
 ```
 
-## 🎮 Features
+## Features
 
 ### Base Classes
 - **Hero**: Player character with statistics (health, strength, defense)
@@ -51,7 +64,7 @@ python app.py
 - Equipment of weapons and armor
 - Use of consumables
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 RPyG/
@@ -65,7 +78,7 @@ RPyG/
 └── .gitignore
 ```
 
-## 🎯 Usage
+## Usage
 
 ```python
 # Example of creating a hero
@@ -77,18 +90,43 @@ sword = Weapon("Steel Sword", "A sharp sword", 15, 0.1)
 hero.attack(enemy)
 ```
 
-## 🛠️ Technologies
+## Technologies
 
 - **Python 3.7+**
 - Object-Oriented Programming (OOP)
 - Modular architecture with separate classes
 
-## 🚧 In Development
+## Roadmap
 
-- Save/Load system
-- Special weapon effects
+### Current — Playable Prototype
+- [x] Basic character creation
+- [] Weapon & armor system
+- [] Turn-based combat
+- [] Minimal inventory
 
-## 🤝 Contribution
+### Next Steps — Combat Enhancements
+- [ ] Dodge system based on Speed
+- [ ] Critical hit system based on Luck
+- [ ] Two-handed weapon handling
+- [ ] Improved battle UI (interactive menus)
+
+### Loot & Progression
+- [ ] Enemy variety + random loot system
+- [ ] Level progression & skill upgrades
+- [ ] Equipment upgrades
+
+### Quality of Life
+- [ ] Save / Load system
+- [ ] Combat log
+- [ ] Unit testing
+
+### Future ideas
+- [ ] Magic skills
+- [ ] Zone exploration
+- [ ] Narrative events
+- [ ] Rogue-lite mode (optional)
+
+## Contribution
 
 Contributions are welcome! Feel free to:
 1. Fork the project
@@ -97,10 +135,11 @@ Contributions are welcome! Feel free to:
 4. Push to the branch
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is under the MIT license. See the `LICENSE` file for more details.
 
-## ✨ Author
+## Author
 
 Developed with ❤️ in Python
+[MIT License](LICENSE)
