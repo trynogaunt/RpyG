@@ -8,7 +8,8 @@ class Character:
         self.strength = strength
         self.effects = []
         self.luck = luck
-        self.inventory = inventory.Inventory() 
+        self.inventory = inventory.Inventory()
+        self.current_room = None
     
     def attack(self, target):
         weapons = self.inventory.get_equipped_weapons()
@@ -44,6 +45,13 @@ class Character:
         self.health -= amount
         self.health = max(self.health, 0) 
         return amount
+    
+    def move(self, direction):
+        if self.current_room and direction in self.current_room.exits:
+            self.current_room = self.current_room.exits[direction]
+            
+            return True
+        return False
     
     @property
     def defense(self):

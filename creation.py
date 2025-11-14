@@ -1,11 +1,12 @@
 from classes import hero
 from items import COMMON_WEAPON as weapons
 import questionary
+import os
 
 POINTS_TO_DISTRIBUTE = 10
 
 def create_hero():
-
+    os.system("cls" if os.name == "nt" else "clear")
     lines = [
         "Hero Creation",
         "Distribute your stat points and choose a starting weapon.",    

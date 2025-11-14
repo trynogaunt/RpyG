@@ -113,10 +113,33 @@ def show_combat(hero, enemy):
     print(f"{hero.name} - Health: {hero.health}, Strength: {hero.strength}")
     print(f"{enemy.name} - Health: {enemy.health}, Strength: {enemy.strength}")
 
+
 def show_inventory(hero):
     pass # To be implemented
 
+def on_enter_room(player):
+    room = player.current_room
+    os.system("cls" if os.name == "nt" else "clear")
+    lines = [
+        f"You have entered: {room.name}",
+        room.description,
+    ]
+    max_line_length = max(len(line) for line in lines)
+
+    print("=" * (max_line_length + 4))
+    for line in lines:
+        print(f"| {line.ljust(max_line_length)} |")
+    print("=" * (max_line_length + 4))
+
+    time.sleep(2)
+    if room.enemies:
+        print("Enemies present:")
+        for enemy in room.enemies:
+            print(f"- {enemy.name}")
+        time.sleep(2)
+
 def show_victory(hero, enemy, loot: list):
+    os.system("cls" if os.name == "nt" else "clear")
     lines = [
         "Victory!",
         f"You have defeated {enemy.name} and earned the following loot:",    
@@ -129,6 +152,7 @@ def show_victory(hero, enemy, loot: list):
         print(line.ljust(max_line_length))
 
 def show_defeat():
+    os.system("cls" if os.name == "nt" else "clear")
     lines = [
         "Defeat!",
         "You have been defeated. Better luck next time!",    
