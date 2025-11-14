@@ -1,3 +1,5 @@
+from classes.damages import Damage
+
 class Item:
     def __init__(self, name, description="", allowed_parts=None):
         self.name = name
@@ -16,17 +18,22 @@ class Weapon(Item):
         damage (int): The damage this weapon can inflict.
         type (str): The type of the item, set to "Weapon".
     """
-    def __init__(self, name: str, description: str, damage: int, allowed_parts=None):
+    def __init__(self, name: str, description: str, damage: int, damage_type: str, ignore_defense=False, allowed_parts=None):
         super().__init__(name, description, allowed_parts)
         self.damage = damage
+        self.damage_type = damage_type
         self.type = "Weapon"
-
+        self.ignore_defense = ignore_defense
     def __str__(self):
         return f"{self.name}"
 
-    def use(self, target, hero_strength=1):
-        damage_taken = target.take_damage(self.damage * hero_strength)
-        return f"{target.name} takes {damage_taken} damage from {self.name}!"
+    def make_damage(self, user, target) -> Damage:
+        return Damage(
+            amount=self.damage * user.strength,
+            damage_type=self.damage_type,
+            source=user.name,
+            ignore_defense=self.ignore_defense
+        )
 
 class Armor(Item):
     def __init__(self, name, description, defense, part=None, allowed_parts=None):

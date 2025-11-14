@@ -25,7 +25,7 @@ class Inventory:
             self.items.remove(item)
 
     def list_items(self):
-        return [item.name for item in self.items if item is not None] or ["Empty"]
+        return [item.name for item in self.items if item is not None] or False
     
     def get_equipped_item(self, slot):
         return self.equipped_items.get(slot, None)
