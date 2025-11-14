@@ -1,5 +1,8 @@
 # Python RPG Game
 
+[![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue?logo=python&logoColor=white)](#)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 An RPG (Role-Playing Game) developed in Python with a combat system, inventory management, and character progression.
 
 ## 📋 Description
