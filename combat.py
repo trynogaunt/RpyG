@@ -10,34 +10,72 @@ class Combat:
     self.hero: Hero = None
     self.ennemies : list[Enemy]= []
     self.log: list[CombatLog] = []
+    self.combatants: list = []
     self.round_number: int = 1
     self.turn_index: int = 0
     self.actions: Literal["attack", "defend", "inventory", "flee"]
     self.is_finished: bool = False
     self.current_combatant = None
-    self.turn_order: list = []
 
     def __init__(self, hero: Hero, enemies: list[Enemy]):
         self.hero = hero
-        self.enemies = ennemies
+        self.enemies = enemies
         self.log = []
-        self.round_number = 1
-        self.is_finished = False
-        self.turn_order = self.determine_turn_order()
-    def run(self):
-        while not self.is_finished:
-            self.process_turn()
-            self.check_combat_end()
-    
-    def determine_turn_order(self):
-        combatants = [self.hero] + self.enemies
-        return sorted(combatants, key=lambda c: c.speed, reverse=True)
+        self.round_number = 1 # Current round number
+        self.is_finished = False 
+        self.turn_index = 0 # Index of current turn in the turn order
+        self.current_combatant = self.get_current_combatant() if self.turn_order != 0 else None 
+        self.combatants = [self.hero] + self.enemies # List of all combatants
 
-    def process_turn(self):
-        current_combatant = self.get_current_combatant()
-        if isinstance(current_combatant, Hero):
-            action = self.get_hero_action()
-            self.execute_hero_action(action)
-        else:
-            self.execute_enemy_action(current_combatant)
-        self.advance_turn()
+    def run(self):
+        self.determine_initial_turn_order()
+        while not self.is_finished:
+            self.current_combatant = self.get_current_combatant()
+            if self.current_combatant == self.hero:
+                self.hero_phase()
+            else:
+                self.enemy_phase(self.current_combatant)
+            self.turn_index += 1
+        if not self.check_combat_end():
+            self.round_number += 1
+            self.turn_index = 0
+            self.recalculate_turn_order()
+    
+    def determine_initial_turn_order(self):
+        self.combatants = sorted(self.combatants, key=lambda c: c.speed, reverse=True)
+    
+    def recalculate_turn_order(self):
+        already_played = self.combatants[:self.turn_index + 1]
+        yet_to_play = self.combatants[self.turn_index + 1:]
+        yet_to_play = sorted(yet_to_play, key=lambda c: c.speed, reverse=True)
+        self.combatants = already_played + yet_to_play
+
+    def hero_phase(self):
+        choice = show_combat_ui(self.hero, self.enemies, [log.message for log in self.log], self.actions)
+
+    def enemy_phase(self, enemy: Enemy):
+        damage = enemy.attack(self.hero)
+        log_entry = log_attack(enemy, self.hero, damage)
+        self.log.append(CombatLog(log_entry))
+    
+    def check_combat_end(self):
+        if not self.hero.is_alive():
+            self.is_finished = True
+            show_defeat()
+            return True
+        elif all(not enemy.is_alive() for enemy in self.enemies):
+            self.is_finished = True
+            loot = []
+            for enemy in self.enemies:
+                loot.extend(enemy.inventory.items)
+            show_victory(self.hero, enemy, loot)
+            return True
+        return False
+
+    @property
+    def get_current_combatant(self):
+        return self.turn_order[self.turn_index]
+    
+    @property
+    def actors(self):
+        return self.combatants
