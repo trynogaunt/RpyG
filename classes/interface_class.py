@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from dataclasses import field
 from character import Character
-
+from typing import Literal
 @dataclass
 class Damage:
     amount: int
@@ -18,13 +18,14 @@ class Damage:
 @dataclass
 class Effect:
     name: str
-    effect_type: str
     duration: int
+    effect_type: Literal["damage", "heal", "buff_strength"]
     instant_value: int = 0
     tick_value: int = 0
     remaining_duration: int = field(init=False)
     ignore_defense: bool = False
-    flags: list = field(default_factory=list)
+    flags: list[str] = field(default_factory=list)
+    total_applied: int = 0
 
     def __post_init__(self):
         self.remaining_duration = self.duration
@@ -38,7 +39,7 @@ class Effect:
             self._apply_effect_value(target, self.tick_value)
             self.duration_tick()
 
-    def _apply_effect_value(self, target, value):
+    def _apply_effect_value(self, target: Character, value: int):
         match self.effect_type:
             case "damage":
                 damage = Damage(
@@ -54,11 +55,12 @@ class Effect:
                 target.health = min(target.max_health, target.health)
             case "buff_strength":
                 target.strength += value
+                self.total_applied += value
             
     def expire(self, target):
         if "buff_strength" == self.effect_type:
             # Revert the strength buff when the effect expires, instant value if exists + total amount from ticks and duration
-            target.strength -= (self.instant_value + (self.tick_value * self.duration))
+            target.strength -= self.total_applied
             
     def duration_tick(self):
         self.remaining_duration -= 1
