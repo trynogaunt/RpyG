@@ -19,59 +19,52 @@ class Damage:
 class Effect:
     name: str
     effect_type: str
+    duration: int
     instant_value: int = 0
     tick_value: int = 0
-    duration: int
     remaining_duration: int = field(init=False)
     ignore_defense: bool = False
-    flags: list = []
+    flags: list = field(default_factory=list)
 
     def __post_init__(self):
         self.remaining_duration = self.duration
 
     def apply(self, target: Character):
         if "instant" in self.flags:
-            match self.effect_type:
-                case "damage":
-                    damage = Damage(
-                        amount=self.instant_value,
-                        damage_type="physical",
-                        source="Effect",
-                        ignore_defense=self.ignore_defense
-                    )
-                    target.take_damage(damage)
-                case "heal":
-                    target.health += self.instant_value
-                    target.health = min(target.max_health, target.health)
-                case "buff_strength":
-                    target.strength += self.instant_value
+            self._apply_effect_value(target, self.instant_value)
 
     def tick(self, target):
-        if "over_time" in self.flags:
-            match self.effect_type:
-                case "damage":
-                    damage = Damage(
-                        amount=self.tick_value,
-                        damage_type="physical",
-                        source="Effect",
-                        ignore_defense=self.ignore_defense,
-                        is_dot=True
-                    )
-                    target.take_damage(damage)
-                case "heal":
-                    target.health += self.tick_value
-                    target.health = min(target.max_health, target.health)
-                case "buff_strength":
-                    target.strength += self.tick_value
-            self.remaining_duration -= 1
+        if "over_time" in self.flags and not self.is_expired():
+            self._apply_effect_value(target, self.tick_value)
+            self.duration_tick()
 
-        
+    def _apply_effect_value(self, target, value):
+        match self.effect_type:
+            case "damage":
+                damage = Damage(
+                    amount=value,
+                    damage_type="physical",
+                    source=self.name,
+                    ignore_defense=self.ignore_defense,
+                    is_dot="over_time" in self.flags
+                )
+                target.take_damage(damage)
+            case "heal":
+                target.health += value
+                target.health = min(target.max_health, target.health)
+            case "buff_strength":
+                target.strength += value
+            
     def expire(self, target):
-        if "buff_strength" in self.effect_type:
-            target.strength -= (self.instant_value + self.tick_value * (self.duration - self.remaining_duration))
-
+        if "buff_strength" == self.effect_type:
+            # Revert the strength buff when the effect expires, instant value if exists + total amount from ticks and duration
+            target.strength -= (self.instant_value + (self.tick_value * self.duration))
+            
     def duration_tick(self):
         self.remaining_duration -= 1
+
+    def is_expired(self):
+        return self.remaining_duration <= 0
 
 
 @dataclass
