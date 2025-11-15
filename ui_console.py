@@ -229,7 +229,7 @@ def show_defeat():
         print(line.ljust(max_line_length))
 
 
-def show_combat_ui(hero, enemy, log_lines, actions):
+def show_combat_ui(hero, enemies, log_lines, actions):
     os.system("cls" if os.name == "nt" else "clear")
     header = f"=========== Combat: {hero.name} vs {enemy.name} ==========="
     stats_hero = {

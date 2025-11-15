@@ -2,6 +2,7 @@ from ui_console import show_combat_ui, log_attack, show_victory, show_defeat
 from dataclasses import dataclass, Literal
 from classes.hero import Hero
 from classes.ennemy import Enemy
+from classes.interface_class import ActionCombatChoice
 @dataclass
 class CombatLog:
     message: str
@@ -13,7 +14,7 @@ class Combat:
     self.combatants: list = []
     self.round_number: int = 1
     self.turn_index: int = 0
-    self.actions: Literal["attack", "defend", "inventory", "flee"]
+    self.actions: list[ActionCombatChoice] = []
     self.is_finished: bool = False
     self.current_combatant = None
 

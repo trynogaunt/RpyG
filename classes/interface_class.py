@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 from dataclasses import field
 from character import Character
-from typing import Literal
+from typing import Literal, Optional
+
+ActionType = Literal["attack", "defend", "inventory", "flee"]
+
 @dataclass
 class Damage:
     amount: int
@@ -77,4 +80,12 @@ class CastTime:
     block_action: bool = False
     def __str__(self):
         return f"Casting {self.name} for {self.cast_time} turns."
+
+
+@dataclass
+class ActionCombatChoice:
+    actor: "Character"
+    action: ActionType
+    target: Optional["Character"] = None
+    item: Optional["Item"] = None
     
