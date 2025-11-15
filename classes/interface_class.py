@@ -7,6 +7,7 @@ class Damage:
     source: str      
     ignore_defense: bool = False
     is_critical: bool = False
+    is_dot: bool = False
 
     def __str__(self):
         crit_text = " (Critical Hit!)" if self.is_critical else ""
@@ -14,37 +15,36 @@ class Damage:
 
 @dataclass
 class Effect:
-    def __init__(self, name: str, effect_type: str, value: int, duration: int, damage_type: Damage = None):
-        self.name = name
-        self.effect_type = effect_type  
-        self.value = value              
-        self.duration = duration        
-        self.remaining_duration = duration
-        
+    name: str
+    effect_type: str
+    value: int
+    duration: int
+    remaining_duration: int = field(init=False)
+    instant_damage: Damage = None
+    tick_damage: Damage = None
+    tick_heal: int = None
+    flags: list = []
 
+    def __post_init__(self):
+        self.remaining_duration = self.duration
     def apply(self, target):
-        match self.effect_type:
-            case "heal":
-                target.health += self.value
-                target.health = min(target.max_health, target.health)
-                return f"{target.name} heals {self.value} health from {self.name}!"
-            case "buff_strength":
-                target.strength += self.value
-                return f"{target.name} gains {self.value} strength from {self.name}!"
-            case "debuff_strength":
-                target.strength -= self.value
-                return f"{target.name} loses {self.value} strength from {self.name}!"
-            case da
+        if "instant" in flags:
+            match self.effect_type:
+                case "damage":
+                    target.health -= self.damage_type.amount
+                case "heal":
+                    target.health += self.tick_heal.amount
 
     def tick(self, target):
-        pass
+        
+
         
     def expire(self, target):
         pass
 
     def duration_tick(self):
-        if self.remaining_duration > 0:
-            self.remaining_duration -= 1
+        pass
+
 
 @dataclass
 class CastTime:

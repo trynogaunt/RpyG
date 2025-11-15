@@ -1,4 +1,4 @@
-from classes.damages import Damage
+from classes.interface_class import Damage, Effect, CastTime
 
 class Item:
     def __init__(self, name, description="", item_type="Generic"):
