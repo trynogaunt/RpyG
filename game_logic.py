@@ -40,7 +40,8 @@ def apply_action(player, action, parameter=None):
     elif action == "inspect":
         pass
     elif action == "inventory":
-        pass
+        from ui_console import show_inventory
+        show_inventory(player)
     elif action == "exit":
         print("Exiting the game. Thanks for playing!")
         exit()

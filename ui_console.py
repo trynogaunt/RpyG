@@ -114,8 +114,32 @@ def show_combat(hero, enemy):
     print(f"{enemy.name} - Health: {enemy.health}, Strength: {enemy.strength}")
 
 
-def show_inventory(hero):
-    pass # To be implemented
+def show_inventory(player):
+    os.system("cls" if os.name == "nt" else "clear")
+    lines = [f"{player.name}'s Inventory",
+             "Your little bag of things"
+            ]
+    print("=" * (max(len(line) for line in lines) + 4))
+    for line in lines:
+        print(f"| {line.ljust(max(len(line) for line in lines))} |")
+    print("=" * (max(len(line) for line in lines) + 4))
+
+    print("")
+    print("Weapons and Armor:")
+    if not player.inventory.list_equipped_items():
+        print("Your character has no equipped items.")
+    else:
+        for slot, item in player.inventory.list_equipped_items():
+            print(f"- {slot}: {item.name} (Type: {item.type})")
+    print("")
+    print("Items in your inventory:")
+    if not player.inventory.list_items():
+        print("Your inventory is empty.")
+    else:
+        for item in player.inventory.list_items():
+            print(f"- {item.name} (Type: {item.type})")
+    input("\nPress Enter to continue...")
+    show_room(player)
 
 def show_room(player, msg = None):
     room = player.current_room

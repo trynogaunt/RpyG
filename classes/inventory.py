@@ -86,4 +86,8 @@ class Inventory:
         return [item for item in self.equipped_items.values() if item and item.type == "Weapon"]
     
     def list_equipped_items(self):
-        return {slot: item.name if item else "Empty" for slot, item in self.equipped_items.items()}
+        return [
+            (slot, item)
+            for slot, item in self.equipped_items.items()
+            if item is not None
+        ]
