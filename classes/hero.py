@@ -5,6 +5,7 @@ class Hero(character.Character):
         super().__init__(name, health, strength, luck)
         self.current_room = None
         self.visited_rooms = set()
+        self.active_effects = []
 
     def change_room(self, new_room, cause="move"):
         if self.current_room != new_room:
