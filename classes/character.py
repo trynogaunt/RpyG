@@ -2,13 +2,14 @@ from classes import inventory
 from classes.damages import Damage
 from ui_console import on_enter_room
 class Character:
-    def __init__(self, name, health=10, strength=1, luck=0):
+    def __init__(self, name, health=10, strength=1, luck=0, speed=1):
         self.name = name
         self.health = health
         self.max_health = health
         self.strength = strength
         self.effects = []
         self.luck = luck
+        self.speed = speed
         self.inventory = inventory.Inventory()
     
     def attack(self, target):
