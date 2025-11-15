@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from dataclasses import field
+from character import Character
 
 @dataclass
 class Damage:
@@ -17,33 +19,59 @@ class Damage:
 class Effect:
     name: str
     effect_type: str
-    value: int
+    instant_value: int = 0
+    tick_value: int = 0
     duration: int
     remaining_duration: int = field(init=False)
-    instant_damage: Damage = None
-    tick_damage: Damage = None
-    tick_heal: int = None
+    ignore_defense: bool = False
     flags: list = []
 
     def __post_init__(self):
         self.remaining_duration = self.duration
-    def apply(self, target):
-        if "instant" in flags:
+
+    def apply(self, target: Character):
+        if "instant" in self.flags:
             match self.effect_type:
                 case "damage":
-                    target.health -= self.damage_type.amount
+                    damage = Damage(
+                        amount=self.instant_value,
+                        damage_type="physical",
+                        source="Effect",
+                        ignore_defense=self.ignore_defense
+                    )
+                    target.take_damage(damage)
                 case "heal":
-                    target.health += self.tick_heal.amount
+                    target.health += self.instant_value
+                    target.health = min(target.max_health, target.health)
+                case "buff_strength":
+                    target.strength += self.instant_value
 
     def tick(self, target):
-        
+        if "over_time" in self.flags:
+            match self.effect_type:
+                case "damage":
+                    damage = Damage(
+                        amount=self.tick_value,
+                        damage_type="physical",
+                        source="Effect",
+                        ignore_defense=self.ignore_defense,
+                        is_dot=True
+                    )
+                    target.take_damage(damage)
+                case "heal":
+                    target.health += self.tick_value
+                    target.health = min(target.max_health, target.health)
+                case "buff_strength":
+                    target.strength += self.tick_value
+            self.remaining_duration -= 1
 
         
     def expire(self, target):
-        pass
+        if "buff_strength" in self.effect_type:
+            target.strength -= (self.instant_value + self.tick_value * (self.duration - self.remaining_duration))
 
     def duration_tick(self):
-        pass
+        self.remaining_duration -= 1
 
 
 @dataclass
