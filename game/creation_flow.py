@@ -40,5 +40,6 @@ def create_character(ui: "UIController") -> Hero:
         speed=state.speed,
         luck=state.luck,
     )
-    
+    creation_menu_lines = build_creation_menu(ui, state)
+    ui.render(creation_menu_lines)
     return hero
