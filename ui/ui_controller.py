@@ -32,9 +32,9 @@ class UIController:
                 width=self.width - 2, 
                 subsequent_indent=" " * indent
             )   
-            print(wrapped)
+            return wrapped.splitlines()
         else:
-            print(message)
+            return [text]
 
     def message_box(self, message:str):
         inner_width = self.width - 2
