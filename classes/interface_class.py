@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 from dataclasses import field
-from character import Character
-from typing import Literal, Optional
+from typing import Literal, Optional, TYPE_CHECKING
 
 ActionType = Literal["attack", "defend", "inventory", "flee"]
+
+if TYPE_CHECKING:
+    from classes.character import Character
+    from classes.Item import Item
 
 @dataclass
 class Damage:
@@ -33,7 +36,7 @@ class Effect:
     def __post_init__(self):
         self.remaining_duration = self.duration
 
-    def apply(self, target: Character):
+    def apply(self, target: "Character"):
         if "instant" in self.flags:
             self._apply_effect_value(target, self.instant_value)
 
@@ -42,7 +45,7 @@ class Effect:
             self._apply_effect_value(target, self.tick_value)
             self.duration_tick()
 
-    def _apply_effect_value(self, target: Character, value: int):
+    def _apply_effect_value(self, target: "Character", value: int):
         match self.effect_type:
             case "damage":
                 damage = Damage(
@@ -60,7 +63,7 @@ class Effect:
                 target.strength += value
                 self.total_applied += value
             
-    def expire(self, target):
+    def expire(self, target: "Character"):
         if "buff_strength" == self.effect_type:
             # Revert the strength buff when the effect expires, instant value if exists + total amount from ticks and duration
             target.strength -= self.total_applied

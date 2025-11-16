@@ -1,32 +1,24 @@
 from ui_console import show_combat_ui, log_attack, show_victory, show_defeat
-from dataclasses import dataclass, Literal
+from dataclasses import dataclass
+from typing import Literal
 from classes.hero import Hero
 from classes.ennemy import Enemy
-from classes.interface_class import ActionCombatChoice
+from classes.interface_class import ActionCombatChoice, ActionType
 @dataclass
 class CombatLog:
     message: str
 
 class Combat:
-    self.hero: Hero = None
-    self.ennemies : list[Enemy]= []
-    self.log: list[CombatLog] = []
-    self.combatants: list = []
-    self.round_number: int = 1
-    self.turn_index: int = 0
-    self.actions: list[ActionCombatChoice] = []
-    self.is_finished: bool = False
-    self.current_combatant = None
-
     def __init__(self, hero: Hero, enemies: list[Enemy]):
-        self.hero = hero
-        self.enemies = enemies
-        self.log = []
-        self.round_number = 1 # Current round number
-        self.is_finished = False 
-        self.turn_index = 0 # Index of current turn in the turn order
-        self.current_combatant = self.get_current_combatant() if self.turn_order != 0 else None 
-        self.combatants = [self.hero] + self.enemies # List of all combatants
+        self.hero: Hero = hero
+        self.enemies : list[Enemy]= enemies
+        self.log: list[CombatLog] = []
+        self.combatants: list = [hero] + enemies
+        self.round_number: int = 1
+        self.turn_index: int = 0
+        self.actions: list[ActionCombatChoice] = []
+        self.is_finished: bool = False
+        self.current_combatant = None
 
     def run(self):
         self.determine_initial_turn_order()

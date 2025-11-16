@@ -1,6 +1,7 @@
 from classes import inventory
-from classes.damages import Damage
+from classes.interface_class import Damage
 from ui_console import on_enter_room
+
 class Character:
     def __init__(self, name, health=10, strength=1, luck=0, speed=1):
         self.name = name
