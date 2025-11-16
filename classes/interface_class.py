@@ -92,3 +92,11 @@ class ActionCombatChoice:
     target: Optional["Character"] = None
     item: Optional["Item"] = None
     
+@dataclass
+class CharacterCreationState:
+    name: str = ""
+    health: int = 10
+    strength: int = 1
+    luck: int = 0
+    speed: int = 1
+    points_to_spend: int = 5

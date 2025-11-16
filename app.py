@@ -1,13 +1,18 @@
 from ui.screens.main_menu_screen import splash, main_menu_choice
 from ui.ui_controller import UIController
+from classes.hero import Hero
+from game import creation_flow
+import questionary
+
 
 def main():
+    hero = None
     ui = UIController(width=80, border_char="=", padding=2)
     splash_lines = splash()
     ui.render(splash_lines, tick_render=0.05)
     choice = main_menu_choice()
     if choice == "Start New Game":
-        pass
+        hero = creation_flow.create_character(ui)
     elif choice == "Settings":
         pass
     elif choice == "Load Game":
@@ -15,7 +20,17 @@ def main():
     elif choice == "Exit":
         print("Exiting the game. Goodbye!")
 
+    if hero:
+        start_adventure = questionary.confirm("Start your adventure now?").ask()
+    else:
+        print("No character created.")
 
+    if hero and start_adventure:
+        print(f"Welcome, {hero.name}! Your adventure begins now...")
+        while hero.is_alive():
+            ui.empty_line()
+            ui.text_block("Game loop would proceed here...", wrap=True)
+            break
     
 if __name__ == "__main__":
     main()

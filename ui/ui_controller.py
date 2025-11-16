@@ -63,11 +63,13 @@ class UIController:
         return f"({current}/{maximum})"
     
     def compute_health_bar(self, col_width:int, left_part: str, hp_text:str)-> int:
-        """Retourne une représentation textuelle de la barre de santé adaptée à une largeur donnée."""
         static_len = len(left_part) + len(hp_text) + 1 
         available = col_width - static_len
         return max(5, min(available, 20)) # taille min/max entre 5 et 20
 
+    def empty_line(self):
+        print("")
+    
     def render(self, lines: list[str], tick_render: float = 0, clear_before: bool = True, center: bool = False):
         if clear_before:
             self.clear()

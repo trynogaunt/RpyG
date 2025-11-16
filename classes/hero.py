@@ -1,8 +1,8 @@
 from classes import character
 from ui_console import on_enter_room
 class Hero(character.Character):
-    def __init__(self, name, health, strength, luck):
-        super().__init__(name, health, strength, luck)
+    def __init__(self, name, health, strength, luck, speed):
+        super().__init__(name, health, strength, luck, speed)
         self.current_room = None
         self.visited_rooms = set()
         self.active_effects = []
