@@ -2,7 +2,6 @@ from ui.ui_controller import UIController
 from typing import Iterable, List
 from classes.character import Character
 from classes.interface_class import ActionType
-from game.combat import Combat
 from collections import Counter
 
 ALL_ACTIONS: list[ActionType] = ["Attack", "Defend", "Inventory", "Flee"]
@@ -93,7 +92,7 @@ def build_choices_section(actions: List[str]) -> list[str]:
         choice_lines.append(f"{idx}. {action}")
     return choice_lines
 
-def build_combat_ui(ui: UIController, combat: Combat) -> list[str]:
+def build_combat_ui(ui: UIController, combat: "Combat") -> list[str]:
     lines = []
     hero = combat.hero
     enemies = combat.enemies

@@ -1,4 +1,3 @@
-from ui_console import show_combat_ui, log_attack, show_victory, show_defeat
 from ui.screens.combat_screen import build_combat_ui
 from dataclasses import dataclass
 from typing import Literal

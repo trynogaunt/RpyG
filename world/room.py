@@ -18,6 +18,11 @@ class Room:
 
     def remove_enemy(self, enemy):
         self.enemies.remove(enemy)
+        
+    def contain_enemy(self) -> bool:
+        if self.enemies:
+            return True
+        return False
 
     def __str__(self):
         return f"{self.name}: {self.description}"

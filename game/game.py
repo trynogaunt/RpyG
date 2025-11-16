@@ -1,6 +1,7 @@
 from classes.hero import Hero
 from enum import Enum, auto
 from world.build_world import build_world
+#from game import combat
 
 from ui.screens.room_screen import build_room_screen, choices_section as room_choices_section, move_choices_section
 
@@ -19,6 +20,8 @@ class Game:
         self.was_loaded = False
         self.world = None  
         self.last_message = ""
+        self.current_combat = None
+        self.discord_presence = None
 
     def run(self):
         if self.was_loaded:
@@ -28,12 +31,13 @@ class Game:
             self.world = build_world()
             self.hero.current_room = self.world.zones[0].rooms[0]
         while self.hero.is_alive() and self.state != GameState.EXIT:
+            if self.discord_presence:
+                self.discord_presence.update(self)
             match self.state:
                 case GameState.EXPLORING:
                     self.actions = ["Look Around", "Move", "Inventory", "Pause Game", "Exit Game"]
                     self.handle_exploration()
                 case GameState.IN_BATTLE:
-                    self.ui.text_block("You are in battle!", wrap=True)
                     self.handle_combat()
                 case GameState.PAUSED:
                     self.ui.text_block("Game is paused.", wrap=True)
@@ -55,13 +59,18 @@ class Game:
         self.ui.render(build_room_screen(self.ui, self.hero, actions=self.actions, message=self.last_message))
         choice = room_choices_section(self.actions)
         if choice == "Look Around":
-            self.ui.text_block(f"You look around the room: {room.description}", wrap=True)
+            if self.hero.current_room.contain_enemy():
+                self.last_message = "There are enemies here! Prepare for battle."
+                self.state = GameState.IN_BATTLE
+                return
+            else:
+                self.last_message = "You look around but find nothing of interest."
         elif choice == "Move":
-            self.ui.render(build_room_screen(self.ui, self.hero, actions=self.actions, message=self.last_message))
-            directions = list(room.exits.keys())
+            directions = list(room.exits.keys()) + ["cancel"]
             direction = move_choices_section(directions)
-            if direction is None:
-                self.ui.text_block("No direction chosen.", wrap=True)
+            
+            if direction is None or direction == "cancel":
+                self.last_message = "You decided not to move."
                 return
             else:
                 if room.exits.get(direction) is None:
@@ -81,6 +90,9 @@ class Game:
             self.state = GameState.EXIT
             
     def handle_combat(self):
+        #ombat = combat.Combat(self.hero, self.hero.current_room.get_enemies())
+        #self.current_combat = combat
+        #combat.run()
         pass
     def handle_pause(self):
         pass
