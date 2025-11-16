@@ -1,7 +1,7 @@
 from ui.screens.main_menu_screen import splash, main_menu_choice
 from ui.ui_controller import UIController
 from classes.hero import Hero
-from game import creation_flow
+from game import creation_flow, game
 import questionary
 
 
@@ -26,12 +26,8 @@ def main():
         print("No character created.")
 
     if hero and start_adventure:
-        print(f"Welcome, {hero.name}! Your adventure begins now...")
-        while hero.is_alive():
-            ui.empty_line()
-            ui.text_block("Game loop would proceed here...", wrap=True)
-            break
-    
+        game_instance = game.Game(ui, hero)
+        game_instance.run()
 if __name__ == "__main__":
     main()
     
