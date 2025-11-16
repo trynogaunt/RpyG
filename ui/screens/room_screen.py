@@ -13,12 +13,21 @@ def choices_section(actions: list[str]) -> str:
     ).ask()
     return choice
 
+def move_choices_section(directions: list[str]) -> str:
+    choice = questionary.select(
+        "Choose a direction to move:",
+        choices=directions
+    ).ask()
+    return choice
 
-def build_room_screen(ui: UIController, hero: Character, actions: list[str]) -> list[str]:
+
+def build_room_screen(ui: UIController, hero: Character, actions: list[str], message: str = "") -> list[str]:
     lines = []
     if hero.current_room:
         lines.extend(room_header(ui, hero.current_room.name, hero.current_room.description))
         lines.extend(ui.sub_header(hero.current_room.description))
     else:
         lines.append("You are nowhere. The game seems to be broken.")
+    if message:
+        lines.append(message)
     return lines

@@ -10,7 +10,6 @@ class Hero(character.Character):
     def change_room(self, new_room, cause="move"):
         if self.current_room != new_room:
             self.current_room = new_room
-            on_enter_room(self)
     
     def move(self, direction):
         if self.current_room and direction in self.current_room.exits:

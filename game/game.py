@@ -1,7 +1,8 @@
 from classes.hero import Hero
-from classes.room import Room
 from enum import Enum, auto
-from ui.screens.room_screen import build_room_screen, choices_section as room_choices_section
+from world.build_world import build_world
+
+from ui.screens.room_screen import build_room_screen, choices_section as room_choices_section, move_choices_section
 
 class GameState(Enum):
     EXPLORING = auto()
@@ -16,14 +17,16 @@ class Game:
         self.state = GameState.EXPLORING
         self.actions = []
         self.was_loaded = False
+        self.world = None  
+        self.last_message = ""
 
     def run(self):
         if self.was_loaded:
             self.ui.text_block(f"Welcome back, {self.hero.name}! Resuming your adventure...", wrap=True)
         else:
             self.ui.text_block(f"Welcome, {self.hero.name}! Your adventure begins now...", wrap=True)
-            room = Room("Starting Room", "You find yourself in a dimly lit room with stone walls.")
-            self.hero.current_room = room
+            self.world = build_world()
+            self.hero.current_room = self.world.zones[0].rooms[0]
         while self.hero.is_alive() and self.state != GameState.EXIT:
             match self.state:
                 case GameState.EXPLORING:
@@ -49,12 +52,23 @@ class Game:
             self.ui.text_block("You are nowhere. The game seems to be broken.", wrap=True)
             self.state = GameState.EXIT
             return
-        self.ui.render(build_room_screen(self.ui, self.hero, actions=self.actions))
+        self.ui.render(build_room_screen(self.ui, self.hero, actions=self.actions, message=self.last_message))
         choice = room_choices_section(self.actions)
         if choice == "Look Around":
             self.ui.text_block(f"You look around the room: {room.description}", wrap=True)
         elif choice == "Move":
-            direction = questionary.text("Enter direction to move (e.g., north, south):").ask()
+            self.ui.render(build_room_screen(self.ui, self.hero, actions=self.actions, message=self.last_message))
+            directions = list(room.exits.keys())
+            direction = move_choices_section(directions)
+            if direction is None:
+                self.ui.text_block("No direction chosen.", wrap=True)
+                return
+            else:
+                if room.exits.get(direction) is None:
+                    self.last_message = "You can't go that way."
+                else:
+                    self.last_message = f"You move {direction}."
+                    self.hero.move(direction)
             if self.hero.move(direction):
                 self.ui.text_block(f"You move {direction}.", wrap=True)
             else:
