@@ -1,4 +1,5 @@
 from ui_console import show_combat_ui, log_attack, show_victory, show_defeat
+from ui.screens.combat_screen import build_combat_ui
 from dataclasses import dataclass
 from typing import Literal
 from classes.hero import Hero
@@ -44,7 +45,8 @@ class Combat:
         self.combatants = already_played + yet_to_play
 
     def hero_phase(self):
-        choice = show_combat_ui(self.hero, self.enemies, [log.message for log in self.log], self.actions)
+
+        choice = build_combat_ui(self.hero, self.enemies, [log.message for log in self.log], self.actions)
 
     def enemy_phase(self, enemy: Enemy):
         damage = enemy.attack(self.hero)

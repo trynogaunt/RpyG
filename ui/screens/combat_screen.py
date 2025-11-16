@@ -4,7 +4,6 @@ from classes.character import Character
 from classes.interface_class import ActionType
 from game.combat import Combat
 from collections import Counter
-import questionary
 
 ALL_ACTIONS: list[ActionType] = ["Attack", "Defend", "Inventory", "Flee"]
 
@@ -83,6 +82,13 @@ def build_log_section(ui, logs: List[str], max_lines: int = 5) -> list[str]:
 
 def build_choices_section(actions: List[str]) -> list[str]:
     choice_lines = ["Available Actions:"]
+
+    choice = questionary.select(
+        "Choose an action:",
+        choices=actions
+    ).ask()
+
+
     for idx, action in enumerate(actions, start=1):
         choice_lines.append(f"{idx}. {action}")
     return choice_lines
@@ -101,7 +107,5 @@ def build_combat_ui(ui: UIController, combat: Combat) -> list[str]:
     lines.extend(ui.sub_header(" Combat Log "))
     lines.extend(build_log_section(ui, logs))
     lines.append("")  # Empty line for spacing
-    lines.extend(build_choices_section(actions))
-
     return lines
     

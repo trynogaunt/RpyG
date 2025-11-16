@@ -1,6 +1,7 @@
 import os
 import textwrap
 import questionary
+import time
 
 class UIController:
     def __init__(self, width=80, border_char="=", padding=2):
@@ -67,8 +68,13 @@ class UIController:
         available = col_width - static_len
         return max(5, min(available, 20)) # taille min/max entre 5 et 20
 
-    def render(self, lines: list[str]):
+    def render(self, lines: list[str], tick_render: float = 0, clear_before: bool = True, center: bool = False):
+        if clear_before:
+            self.clear()
         for line in lines:
+            if center:
+                line = line.center(self.width)
+            time.sleep(tick_render)
             print(line)
 
 if __name__ == "__main__":

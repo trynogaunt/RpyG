@@ -1,5 +1,6 @@
 from ui.ui_controller import UIController
 from  ui.screens.combat_screen import ennemy_group_label_names, build_combat_ui
+import questionary
 
 
 def test_health_bar(ui):
@@ -180,3 +181,7 @@ if __name__ == "__main__":
     print("Render function tests passed.")
     print("All tests passed.")
     test_real_render(ui)
+    choices = questionary.select(
+        "Select an option to finish tests:",
+        choices=["Exit"]
+    ).ask()
