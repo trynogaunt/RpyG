@@ -51,7 +51,14 @@ class UIController:
             choices=options
         ).ask()
         return choice
-        
+
+    def health_bar(self, current:int, maximum:int, bar_length:int=20) -> str:
+        """Retourne une représentation textuelle de la barre de santé."""
+        health_ratio = current / maximum
+        filled_length = int(bar_length * health_ratio)
+        bar = "█" * filled_length + "░" * (bar_length - filled_length)
+        return f"{bar}"
+
 if __name__ == "__main__":
     ui = UIController()
     ui.header("Welcome to the Game")
