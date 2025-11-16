@@ -1,145 +1,148 @@
 # Python RPG Game
 
-[![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue?logo=python&logoColor=white)](#)
+[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](#)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## Table of Contents
+- Description
+- Installation
+- Features
+- Project Structure
+- Roadmap
+- Contribution
+- License
+- Author
 
-- [Description](#description)
-- [Installation](#installation)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Usage](#usage)
-- [Technologies](#technologies)
-- [Roadmap](#roadmap)
-- [Contribution](#contribution)
-- [License](#license)
-- [Author](#author)
+---
 
 ## Description
 
-An RPG (Role-Playing Game) developed in Python with a combat system, inventory management, and character progression.
+A text-based RPG game made in Python with a console UI.  
+The player creates a hero and explores a world made of interconnected rooms.
 
-This project is a text-based RPG game where the player embodies a hero who can:
-- Fight enemies
-- Manage inventory of weapons, armor, and consumables
-- Progress in level and improve statistics
-- Equip different types of items
+🎯 Current goal: build a **solid foundation** for an extensible RPG  
+(exploration, combat, quests, equipment, saving).
+
+Already implemented:
+
+- Interactive main menu
+- Character creation with stat allocation
+- Styled console UI through a custom renderer
+- Structured game loop using a state machine
+- First playable room with basic exploration actions
+
+---
 
 ## Installation
 
-1. Clone this repository:
-```bash
-git clone <https://github.com/trynogaunt/RpyG>
-cd "RpyG"
-```
+Clone the repository:
 
-2. Make sure you have Python 3.7+ installed:
-```bash
-python --version
-```
+    git clone https://github.com/trynogaunt/RpyG
+    cd RpyG
 
-3. Launch the game:
-```bash
-python app.py
-```
+Run the game:
+
+    python app.py
+
+> ⚠️ Requires Python **3.10+** (usage of match/case syntax)
+
+---
 
 ## Features
 
-### Base Classes
-- **Hero**: Player character with statistics (health, strength, defense)
-- **Enemy**: Enemies with combat AI
-- **Item System**: Complete object system
-  - Weapons (variable damage according to strength)
-  - Armor (protection)
-  - Consumables (healing potions, etc.)
+### ✔ Implemented
 
-### Combat System
-- Turn-based combat
-- Damage calculation based on statistics
-- Dodge and critical hit system
+| System | Details |
+|--------|---------|
+| Character Creation | Name + stat distribution (Health, Strength, Speed, Luck) |
+| Console UI | Styled rendering + interactive menus |
+| Game Loop | States: Exploration / Menu / Pause / Future Combat / Exit |
+| World System | Starting room + contextual actions |
+| Modular Architecture | Split into Game / World / UI / Character classes |
 
-### Inventory
-- Item management
-- Equipment of weapons and armor
-- Use of consumables
+---
+
+### 🔜 In development
+
+- Room-to-room navigation (N, S, E, W)
+- Context-aware actions based on current room
+- (Re)implementation of the combat system
+- Inventory + equipment
+- Save / Load system
+
+---
 
 ## Project Structure
 
-```
-RPyG/
-├── classes/
-│   ├── hero.py          # Hero Class
-│   ├── enemy.py         # Enemy Class  
-│   ├── Item.py          # Object System
-│   └── inventory.py     # Inventory Management
-├── main.py              # Game entry point
-├── README.md
-└── .gitignore
-```
+    RpyG/
+    ├── app.py                      # Game entry point (menu + launch Game)
+    ├── game/
+    │   ├── game.py                 # Game class + main loop (state machine)
+    │   └── creation_flow.py        # Character creation process
+    ├── world/
+    │   ├── room.py                 # Room class
+    │   ├── world.py                # World container
+    │   └── build_world.py          # First playable map
+    ├── classes/
+    │   ├── character.py            # Base character class
+    │   ├── hero.py                 # Hero (stats + state + room position)
+    │   ├── enemy.py                # Enemy class (work-in-progress)
+    │   └── interface_class.py      # CharacterCreationState class
+    ├── ui/
+    │   ├── ui_controller.py        # Console renderer
+    │   └── screens/                # Menus & creation screens
+    └── README.md
 
-## Usage
+> Legacy inventory/enemy systems are currently being refactored.
 
-```python
-# Example of creating a hero
-from classes.hero import Hero
-from classes.Item import Weapon
-
-hero = Hero("Adventurer", 100, 20, 10)
-sword = Weapon("Steel Sword", "A sharp sword", 15, 0.1)
-hero.attack(enemy)
-```
-
-## Technologies
-
-- **Python 3.7+**
-- Object-Oriented Programming (OOP)
-- Modular architecture with separate classes
+---
 
 ## Roadmap
 
-### Current — Playable Prototype
-- [x] Basic character creation
-- [] Weapon & armor system
-- [x] Turn-based combat
-- [] Minimal inventory
+### 🧱 Phase 1 — Exploration (current)
+- [x] Character creation
+- [x] Game loop with state machine
+- [x] Starting room spawn
+- [ ] Movement between rooms (N/S/E/W)
+- [ ] Random encounters on movement
 
-### Next Steps — Combat Enhancements
-- [ ] Dodge system based on Speed
-- [ ] Critical hit system based on Luck
-- [x] Two-handed weapon handling
-- [ ] Improved battle UI (interactive menus)
+### ⚔️ Phase 2 — Combat & Equipment
+- [ ] Turn-based combat
+- [ ] Damage calculation based on stats (Strength/Luck)
+- [ ] Equipment + inventory
+- [ ] Simple loot
 
-### Loot & Progression
-- [ ] Enemy variety + random loot system
-- [ ] Level progression & skill upgrades
-- [ ] Equipment upgrades
-
-### Quality of Life
+### 💾 Phase 3 — Persistence & QoL
 - [ ] Save / Load system
-- [x] Combat log
-- [ ] Unit testing
+- [ ] Action / event log
+- [ ] Unit tests
 
-### Future ideas
-- [ ] Magic skills
-- [ ] Zone exploration
-- [ ] Narrative events
-- [ ] Rogue-lite mode (optional)
+### 🔮 Future ideas
+- Procedural dungeon generation
+- Quest / NPC system
+- Skills and talent trees
+- Optional rogue-lite mode
+
+---
 
 ## Contribution
 
-Contributions are welcome! Feel free to:
-1. Fork the project
-2. Create a branch for your feature
+Contributions are welcome 🎯
+
+1. Fork the repository
+2. Create your feature branch
 3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+4. Open a Pull Request 🚀
+
+---
 
 ## License
 
-This project is under the MIT license. See the `LICENSE` file for more details.
+Licensed under MIT — see `LICENSE` for details.
+
+---
 
 ## Author
 
-Developed with ❤️ in Python
-[MIT License](LICENSE)
+Made with ❤️ in Python  
+by **Trynogaunt**
