@@ -1,6 +1,7 @@
-import questionary
+from typing import Iterable, List
+from ui import toolkit
 
-def splash() -> list[str]:
+def splash(ui) -> list[str]:
     STONE = "\033[37m"
     GOLD = "\033[33m"
     RESET = "\033[0m"
@@ -54,6 +55,7 @@ def splash() -> list[str]:
     wY = max(len(line) for line in Y)
     wG = max(len(line) for line in G)
 
+
     lines: list[str] = []
     for i in range(len(R)):
         line = (
@@ -67,15 +69,3 @@ def splash() -> list[str]:
     lines.append("")      # petite ligne vide
     lines.append(slogan)
     return lines
-
-def main_menu_choice() -> str:
-    choice = questionary.select(
-        "Main Menu - Choose an option:",
-        choices=[
-            "Start New Game",
-            "Load Game",
-            "Settings",
-            "Exit"
-        ]
-    ).ask()
-    return choice

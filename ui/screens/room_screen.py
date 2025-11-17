@@ -1,31 +1,11 @@
-from ui.ui_controller import UIController
 from typing import Iterable, List
-from classes.character import Character
-import questionary
-
-def room_header(ui, room_name: str, room_description: str) -> list[str]:
-    return ui.header(room_name)
-
-def choices_section(actions: list[str]) -> str:
-    choice = questionary.select(
-        "What would you like to do?",
-        choices=actions
-    ).ask()
-    return choice
-
-def move_choices_section(directions: list[str]) -> str:
-    choice = questionary.select(
-        "Choose a direction to move:",
-        choices=directions
-    ).ask()
-    return choice
+from ui import toolkit
 
 
-def build_room_screen(ui: UIController, hero: Character, actions: list[str], message: str = "") -> list[str]:
-    lines = []
-    if hero.current_room:
-        lines.extend(room_header(ui, hero.current_room.name, hero.current_room.description))
-        lines.extend(ui.sub_header(hero.current_room.description))
+def build_room_screen(ui, room, message: str = "") -> list[str]:
+    lines : List[str] = []
+    if room:
+        lines.extend(toolkit.room_header(ui, room.name, room.description))
     else:
         lines.append("You are nowhere. The game seems to be broken.")
     if message:

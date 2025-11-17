@@ -1,11 +1,3 @@
-from ui.ui_controller import UIController
-from typing import Iterable, List
-from classes.character import Character
-from classes.interface_class import ActionType
-from collections import Counter
-
-ALL_ACTIONS: list[ActionType] = ["Attack", "Defend", "Inventory", "Flee"]
-
 def ennemy_group_label_names(enemies: Iterable["Character"]) -> str:
     enemis = list(enemies)
     if not enemis:

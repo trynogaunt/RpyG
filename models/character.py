@@ -1,5 +1,7 @@
 from classes import inventory
-from classes.interface_class import Damage
+from models.damage import Damage
+from typing import TYPE_CHECKING
+from events.response import DamageResult
 
 class Character:
     def __init__(self, name, health=10, strength=1, luck=0, speed=1):
@@ -12,17 +14,24 @@ class Character:
         self.speed = speed
         self.inventory = inventory.Inventory()
     
-    def attack(self, target):
+    def perform_attack(self, target):
         weapons = self.inventory.get_equipped_weapons()
         if not weapons:
-            damage = Damage(self.strength, "physical", self.name)
+            damage = Damage(self.strength, "physical", self.name, is_critical=False, is_dot=False, ignore_defense=False)
             actual_damage = target.take_damage(damage)
-            return actual_damage
         else:
             for weapon in weapons:
                 damage = weapon.make_damage(self, target)
                 actual_damage = target.take_damage(damage)
-                return actual_damage
+        result = DamageResult(
+            attacker_id=self.name,
+            target_id=target.name,
+            damage=damage,
+            final_amount=actual_damage,
+            target_was_alive=target.health + actual_damage > 0,
+            target_is_dead=target.health <= 0
+        )
+        return result
 
     def apply_effect(self, effect):
         self.effects.append(effect)

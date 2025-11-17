@@ -2,6 +2,8 @@ import os
 import textwrap
 import questionary
 import time
+from events.response import GameResponse, ResponseType
+from ui.screens import main_menu_screen
 
 class UIController:
     def __init__(self, width=80, border_char="=", padding=2):
@@ -69,14 +71,31 @@ class UIController:
 
     def empty_line(self):
         print("")
+        
+    def choose(self, prompt:str, choices:list[str], upper: bool = False) -> str:
+        return questionary.select(
+            prompt,
+            choices=choices,
+        ).ask()
     
-    def render(self, lines: list[str], tick_render: float = 0, clear_before: bool = True, center: bool = False):
-        if clear_before:
-            self.clear()
+    def confirm(self, prompt:str) -> bool:
+        return questionary.confirm(prompt).ask()
+    
+    def render(self, response: GameResponse):
+        self.clear()
+        match response.type:
+            case ResponseType.MAIN_MENU:
+                actions = response.payload.get("actions", [])
+                lines = main_menu_screen.splash(self)
+            case ResponseType.CHARACTER_CREATION:
+                lines = creation_screen.build_creation_screen(self, response.payload.get("steps", []), response.message)
+            case ResponseType.IN_COMBAT:
+                lines = combat_screen.build_combat_screen(self, response.payload.get("combat"), response.message)
+            case ResponseType.ROOM_ENTERED | ResponseType.MOVE_BLOCKED:
+                 lines = room_screen.build_room_screen(self, response.payload.get("to"), response.message)
+            case _:
+                lines = [response.message]
         for line in lines:
-            if center:
-                line = line.center(self.width)
-            time.sleep(tick_render)
             print(line)
 
 if __name__ == "__main__":

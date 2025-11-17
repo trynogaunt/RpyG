@@ -1,9 +1,8 @@
-from classes.hero import Hero
+from models.hero import Hero
 from enum import Enum, auto
 from world.build_world import build_world
 #from game import combat
-
-from ui.screens.room_screen import build_room_screen, choices_section as room_choices_section, move_choices_section
+from events.response import GameResponse, ResponseType
 
 class GameState(Enum):
     EXPLORING = auto()
@@ -11,12 +10,13 @@ class GameState(Enum):
     PAUSED = auto()
     MENU = auto()
     EXIT = auto()
+    MAIN_MENU = auto()
+    CHARACTER_CREATION = auto()
 class Game:
-    def __init__(self, ui: "UIController", hero: Hero):
+    def __init__(self, ui: "UIController"):
         self.ui = ui
-        self.hero = hero
-        self.state = GameState.EXPLORING
-        self.actions = []
+        self.hero = None
+        self.state = GameState.MAIN_MENU
         self.was_loaded = False
         self.world = None  
         self.last_message = ""
@@ -24,64 +24,61 @@ class Game:
         self.discord_presence = None
 
     def run(self):
-        if self.was_loaded:
-            self.ui.text_block(f"Welcome back, {self.hero.name}! Resuming your adventure...", wrap=True)
-        else:
-            self.ui.text_block(f"Welcome, {self.hero.name}! Your adventure begins now...", wrap=True)
-            self.world = build_world()
-            self.hero.current_room = self.world.zones[0].rooms[0]
-        while self.hero.is_alive() and self.state != GameState.EXIT:
+        while self.hero == None or self.hero.is_alive() and self.state != GameState.EXIT:
             if self.discord_presence:
                 self.discord_presence.update(self)
             match self.state:
+                case GameState.MAIN_MENU:
+                    self.handle_main_menu()
+                case GameState.CHARACTER_CREATION:
+                    self.handle_character_creation()
+                case GameState.MENU:
+                    self.handle_menu()
                 case GameState.EXPLORING:
-                    self.actions = ["Look Around", "Move", "Inventory", "Pause Game", "Exit Game"]
                     self.handle_exploration()
                 case GameState.IN_BATTLE:
                     self.handle_combat()
                 case GameState.PAUSED:
-                    self.ui.text_block("Game is paused.", wrap=True)
                     self.handle_pause()
                 case GameState.MENU:
-                    self.ui.text_block("In game menu.", wrap=True)
                     self.handle_menu()
                 case GameState.EXIT:
-                    self.ui.text_block("Exiting the game. Goodbye!", wrap=True)
                     self.handle_exit()
                     break
-                
-    def handle_exploration(self):
-        room = self.hero.current_room
-        if room is None:
-            self.ui.text_block("You are nowhere. The game seems to be broken.", wrap=True)
+        
+    def handle_main_menu(self):
+    
+        response = GameResponse(
+            message="",
+            type=ResponseType.MAIN_MENU,
+            payload={"type": "splash_screen"}
+        )
+        self.ui.render(response)
+        choice = self.ui.choose("", ["Start New Game", "Load Game", "Exit"])
+        if choice == "Start New Game":
+            self.state = GameState.CHARACTER_CREATION
+        elif choice == "Load Game":
+            #self.load("savefile.sav")
+            self.state = GameState.EXPLORING
+        elif choice == "Exit":
             self.state = GameState.EXIT
-            return
-        self.ui.render(build_room_screen(self.ui, self.hero, actions=self.actions, message=self.last_message))
-        choice = room_choices_section(self.actions)
+    
+    def handle_character_creation(self):
+        pass
+        
+    def handle_exploration(self):
         if choice == "Look Around":
-            if self.hero.current_room.contain_enemy():
-                self.last_message = "There are enemies here! Prepare for battle."
-                self.state = GameState.IN_BATTLE
-                return
-            else:
-                self.last_message = "You look around but find nothing of interest."
+            pass
         elif choice == "Move":
-            directions = list(room.exits.keys()) + ["cancel"]
-            direction = move_choices_section(directions)
-            
-            if direction is None or direction == "cancel":
-                self.last_message = "You decided not to move."
-                return
+            move_response = self.ui.present_choices("Choose a direction to move:", move_choices_section(self.hero.current_room))
+            if move_response in self.hero.current_room.exits:
+                response = self.move_hero(move_response)
+                self.ui.text_block(response.message, wrap=True)
+                if "enemies" in response.payload and response.payload["enemies"]:
+                    self.ui.text_block("You encounter enemies!", wrap=True)
+                    self.state = GameState.IN_BATTLE
             else:
-                if room.exits.get(direction) is None:
-                    self.last_message = "You can't go that way."
-                else:
-                    self.last_message = f"You move {direction}."
-                    self.hero.move(direction)
-            if self.hero.move(direction):
-                self.ui.text_block(f"You move {direction}.", wrap=True)
-            else:
-                self.ui.text_block("You can't move in that direction.", wrap=True)
+                self.ui.text_block("Invalid direction.", wrap=True)
         elif choice == "Inventory":
             self.ui.text_block("You check your inventory.", wrap=True)
         elif choice == "Pause Game":
@@ -105,3 +102,35 @@ class Game:
     def load(self, save_file: str):
         self.was_loaded = True
         pass
+    
+    
+    def move_hero(self, direction) -> GameResponse:
+        if self.hero.current_room and direction in self.hero.current_room.exits:
+            if self.hero.current_room.exits[direction] is None:
+                return GameResponse(
+                    message=f"You cannot go {direction} from here.",
+                    type=ResponseType.MOVE_BLOCKED
+                )
+            else:
+                new_room = self.hero.current_room.exits[direction]
+                return change_room(self, new_room)
+        else:
+            return GameResponse(
+                message=f"There is no exit to the {direction}.",
+                type=ResponseType.MOVE_BLOCKED
+            )
+    
+    def change_room(self, new_room) -> GameResponse:
+        old_room = self.hero.current_room
+        self.hero.current_room = new_room
+        response = GameResponse(
+            message=f"You move from {old_room.name} to {new_room.name}.",
+            type=ResponseType.ROOM_ENTERED,
+            tags=["move", "room_change"],
+            payload={"from": old_room, 
+                     "to": new_room,
+                     "enemies": new_room.get_enemies(),
+                     "exits": new_room.exits
+                     }
+        )
+        return response

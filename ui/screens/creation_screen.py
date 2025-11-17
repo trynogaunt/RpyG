@@ -1,5 +1,3 @@
-import questionary
-
 def creation_header(ui: "UIController") -> list[str]:
     title = "Character Creation"
     return ui.header(title)
