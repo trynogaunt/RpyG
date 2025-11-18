@@ -35,5 +35,5 @@ class CharacterCreationState:
     speed: int = 1
     points_to_spend: int = 5
     step: str = "name"  
-    
+    error : str = ""
 

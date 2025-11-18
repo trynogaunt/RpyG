@@ -28,6 +28,7 @@ class Game:
         self.current_combat = None
         self.discord_presence = None
         self.state_creation = CharacterCreationState()
+        self.error_message = ""
 
     def run(self):
         while (
@@ -75,7 +76,10 @@ class Game:
 
         if self.state_creation.step == "name":
             self.state_creation.name = self.ui.ask_text("Enter your character's name:")
-            self.state_creation.step = "attributes"
+            if self.state_creation.name.strip() == "":
+                self.state_creation.error = "Name cannot be empty."
+            else:
+                self.state_creation.step = "attributes"
         elif self.state_creation.step == "attributes" and self.state_creation.points_to_spend > 0:
             attr = response.payload["attributes"]
             choices = [f"{a['label']}: {a['value']}" for a in attr]
@@ -213,7 +217,9 @@ class Game:
                 {"id": "luck", "value": state.luck, "label": "Luck"},
                 {"id": "speed", "value": state.speed, "label": "Speed"},
             ],
+            "error": state.error,
         }
+        state.error = ""
         return GameResponse(
             message=msg, type=ResponseType.CHARACTER_CREATION, payload=payload
         )

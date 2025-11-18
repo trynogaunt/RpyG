@@ -99,6 +99,10 @@ class UIController:
                  lines = room_screen.build_room_screen(self, response)
             case ResponseType.ROOM_ENTERED:
                 lines = room_screen.build_room_screen(self, response)
+            case ResponseType.SYSTEM:
+                match response.payload.get("screen"):
+                    case "character_creation":
+                        lines = creation_screen.build_creation_menu(self, response)
             case _:
                 lines = [response.message]
         for line in lines:

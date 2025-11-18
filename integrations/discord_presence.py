@@ -22,12 +22,13 @@ class DiscordPresence:
         elif state == GameState.CHARACTER_CREATION.name:
             state_text = "Creating Character"
             details = "Designing a new hero"
-        elif state == GameState.MENU.name or state == GameState.EXPLORING.name:
+        elif state == GameState.EXPLORING.name:
             hero = game.hero
             room = hero.current_room
+            zone = hero.current_zone
             state = game.state
             state_text = f"Exploring {room.name}" if room else "Exploring the unknown"
-            details = f"{hero.name} – HP {hero.health}/{hero.max_health}"
+            details = f"{hero.name} – {zone.name}" if zone else f"{hero.name} – Exploring"
         elif state == GameState.IN_BATTLE.name:
             hero = game.hero
             combat = game.current_combat
