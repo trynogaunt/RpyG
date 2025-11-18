@@ -5,6 +5,7 @@ class Hero(Character):
     def __init__(self, name, health, strength, luck, speed):
         super().__init__(name, health, strength, luck, speed)
         self.current_room = None
+        self.current_zone = None
         self.visited_rooms = set()
         self.active_effects = []
 

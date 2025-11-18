@@ -3,7 +3,7 @@ import textwrap
 import questionary
 import time
 from events.response import GameResponse, ResponseType
-from ui.screens import main_menu_screen, creation_screen
+from ui.screens import main_menu_screen, creation_screen, room_screen
 
 class UIController:
     def __init__(self, width=80, border_char="=", padding=2):
@@ -95,8 +95,10 @@ class UIController:
                 lines = creation_screen.build_creation_menu(self,response)
             case ResponseType.IN_COMBAT:
                 lines = combat_screen.build_combat_screen(self, response.payload.get("combat"), response.message)
-            case ResponseType.ROOM_ENTERED | ResponseType.MOVE_BLOCKED:
-                 lines = room_screen.build_room_screen(self, response.payload.get("to"), response.message)
+            case ResponseType.EXPLORATION:
+                 lines = room_screen.build_room_screen(self, response)
+            case ResponseType.ROOM_ENTERED:
+                lines = room_screen.build_room_screen(self, response)
             case _:
                 lines = [response.message]
         for line in lines:

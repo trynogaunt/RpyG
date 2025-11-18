@@ -123,35 +123,24 @@ class Game:
                     luck=self.state_creation.luck,
                     speed=self.state_creation.speed,
                 )
-                self.world = build_world()
-                self.hero.current_room = self.world.starting_room
+                self.build_world()
                 self.state = GameState.EXPLORING
             else:
                 self.state_creation = CharacterCreationState()
 
     def handle_exploration(self):
-        if choice == "Look Around":
-            pass
-        elif choice == "Move":
-            move_response = self.ui.present_choices(
-                "Choose a direction to move:",
-                move_choices_section(self.hero.current_room),
-            )
-            if move_response in self.hero.current_room.exits:
-                response = self.move_hero(move_response)
-                self.ui.text_block(response.message, wrap=True)
-                if "enemies" in response.payload and response.payload["enemies"]:
-                    self.ui.text_block("You encounter enemies!", wrap=True)
-                    self.state = GameState.IN_BATTLE
-            else:
-                self.ui.text_block("Invalid direction.", wrap=True)
-        elif choice == "Inventory":
-            self.ui.text_block("You check your inventory.", wrap=True)
-        elif choice == "Pause Game":
-            self.state = GameState.PAUSED
-        elif choice == "Exit Game":
-            self.state = GameState.EXIT
-
+        response = GameResponse(
+            message="", 
+            type=ResponseType.EXPLORATION,
+            payload={"room": self.hero.current_room }
+        )
+        self.ui.render(response)
+        choice = self.ui.choose("What do you want to do?", ["Move", "Look Around", "Inventory", "Exit"])
+        if choice == "Move":
+            directions = list(self.hero.current_room.exits.keys())
+            direction = self.ui.choose("Choose a direction to move:", directions)
+            move_response = self.move_hero(direction)
+            self.ui.render(move_response)
     def handle_combat(self):
         # ombat = combat.Combat(self.hero, self.hero.current_room.get_enemies())
         # self.current_combat = combat
@@ -182,7 +171,7 @@ class Game:
                 )
             else:
                 new_room = self.hero.current_room.exits[direction]
-                return change_room(self, new_room)
+                return self.change_room(new_room)
         else:
             return GameResponse(
                 message=f"There is no exit to the {direction}.",
@@ -190,17 +179,18 @@ class Game:
             )
 
     def change_room(self, new_room) -> GameResponse:
-        old_room = self.hero.current_room
-        self.hero.current_room = new_room
+        if new_room["type"] == "room":
+            self.hero.current_room = self.hero.current_zone.get_room_by_id(new_room["target"])
+        elif new_room["type"] == "zone":
+            self.hero.current_zone = self.world.get_zone(new_room["target"])
+            self.hero.current_room = self.hero.current_zone.get_room_by_id(new_room["entry_room_id"])
+            
         response = GameResponse(
-            message=f"You move from {old_room.name} to {new_room.name}.",
+            message=f"You move to {self.hero.current_room.name}.",
             type=ResponseType.ROOM_ENTERED,
             tags=["move", "room_change"],
             payload={
-                "from": old_room,
-                "to": new_room,
-                "enemies": new_room.get_enemies(),
-                "exits": new_room.exits,
+                "room": self.hero.current_room,
             },
         )
         return response
@@ -241,3 +231,5 @@ class Game:
 
     def build_world(self):
         self.world = load_world("world/zones")
+        self.hero.current_zone = self.world.get_world_starting_zone()
+        self.hero.current_room = self.world.get_world_starting_room()

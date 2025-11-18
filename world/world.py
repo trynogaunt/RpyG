@@ -20,5 +20,20 @@ class World:
             if zone.id == zone_id:
                 return zone
         raise ValueError(f"Zone with id {zone_id} not found")
+        
+    
+    def get_world_starting_zone(self) -> 'Zone':
+        return self.get_zone(self.starting_zone_id)
+    
+    def get_world_starting_room(self) -> 'Room':
+        starting_zone = self.get_zone(self.starting_zone_id)
+        for room in starting_zone.rooms:
+            if room.spawnpoint:
+                return room
+        raise ValueError("No spawnpoint room found in starting zone")
+    
+    def __str__(self):
+        return f"World(name={self.name}, zones={len(self.zones)})"
+    
     
     

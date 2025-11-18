@@ -12,7 +12,11 @@
                 "north": {"type": "room", "target": "blacksmith_shop"},
                 "east": {"type": "room", "target": "tavern"},
                 "south": {"type": "room", "target": "village_gate"}
-            }
+            },
+            "enemies": [],
+            "items": [],
+            "npc": [],
+            "spawnpoint": true
         },
         {
             "id": "blacksmith_shop",
@@ -20,7 +24,11 @@
             "description": "A small shop where the blacksmith forges weapons and armor.",
             "exits": {
                 "south": {"type": "room", "target": "village_square"}
-            }
+            },
+            "enemies": [],
+            "items": [],
+            "npc": [],
+            "spawnpoint": false
         },
         {
             "id": "tavern",
@@ -28,7 +36,11 @@
             "description": "A lively tavern where adventurers gather to share stories and drinks.",
             "exits": {
                 "west": {"type": "room", "target": "village_square"}
-            }
+            },
+            "enemies": [],
+            "items": [],
+            "npc": [],
+            "spawnpoint": false
         },
         {
             "id": "village_gate",
@@ -37,7 +49,11 @@
             "exits": {
                 "north": {"type": "room", "target": "village_square"},
                 "south": {"type": "zone", "target": "flooded_cave", "entry_room_id": "entrance"}
-            }
+            },
+            "enemies": [],
+            "items": [],
+            "npc": [],
+            "spawnpoint": false
         }
     ]
 }

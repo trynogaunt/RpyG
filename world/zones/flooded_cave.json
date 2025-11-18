@@ -10,7 +10,11 @@
             "description": "The entrance to the cave, where light from outside barely reaches.",
             "exits": {
                 "north": {"type": "room", "target": "water_pool"}
-            }
+            },
+            "enemies": [],
+            "items": [],
+            "npc": [],
+            "spawnpoint": false
         },
         {
             "id": "water_pool",
@@ -19,7 +23,11 @@
             "exits": {
                 "south": {"type": "room", "target": "entrance"},
                 "east": {"type": "room", "target": "narrow_passage"}
-            }
+            },
+            "enemies": [],
+            "items": [],
+            "npc": [],
+            "spawnpoint": false
         },
         {
             "id": "narrow_passage",
@@ -27,7 +35,11 @@
             "description": "A tight passageway that seems to lead deeper into the cave system.",
             "exits": {
                 "west": {"type": "room", "target": "water_pool"}
-            }
+            },
+            "enemies": [],
+            "items": [],
+            "npc": [],
+            "spawnpoint": false
         }
     ]
 }
