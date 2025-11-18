@@ -21,7 +21,7 @@ def load_discord_presence() -> DiscordPresence | None:
     return presence
 
 def main():
-    game_ui = UIController(width=100, border_char="*", padding=4)
+    game_ui = UIController(width=100, border_char="=", padding=4)
     game_instance = game.Game(ui=game_ui)
     discord = load_discord_presence()
     if discord:

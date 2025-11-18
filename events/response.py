@@ -25,6 +25,7 @@ class ResponseType(Enum):
     ROOM_ENTERED = auto()
     MOVE_BLOCKED = auto()
     MAIN_MENU = auto()
+    CHARACTER_CREATION = auto()
    
    
 @dataclass

@@ -7,12 +7,13 @@ ActionType = Literal["attack", "defend", "inventory", "flee"]
 if TYPE_CHECKING:
     from classes.character import Character
     from classes.Item import Item
+    from models.effect import Effect
 
 @dataclass
 class CastTime:
     name: str
     cast_time: int  
-    effect: Effect
+    effect: "Effect"
     block_action: bool = False
     def __str__(self):
         return f"Casting {self.name} for {self.cast_time} turns."
@@ -33,5 +34,6 @@ class CharacterCreationState:
     luck: int = 0
     speed: int = 1
     points_to_spend: int = 5
+    step: str = "name"  
     
 

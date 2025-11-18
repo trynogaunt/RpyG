@@ -3,7 +3,7 @@ import textwrap
 import questionary
 import time
 from events.response import GameResponse, ResponseType
-from ui.screens import main_menu_screen
+from ui.screens import main_menu_screen, creation_screen
 
 class UIController:
     def __init__(self, width=80, border_char="=", padding=2):
@@ -72,14 +72,18 @@ class UIController:
     def empty_line(self):
         print("")
         
-    def choose(self, prompt:str, choices:list[str], upper: bool = False) -> str:
-        return questionary.select(
-            prompt,
-            choices=choices,
-        ).ask()
+    def choose(self, prompt:str, choices:list[str], value=None) -> str:
+        if value is None:
+            return questionary.select(
+                prompt,
+                choices=choices
+            ).ask()
     
     def confirm(self, prompt:str) -> bool:
         return questionary.confirm(prompt).ask()
+
+    def ask_text(self, prompt:str) -> str:
+        return questionary.text(prompt).ask()
     
     def render(self, response: GameResponse):
         self.clear()
@@ -88,7 +92,7 @@ class UIController:
                 actions = response.payload.get("actions", [])
                 lines = main_menu_screen.splash(self)
             case ResponseType.CHARACTER_CREATION:
-                lines = creation_screen.build_creation_screen(self, response.payload.get("steps", []), response.message)
+                lines = creation_screen.build_creation_menu(self,response)
             case ResponseType.IN_COMBAT:
                 lines = combat_screen.build_combat_screen(self, response.payload.get("combat"), response.message)
             case ResponseType.ROOM_ENTERED | ResponseType.MOVE_BLOCKED:
