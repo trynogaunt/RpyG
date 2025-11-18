@@ -1,21 +1,43 @@
 from world.zone import Zone
-from world.world import World
-from world.room import Room, connect
+from world.world import WorldMap, WorldZone
+from world.room import Room
+import json
+import os
+from typing import List
 
 def build_world():
-    world = World()
-    # Create Zones
-    forest_zone = Zone("Enchanted Forest", "A mystical forest filled with magical creatures.")
-    dungeon_zone = Zone("Dark Dungeon", "A gloomy dungeon crawling with monsters.")
-    # Create Rooms for Forest Zone
-    clearing = Room("Forest Clearing", "A sunny clearing surrounded by tall trees.")
-    forest_zone.add_room(clearing)
-    # Create Rooms for Dungeon Zone
-    entrance = Room("Dungeon Entrance", "The dark entrance to the dungeon.")
-    dungeon_zone.add_room(entrance)
-    # Connect Rooms
-    connect(clearing, entrance, "south", "north")
-    # Add Zones to World
-    world.add_zone(forest_zone)
-    world.add_zone(dungeon_zone)
-    return world
+    pass
+def load_world_from_file(file_path: str) -> WorldMap:
+    # Placeholder for loading world from a file
+    pass
+
+def load_zones(directory_path: str) -> List[Zone]:
+    for filename in os.listdir(directory_path):
+        if filename.endswith('.json'):
+            zone = load_zone_from_file(os.path.join(directory_path, filename))
+            yield zone
+
+def load_zone_from_file(file_path: str) -> Zone:
+    if file_path.endswith('.json'):
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+            rooms = []
+            for each_room in data.get("rooms", []):
+                room = Room(
+                    id=each_room["id"],
+                    name=each_room["name"],
+                    description=each_room["description"],
+                    exits= each_room["exits"],
+                )
+                rooms.append(room)
+
+            zone = Zone(
+                id=data["id"],
+                name=data["name"],
+                description=data["description"],
+                entry_room_id=data.get("entry_room_id"),
+                rooms=rooms,
+            )
+            return zone
+    else:
+        raise ValueError("Unsupported file format")

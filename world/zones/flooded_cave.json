@@ -1,0 +1,33 @@
+{
+    "id": "flooded_cave",
+    "name": "Flooded Cave",
+    "description": "A dark cave partially filled with water. The sound of dripping water echoes throughout.",
+    "entry_room_id": "entrance",
+    "rooms": [
+        {
+            "id": "entrance",
+            "name": "Cave Entrance",
+            "description": "The entrance to the cave, where light from outside barely reaches.",
+            "exits": {
+                "north": {"type": "room", "target": "water_pool"}
+            }
+        },
+        {
+            "id": "water_pool",
+            "name": "Water Pool",
+            "description": "A shallow pool of water fills this part of the cave. The water is clear but cold.",
+            "exits": {
+                "south": {"type": "room", "target": "entrance"},
+                "east": {"type": "room", "target": "narrow_passage"}
+            }
+        },
+        {
+            "id": "narrow_passage",
+            "name": "Narrow Passage",
+            "description": "A tight passageway that seems to lead deeper into the cave system.",
+            "exits": {
+                "west": {"type": "room", "target": "water_pool"}
+            }
+        }
+    ]
+}
