@@ -29,7 +29,7 @@ class DiscordPresence:
             state = game.state
             state_text = f"Exploring {room.name}" if room else "Exploring the unknown"
             details = f"{hero.name} – {zone.name}" if zone else f"{hero.name} – Exploring"
-            match zone.name.id:
+            match zone.id:
                 case "forest":
                     large_image = "forest"
                 case "flooded_cave":
