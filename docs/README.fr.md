@@ -11,7 +11,6 @@
 - Description
 - Installation
 - Fonctionnalités
-- Structure du projet
 - Roadmap
 - Contribution
 - Licence
@@ -75,38 +74,15 @@ Lancer le jeu :
 
 ---
 
-## Structure du Projet
-
-    RpyG/
-    ├── app.py                      # Entrée du jeu + menus + lancement Game
-    ├── game/
-    │   ├── game.py                 # Classe Game + game loop (state machine)
-    │   └── creation_flow.py        # Logique création de personnage
-    ├── world/
-    │   ├── room.py                 # Classe Room
-    │   ├── world.py                # Conteneur du monde
-    │   └── build_world.py          # Construction de la map de base
-    ├── classes/
-    │   ├── character.py            # Classe parente
-    │   ├── hero.py                 # Classe Hero (stats + état + position)
-    │   ├── enemy.py                # Classe Enemy 
-    │   └── interface_class.py      # État temporaire création du héros
-    ├── ui/
-    │   ├── ui_controller.py        # Gestion du rendu textuel
-    │   └── screens/                # Écrans du menu principal / création
-    └── README.md
-
-> Anciennes classes inventaire/ennemis en refonte complète.
-
----
-
 ## Roadmap
 
 ### 🧱 Phase 1 — Exploration (actuelle)
 - [x] Création personnage
 - [x] Game Loop avec machine d’état
 - [x] Spawn dans une salle jouable
-- [ ] Mouvement NSEW entre salles
+- [x] Mouvement NSEW entre salles
+- [x] RichPresence Discord
+- [x] Zone de spawn de départ
 - [ ] Rencontres aléatoires lors des déplacements
 
 ### ⚔️ Phase 2 — Combat & Équipement

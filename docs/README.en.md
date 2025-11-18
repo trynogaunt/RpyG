@@ -11,7 +11,6 @@
 - Description
 - Installation
 - Features
-- Project Structure
 - Roadmap
 - Contribution
 - License
@@ -76,38 +75,15 @@ Run the game:
 
 ---
 
-## Project Structure
-
-    RpyG/
-    ├── app.py                      # Game entry point (menu + launch Game)
-    ├── game/
-    │   ├── game.py                 # Game class + main loop (state machine)
-    │   └── creation_flow.py        # Character creation process
-    ├── world/
-    │   ├── room.py                 # Room class
-    │   ├── world.py                # World container
-    │   └── build_world.py          # First playable map
-    ├── classes/
-    │   ├── character.py            # Base character class
-    │   ├── hero.py                 # Hero (stats + state + room position)
-    │   ├── enemy.py                # Enemy class (work-in-progress)
-    │   └── interface_class.py      # CharacterCreationState class
-    ├── ui/
-    │   ├── ui_controller.py        # Console renderer
-    │   └── screens/                # Menus & creation screens
-    └── README.md
-
-> Legacy inventory/enemy systems are currently being refactored.
-
----
-
 ## Roadmap
 
 ### 🧱 Phase 1 — Exploration (current)
 - [x] Character creation
 - [x] Game loop with state machine
 - [x] Starting room spawn
-- [ ] Movement between rooms (N/S/E/W)
+- [x] Movement between rooms (N/S/E/W)
+- [x] Discord RichPresence
+- [x] Starting zone spawn
 - [ ] Random encounters on movement
 
 ### ⚔️ Phase 2 — Combat & Equipment
