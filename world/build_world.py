@@ -1,15 +1,15 @@
 from world.zone import Zone
-from world.world import WorldMap, WorldZone
+from world.world import World
 from world.room import Room
 import json
 import os
 from typing import List
 
-def build_world():
-    pass
-def load_world_from_file(file_path: str) -> WorldMap:
-    # Placeholder for loading world from a file
-    pass
+def load_world(directory_path: str) -> World:
+    world = World()
+    zones = list(load_zones(directory_path))
+    return World(zones)
+    
 
 def load_zones(directory_path: str) -> List[Zone]:
     for filename in os.listdir(directory_path):

@@ -1,6 +1,6 @@
 from models.hero import Hero
 from enum import Enum, auto
-from world.build_world import build_world
+from world.build_world import load_world
 
 # from game import combat
 from events.response import GameResponse, ResponseType
@@ -238,3 +238,6 @@ class Game:
             speed=state.speed,
         )
         return hero
+
+    def build_world(self):
+        self.world = load_world("world/zones")
