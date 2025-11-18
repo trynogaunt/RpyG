@@ -16,7 +16,8 @@
             "enemies": [],
             "items": [],
             "npc": [],
-            "spawnpoint": true
+            "spawnpoint": true,
+            "look_around_text": "You see villagers going about their daily routines, children playing, and merchants selling their goods."
         },
         {
             "id": "blacksmith_shop",

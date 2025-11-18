@@ -29,6 +29,7 @@ class Game:
         self.discord_presence = None
         self.state_creation = CharacterCreationState()
         self.error_message = ""
+        self.player_choice = None
 
     def run(self):
         while (
@@ -134,17 +135,36 @@ class Game:
 
     def handle_exploration(self):
         response = GameResponse(
-            message="", 
-            type=ResponseType.EXPLORATION,
-            payload={"room": self.hero.current_room }
+                message="", 
+                type=ResponseType.EXPLORATION,
+                payload={"room": self.hero.current_room }
         )
-        self.ui.render(response)
-        choice = self.ui.choose("What do you want to do?", ["Move", "Look Around", "Inventory", "Exit"])
-        if choice == "Move":
-            directions = list(self.hero.current_room.exits.keys())
-            direction = self.ui.choose("Choose a direction to move:", directions)
-            move_response = self.move_hero(direction)
-            self.ui.render(move_response)
+        while self.state == GameState.EXPLORING:
+            if self.discord_presence:
+                self.discord_presence.update(self)
+            self.ui.render(response)
+            print(self.hero.current_room.name)
+            choice = self.ui.choose("What do you want to do?", ["Move", "Look Around", "Inventory", "Exit"])
+            if choice == "Move":
+                directions = list(self.hero.current_room.exits.keys())
+                direction = self.ui.choose("Choose a direction to move:", directions)
+                response = self.move_hero(direction)
+            elif choice == "Look Around":
+                response = GameResponse(
+                    message=self.hero.current_room.describe(),
+                    type=ResponseType.EXPLORATION,
+                    payload={"room": self.hero.current_room}
+                )
+            elif choice == "Inventory":
+                response = GameResponse(
+                    message="You check your inventory.",
+                    type=ResponseType.EXPLORATION, 
+                    payload={"room": self.hero.current_room}
+                )
+            elif choice == "Exit":
+                self.state = GameState.MAIN_MENU
+                break
+            
     def handle_combat(self):
         # ombat = combat.Combat(self.hero, self.hero.current_room.get_enemies())
         # self.current_combat = combat
@@ -239,3 +259,4 @@ class Game:
         self.world = load_world("world/zones")
         self.hero.current_zone = self.world.get_world_starting_zone()
         self.hero.current_room = self.world.get_world_starting_room()
+        

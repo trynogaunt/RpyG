@@ -28,7 +28,7 @@ class ResponseType(Enum):
     MAIN_MENU = auto()
     CHARACTER_CREATION = auto()
     ROOM_ENTERED = auto()
-
+    LOOK_AROUND = auto()
 
 @dataclass
 class MoveResult:

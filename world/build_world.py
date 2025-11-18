@@ -34,7 +34,8 @@ def load_zone_from_file(file_path: str) -> Zone:
                     enemies= each_room.get("enemies", []),
                     items= each_room.get("items", []),
                     npc= each_room.get("npc", []),
-                    spawnpoint= each_room.get("spawnpoint", False)
+                    spawnpoint= each_room.get("spawnpoint", False),
+                    look_around_text= each_room.get("look_around_text", None),
                 )
                 rooms.append(room)
 
