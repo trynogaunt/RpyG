@@ -139,12 +139,16 @@ class Game:
                 type=ResponseType.EXPLORATION,
                 payload={"room": self.hero.current_room }
         )
+        choice_list = ["Move", "Look Around", "Inventory", "Exit"]
         while self.state == GameState.EXPLORING:
             if self.discord_presence:
                 self.discord_presence.update(self)
             self.ui.render(response)
-            print(self.hero.current_room.name)
-            choice = self.ui.choose("What do you want to do?", ["Move", "Look Around", "Inventory", "Exit"])
+            if response.type == ResponseType.EXPLORATION:
+                choice_list = ["Move", "Look Around", "Inventory", "Exit"]
+            elif response.type == ResponseType.INVENTORY:
+                choice_list = ["Use Item", "Equip Item", "Back to Exploration"]
+            choice = self.ui.choose("What do you want to do?", choice_list)
             if choice == "Move":
                 directions = list(self.hero.current_room.exits.keys())
                 direction = self.ui.choose("Choose a direction to move:", directions)
@@ -156,11 +160,18 @@ class Game:
                     payload={"room": self.hero.current_room}
                 )
             elif choice == "Inventory":
+                response = self.handle_inventory()
+            elif choice == "Use Item":
+                pass
+            elif choice == "Equip Item":
+                pass
+            elif choice == "Back to Exploration":
                 response = GameResponse(
-                    message="You check your inventory.",
-                    type=ResponseType.EXPLORATION, 
+                    message="",
+                    type=ResponseType.EXPLORATION,
                     payload={"room": self.hero.current_room}
                 )
+
             elif choice == "Exit":
                 self.state = GameState.MAIN_MENU
                 break
@@ -182,6 +193,14 @@ class Game:
     def handle_menu(self):
         pass
 
+    def handle_inventory(self) -> GameResponse:
+        items = self.hero.inventory.list_items()
+        equipped = self.hero.inventory.list_equipped_items()
+        response = GameResponse(
+            message="", type=ResponseType.INVENTORY, payload={"equipped": equipped, "items": items, "gold": self.hero.gold}
+        )
+        return response
+    
     def load(self, save_file: str):
         self.was_loaded = True
         pass
@@ -259,4 +278,4 @@ class Game:
         self.world = load_world("world/zones")
         self.hero.current_zone = self.world.get_world_starting_zone()
         self.hero.current_room = self.world.get_world_starting_room()
-        
+    
