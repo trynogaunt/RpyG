@@ -7,5 +7,4 @@ class Hero(Character):
         self.current_room = None
         self.current_zone = None
         self.visited_rooms = set()
-        self.active_effects = []
         self.gold = gold

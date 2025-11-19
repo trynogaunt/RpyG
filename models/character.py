@@ -12,6 +12,7 @@ class Character:
         self.effects = []
         self.luck = luck
         self.speed = speed
+        self.active_effects = []
         self.inventory = inventory.Inventory()
     
     def perform_attack(self, target):
