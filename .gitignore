@@ -6,3 +6,5 @@ __py_cache__/
 config.json
 .venv/
 env/
+.gitignore
+.gitmessage
