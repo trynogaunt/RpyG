@@ -3,7 +3,7 @@ import textwrap
 import questionary
 import time
 from events.response import GameResponse, ResponseType
-from ui.screens import main_menu_screen, creation_screen, room_screen
+from ui.screens import main_menu_screen, creation_screen, room_screen, inventory_screen
 
 class UIController:
     def __init__(self, width=80, border_char="=", padding=2):
@@ -103,11 +103,13 @@ class UIController:
                 match response.payload.get("screen"):
                     case "character_creation":
                         lines = creation_screen.build_creation_menu(self, response)
+            case ResponseType.INVENTORY:
+                lines = inventory_screen.build_inventory_screen(self, response)
             case _:
-                lines = [response.message]
+                lines = ["Unknown response type."]
         for line in lines:
             print(line)
-
+            
 if __name__ == "__main__":
     ui = UIController()
     ui.header("Welcome to the Game")
