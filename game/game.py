@@ -156,11 +156,7 @@ class Game:
                     payload={"room": self.hero.current_room}
                 )
             elif choice == "Inventory":
-                response = GameResponse(
-                    message="You check your inventory.",
-                    type=ResponseType.EXPLORATION, 
-                    payload={"room": self.hero.current_room}
-                )
+                response = self.handle_inventory()
             elif choice == "Exit":
                 self.state = GameState.MAIN_MENU
                 break
@@ -182,6 +178,14 @@ class Game:
     def handle_menu(self):
         pass
 
+    def handle_inventory(self) -> GameResponse:
+        items = self.hero.inventory.list_items()
+        equipped = self.hero.inventory.list_equipped_items()
+        response = GameResponse(
+            message="", type=ResponseType.INVENTORY, payload={"equipped": equipped, "items": items, "gold": self.hero.gold}
+        )
+        return response
+    
     def load(self, save_file: str):
         self.was_loaded = True
         pass
@@ -259,4 +263,4 @@ class Game:
         self.world = load_world("world/zones")
         self.hero.current_zone = self.world.get_world_starting_zone()
         self.hero.current_room = self.world.get_world_starting_room()
-        
+    
