@@ -23,6 +23,7 @@ class Inventory:
             self.unequip_item(slot)
 
         if item.type == "Weapon" and item.two_handed:
+            self.unequip_item("left_hand" if slot == "right_hand" else "right_hand")
             self.equipped_items["left_hand"] = item
             self.equipped_items["right_hand"] = item
         else:

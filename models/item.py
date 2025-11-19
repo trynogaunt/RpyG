@@ -35,7 +35,7 @@ class Weapon(Item):
             self.allowed_slots = allowed_slots
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} (Damage: {self.damage} {self.damage_type})"
 
     def make_damage(self, user, target) -> Damage:
         return Damage(
