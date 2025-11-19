@@ -16,7 +16,7 @@ def build_inventory_screen(ui, response):
     else:
         lines.append(" (none)")
         lines.append("")
-        lines.append("Inventory Items:")
+    lines.append("Inventory Items:")
     if items:
         for item in items:
             lines.append(f" - {item}")
