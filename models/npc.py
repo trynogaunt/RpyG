@@ -1,6 +1,6 @@
 ROLE_CLASSES = {
-    "blacksmith": ShopKeeper,
-    "citizen": NPC,
+    "blacksmith": "ShopKeeper",
+    "citizen": "NPC",
 }
 
 class NPC():

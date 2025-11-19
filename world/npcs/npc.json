@@ -1,0 +1,13 @@
+{
+    "blacksmith": {
+        "name": "Gorim the Blacksmith",
+        "role": "blacksmith",
+        "description": "A burly blacksmith with soot-covered hands and a warm smile. He forges weapons and armor for adventurers.",
+        "dialogue": [
+            "Greetings, traveler! Looking for some sturdy gear?",
+            "I can craft the finest weapons and armor in these parts.",
+            "Remember, a well-equipped adventurer is a safe adventurer!"
+        ],
+        "shop_id": "entry_blacksmith_shop"
+    }
+}

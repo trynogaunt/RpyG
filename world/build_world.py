@@ -22,8 +22,8 @@ def load_zones(directory_path: str) -> List[Zone]:
 
 def load_zone_from_file(file_path: str) -> Zone:
     if file_path.endswith('.json'):
-        with open(file_path, 'r') as f:
-            data = json.load(f)
+        npc_data = 
+        
             rooms = []
             for each_room in data.get("rooms", []):
                 room = Room(
