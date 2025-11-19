@@ -24,7 +24,6 @@ Your CPU will handle all the dragons.
 
 This project includes multiple localized READMEs:
 
-- 🇬🇧 [English documentation](docs/README.en.md)
-- 🇫🇷 [Documentation française](docs/README.fr.md)
+## Full documentation
 
-> Select your language above 👆
+Coming soon on the Wiki

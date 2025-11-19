@@ -4,3 +4,5 @@ __py_cache__/
 */__init__.pyc
 .vscode/settings.json
 config.json
+.venv/
+env/
