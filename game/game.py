@@ -139,11 +139,16 @@ class Game:
                 type=ResponseType.EXPLORATION,
                 payload={"room": self.hero.current_room }
         )
+        choice_list = ["Move", "Look Around", "Inventory", "Exit"]
         while self.state == GameState.EXPLORING:
             if self.discord_presence:
                 self.discord_presence.update(self)
             self.ui.render(response)
-            choice = self.ui.choose("What do you want to do?", ["Move", "Look Around", "Inventory", "Exit"])
+            if response.type == ResponseType.EXPLORATION:
+                choice_list = ["Move", "Look Around", "Inventory", "Exit"]
+            elif response.type == ResponseType.INVENTORY:
+                choice_list = ["Use Item", "Equip Item", "Back to Exploration"]
+            choice = self.ui.choose("What do you want to do?", choice_list)
             if choice == "Move":
                 directions = list(self.hero.current_room.exits.keys())
                 direction = self.ui.choose("Choose a direction to move:", directions)
@@ -156,7 +161,6 @@ class Game:
                 )
             elif choice == "Inventory":
                 response = self.handle_inventory()
-                choice = self.ui.choose("Next action ?", ["Use Item", "Equip Item", "Back to Exploration"])
                 if choice == "Use Item":
                     pass
                 elif choice == "Equip Item":
