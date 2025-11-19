@@ -21,6 +21,7 @@ Your CPU will handle all the dragons.
 [![Chat](https://img.shields.io/badge/Community-Join%20us!-blue?logo=github)](../../discussions)
 ![Code Style](https://img.shields.io/badge/code%20style-black-black)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![Release](https://img.shields.io/badge/Release-Pre--Alpha-red)
 
 
 
