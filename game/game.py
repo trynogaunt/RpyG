@@ -143,7 +143,6 @@ class Game:
             if self.discord_presence:
                 self.discord_presence.update(self)
             self.ui.render(response)
-            print(self.hero.current_room.name)
             choice = self.ui.choose("What do you want to do?", ["Move", "Look Around", "Inventory", "Exit"])
             if choice == "Move":
                 directions = list(self.hero.current_room.exits.keys())
@@ -157,6 +156,17 @@ class Game:
                 )
             elif choice == "Inventory":
                 response = self.handle_inventory()
+                choice = self.ui.choose("Next action ?", ["Use Item", "Equip Item", "Back to Exploration"])
+                if choice == "Use Item":
+                    pass
+                elif choice == "Equip Item":
+                    pass
+                elif choice == "Back to Exploration":
+                    response = GameResponse(
+                        message="",
+                        type=ResponseType.EXPLORATION,
+                        payload={"room": self.hero.current_room}
+                    )
             elif choice == "Exit":
                 self.state = GameState.MAIN_MENU
                 break
