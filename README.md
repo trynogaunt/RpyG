@@ -33,6 +33,8 @@ Your CPU will handle all the dragons.
 
 > Early development stage — contributions welcome!
 
+⭐ If you like the project, give it a star, it really helps!
+
 ## Features (current)
 
 - Character creation (name + stats)
