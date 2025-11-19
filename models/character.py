@@ -12,7 +12,20 @@ class Character:
         self.effects = []
         self.luck = luck
         self.speed = speed
+        self.active_effects = []
         self.inventory = inventory.Inventory()
+    
+    def add_to_inventory(self, item):
+        self.inventory.add_item(item)
+    
+    def remove_from_inventory(self, item):
+        self.inventory.remove_item(item)
+    
+    def equip_item(self, item, slot):
+        self.inventory.equip_item(item, slot)
+    
+    def unequip_item(self, slot):
+        self.inventory.unequip_item(slot)
     
     def perform_attack(self, target):
         weapons = self.inventory.get_equipped_weapons()
@@ -67,3 +80,7 @@ class Character:
     @property
     def hp_ratio(self):
         return max(0, min(1, self.health / self.max_health)) if self.max_health > 0 else 0
+
+    def is_alive(self):
+        '''Check if the character is alive based on health.'''
+        return self.health > 0

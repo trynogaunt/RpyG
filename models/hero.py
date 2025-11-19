@@ -7,9 +7,4 @@ class Hero(Character):
         self.current_room = None
         self.current_zone = None
         self.visited_rooms = set()
-        self.active_effects = []
         self.gold = gold
-
-    def is_alive(self):
-        '''Check if the hero is alive based on health.'''
-        return self.health > 0
