@@ -29,6 +29,7 @@ class ResponseType(Enum):
     CHARACTER_CREATION = auto()
     ROOM_ENTERED = auto()
     LOOK_AROUND = auto()
+    INVENTORY = auto()
 
 @dataclass
 class MoveResult:
