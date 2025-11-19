@@ -1,0 +1,7 @@
+{
+    "entry_village":{
+        "name": "Entry Village",
+        "description": "A small village that serves as the starting point for adventurers.",
+        "entry_room_id": "village_square"
+    }
+}

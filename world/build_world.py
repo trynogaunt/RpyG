@@ -14,38 +14,39 @@ def load_world(directory_path: str) -> World:
         world.starting_zone_id = zones[0].id
     return world
 
-def load_zones(directory_path: str) -> List[Zone]:
-    for filename in os.listdir(directory_path):
-        if filename.endswith('.json') and not filename.startswith('.'):
-            zone = load_zone_from_file(os.path.join(directory_path, filename))
-            yield zone
+def load_zone(file_path: str) -> Zone:
+    with open(file_path, 'r') as file:
+        zone_data = json.load(file)
 
-def load_zone_from_file(file_path: str) -> Zone:
-    if file_path.endswith('.json'):
-        npc_data = 
-        
-            rooms = []
-            for each_room in data.get("rooms", []):
-                room = Room(
-                    id=each_room["id"],
-                    name=each_room["name"],
-                    description=each_room["description"],
-                    exits= each_room["exits"],
-                    enemies= each_room.get("enemies", []),
-                    items= each_room.get("items", []),
-                    npc= each_room.get("npc", []),
-                    spawnpoint= each_room.get("spawnpoint", False),
-                    look_around_text= each_room.get("look_around_text", None),
-                )
-                rooms.append(room)
+    zone = Zone(
+        id=zone_data['id'],
+        name=zone_data['name'],
+        description=zone_data['description']
+    )
 
-            zone = Zone(
-                id=data["id"],
-                name=data["name"],
-                description=data["description"],
-                entry_room_id=data.get("entry_room_id"),
-                rooms=rooms,
-            )
-            return zone
-    else:
-        raise ValueError("Unsupported file format")
+    for room_data in zone_data['rooms']:
+        room = load_room
+        zone.add_room(room)
+
+    return zone
+def load_room(file_path: str) -> Room:
+    with open(file_path, 'r') as file:
+        room_data = json.load(file)
+
+    room = Room(
+        id=room_data['id'],
+        name=room_data['name'],
+        description=room_data['description'],
+        exits=room_data.get('exits', {}),
+        enemies=room_data.get('enemies', []),
+        items=room_data.get('items', []),
+        npc=room_data.get('npc', []),
+        spawnpoint=room_data.get('spawnpoint', False)
+    )
+
+    return room
+
+def load_npc(file_path: str) -> dict:
+    with open(file_path, 'r') as file:
+        npc_data = json.load(file)
+    return npc_data
