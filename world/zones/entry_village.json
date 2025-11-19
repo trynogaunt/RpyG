@@ -28,7 +28,7 @@
             },
             "enemies": [],
             "items": [],
-            "npc": [],
+            "npc": ["blacksmith"],
             "spawnpoint": false
         },
         {

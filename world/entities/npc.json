@@ -1,0 +1,40 @@
+{
+    "blacksmith": {
+        "name": "Gorim the Blacksmith",
+        "description": "A burly blacksmith with soot-covered hands and a warm smile. He forges weapons and armor for adventurers.",
+        "dialogue": [
+            "Greetings, traveler! Looking for some sturdy gear?",
+            "I can craft the finest weapons and armor in these parts.",
+            "Remember, a well-equipped adventurer is a safe adventurer!"
+        ],
+        "services": {
+            "buy": ["sword", "shield", "armor"],
+            "sell": true,
+            "repair": true
+        },
+        "shop": {
+            "sword": {
+                "name": "Iron Sword",
+                "description": "A sturdy iron sword, perfect for beginners.",
+                "type": "weapon",
+                "damage": 10,
+                "damage_type": "physical",
+                "price": 50
+            },
+            "shield": {
+                "name": "Wooden Shield",
+                "description": "A basic wooden shield that offers decent protection.",
+                "type": "armor",
+                "defense": 5,
+                "price": 30
+            },
+            "armor": {
+                "name": "Leather Armor",
+                "description": "Lightweight leather armor that provides moderate defense.",
+                "type": "armor",
+                "defense": 8,
+                "price": 70
+            }
+        }
+    }
+}
