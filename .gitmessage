@@ -1,0 +1,26 @@
+# <type>(<scope>): <short description>
+#
+# Types:
+#   feat     - new feature
+#   fix      - bug fix
+#   docs     - documentation only
+#   refactor - code change without functional impact
+#   style    - formatting, linting (no code logic change)
+#   test     - add/update tests
+#   chore    - maintenance / config / CI
+#   perf     - performance improvement
+#
+# Scopes (examples for RPyG):
+#   hero, ui, world, zone, inventory, item, shop, combat, engine
+#
+# The description should:
+#   - be in English
+#   - be in imperative mood (add, fix, remove…)
+#   - be short and clear
+#
+# If needed, explain the change below:
+#
+# Body (optional): Why is this change necessary?
+#
+# Footer (optional): Link issue or PR
+# Example: Closes #12
