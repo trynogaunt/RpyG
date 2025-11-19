@@ -10,6 +10,9 @@ class Item:
         self.allowed_slots = []
     def use(self, target):
         raise NotImplementedError("This method should be overridden by subclasses.")
+    
+    def __str__(self):
+        return f"{self.name}"
 
 class Weapon(Item):
     """Weapon item that can be used to attack targets.
@@ -50,6 +53,9 @@ class Armor(Item):
     def use(self, target):
         target.health += self.defense
         return f"{target.name} gains {self.defense} health from {self.name}!"
+    
+    def __str__(self):
+        return f"{self.name} (Defense: {self.defense})"
 
 class Consumable(Item):
     def __init__(self, name, description, effect_type ,value, duration=0, cast_time=0, block_action=False):
@@ -79,3 +85,5 @@ class Consumable(Item):
                     damage_type="physical",
                     source=user.name
                 )
+    def __str__(self):
+        return f"{self.name} (Effect: {self.effect_type}, Value: {self.value})"
