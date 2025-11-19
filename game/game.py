@@ -144,14 +144,11 @@ class Game:
             if self.discord_presence:
                 self.discord_presence.update(self)
             self.ui.render(response)
-            print(response.type)
             if response.type == ResponseType.EXPLORATION:
                 choice_list = ["Move", "Look Around", "Inventory", "Exit"]
             elif response.type == ResponseType.INVENTORY:
                 choice_list = ["Use Item", "Equip Item", "Back to Exploration"]
             choice = self.ui.choose("What do you want to do?", choice_list)
-            print(choice)
-            input("press enter to continue...")
             if choice == "Move":
                 directions = list(self.hero.current_room.exits.keys())
                 direction = self.ui.choose("Choose a direction to move:", directions)
