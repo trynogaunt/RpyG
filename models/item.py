@@ -7,6 +7,7 @@ class Item:
         self.description = description
         self.type = item_type
         self.name = name
+        self.price = 0
         self.allowed_slots = []
     def use(self, target):
         raise NotImplementedError("This method should be overridden by subclasses.")
