@@ -1,7 +1,62 @@
 {
-    "entry_village":{
-        "name": "Entry Village",
-        "description": "A small village that serves as the starting point for adventurers.",
-        "entry_room_id": "village_square"
+    "zones": {
+        "entry_village": {
+            "id": "entry_village",
+            "name": "Entry Village",
+            "rooms": ["village_square", "village_gate", "blacksmith_forge", "forest_path"],
+            "entry_room_id": "village_square",
+            "description": "A quaint village that serves as the starting point for many adventurers. It is surrounded by lush forests and rolling hills.",
+            "generation": {
+                "mandatory_rooms": [
+                    "village_square",
+                    "village_gate"
+                ],
+                "transition_rooms": [
+                    "forest_path",
+                    "cavern_entrance",
+                    "plain_outskirts",
+                    "river_bank",
+                    "abandoned_bridge"
+                ],
+                "optional_pool": [
+                    { "room_id": "blacksmith_forge", "weight": 3 },
+                    {  }
+                ],
+                "min_optional": 1,
+                "max_optional": 2
+            }
+        }
     }
+}
+
+"Exemple"
+{
+  "zones": {
+    "village": {
+      "name": "Quiet Village",
+      "generation": {
+        "mandatory_rooms": [
+          "village_square",
+          "village_gate"
+        ],
+        "optional_pool": [
+          { "room_id": "blacksmith_forge", "weight": 3 }
+        ],
+        "min_optional": 0,
+        "max_optional": 1
+      }
+    },
+
+    "forest": {
+      "name": "Enchanted Forest",
+      "generation": {
+        "mandatory_rooms": [
+          "forest_path"
+        ],
+        "optional_pool": [],
+        "min_optional": 0,
+        "max_optional": 0
+      }
+    }
+  }
 }

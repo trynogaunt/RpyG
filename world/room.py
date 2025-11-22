@@ -6,12 +6,14 @@ class Room:
     id : str
     name : str
     description : str
-    exits : Dict[str, 'Room'] = field(default_factory=dict)
+    exits : Dict[str, str] = field(default_factory=dict)
     enemies : List[str] = field(default_factory=list)
     items : List[str] = field(default_factory=list)
     npc : List[str] = field(default_factory=list)
     spawnpoint : bool = False
     look_around_text : Optional[str] = None
+    role: str = "generic"
+    tags : List[str] = field(default_factory=list)
     
     def describe(self) -> str:
         desc = "Nothing special here."

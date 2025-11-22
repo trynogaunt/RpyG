@@ -6,7 +6,7 @@ from typing import List, Dict, Optional
 class Zone:    
     id : str
     name: str
-    rooms: List['Room'] = field(default_factory=list)
+    rooms: List[str] = field(default_factory=list)
     entry_room_id: Optional[str] = None
     
     description: str = ""

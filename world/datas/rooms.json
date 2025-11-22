@@ -1,0 +1,54 @@
+{
+    "rooms": {
+        "village_square":{
+            "id": "village_square",
+            "name": "Village Square",
+            "description": "The bustling center of the village, filled with market stalls and townsfolk.",
+            "enemies": [],
+            "items": [],
+            "npcs": [],
+            "spawnpoint": true,
+            "look_around_text": "You see villagers going about their daily routines, children playing, and merchants calling out their wares.",
+            "role": "hub",
+            "tags": ["safe_zone"]
+            },
+    
+        "village_gate":{
+            "id": "village_gate",
+            "name": "Village Gate",
+            "description": "The main entrance to the village, guarded by two sturdy wooden doors.",
+            "enemies": [],
+            "items": [],
+            "npcs": [],
+            "spawnpoint": false,
+            "look_around_text": "The gate stands tall, with guards keeping a watchful eye on anyone entering or leaving the village.",
+            "role": "entrance",
+            "tags": ["checkpoint", "zone_transition"]
+        },
+        "blacksmith_forge":{
+            "id": "blacksmith_forge",
+            "name": "Blacksmith's Shop",
+            "description": "A small workshop filled with the sound of hammering metal and the smell of burning coal.",
+            "enemies": [],
+            "items": [],
+            "npcs": ["blacksmith"],
+            "spawnpoint": false,
+            "look_around_text": "You see various weapons and armor displayed around the shop, with a sturdy forge blazing in the corner.",
+            "role": "shop",
+            "tags": ["vendor"]
+        },
+        
+        "forest_path":{
+            "id": "forest_path",
+            "name": "Forest Path",
+            "description": "A narrow path winding through the dense trees of the enchanted forest.",
+            "enemies": ["goblin", "fairy"],
+            "items": ["healing_herb"],
+            "npcs": [],
+            "spawnpoint": false,
+            "look_around_text": "The trees tower above you, their leaves whispering in the gentle breeze. You can hear the distant sounds of magical creatures.",
+            "role": "adventure",
+            "tags": ["danger_zone", "exploration", "zone_transition"]
+        }
+    }
+}
