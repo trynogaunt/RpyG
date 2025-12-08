@@ -1,7 +1,10 @@
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple, Set
 from pathlib import Path
 import json
+
+
+Vec2 = Tuple[int, int]
 
 @dataclass
 class GenerationParameters:
@@ -32,8 +35,33 @@ class RoomTemplate:
     content: ContentParameters
     
 class RoomInstance():
-    pass
+    def __init__(self,instance_id: str, template: RoomTemplate, depth: int, position: Vec2):
+        self.instance_id = instance_id #Unique identifier for this room instance per run
+        self.template = template
+        self.depth = depth
+        self.position = position
+        self.neighbors : Dict[str, str] = {} # Direction (North, South, East, West) to RoomInstance ID mapping
+        self.visited : bool = False # Has the player visited this room yet? Story flags and encounters may depend on this.
+        self.cleared : bool = False # Has the player cleared this room of encounters?
+        self.state_flags: Set[str] = set() # Custom state flags for this room instance
+        
+    def __repr__(self):
+        return f"<RoomInstance id={self.instance_id} template={self.template.id} depth={self.depth} pos={self.position}>"
+    
+    @property
+    def biome(self) -> str:
+        return self.template.biome
 
+    def connect(self, direction: str, other_room_id: str):
+        self.neighbors[direction] = other_room_id
+    
+    def marked_visited(self):
+        self.visited = True
+        for f in self.template.content.story_flag_set:
+            self.state_flags.add(f)
+          
+    
+    
 def load_room_templates(path: Path) -> Dict[str, RoomTemplate]:
     raw = json.loads(path.read_text(encoding='utf-8'))
     templates: Dict[str, RoomTemplate] = {}
