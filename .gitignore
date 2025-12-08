@@ -5,6 +5,7 @@ __py_cache__/
 .vscode/settings.json
 config.json
 .venv/
+venv/
 env/
 .gitignore
 .gitmessage
