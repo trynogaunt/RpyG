@@ -1,0 +1,25 @@
+{
+    "id": "room_template",
+    "label": "Template Room",
+    "biome": "biome",
+    "role": "neutral", 
+    "difficulty": 1,
+    "tags": ["template", "example", "safe", "indoor"],
+    "generation":{
+        "weight": 1,
+        "min_depth": 0,
+        "max_depth": 2,
+        "max_neighbors": 4,
+        "allowed_biome_neighbors": ["biome"],
+        "required_prev_tags_any": ["example"],
+        "forbidden_prev_tags_all": ["dangerous"],
+        "unique_per_run": false
+    },
+    "content": {
+        "encounter_table": "room_template_encounters",
+        "fixed_npcs": ["npc_template"],
+        "shop_id": null,
+        "rest_point": false,
+        "story_flag_set": ["example_flag"]
+    }
+}
