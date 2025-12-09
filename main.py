@@ -23,7 +23,12 @@ def load_discord_presence() -> DiscordPresence | None:
 def main():
     game_ui = UIController(width=100, border_char="=", padding=4)
     game_instance = game.Game(ui=game_ui)
-    discord = load_discord_presence()
+    
+    try:
+        discord = load_discord_presence()
+    except Exception as e:
+        print(f"Failed to initialize Discord presence: {e}")
+        discord = None
     if discord:
         game_instance.discord_presence = discord
     game_instance.run()

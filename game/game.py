@@ -1,6 +1,8 @@
 from models.hero import Hero
 from enum import Enum, auto
-from world.build_world import load_world
+from world_folder.world import WorldGraph, ProcGenerator
+from world_folder.room import load_room_templates
+from pathlib import Path
 
 # from game import combat
 from events.response import GameResponse, ResponseType
@@ -26,11 +28,12 @@ class Game:
         self.world = None
         self.last_message = ""
         self.current_combat = None
+        self.current_room_id = None
         self.discord_presence = None
         self.state_creation = CharacterCreationState()
         self.error_message = ""
         self.player_choice = None
-
+    
     def run(self):
         while (
             self.hero == None or self.hero.is_alive() and self.state != GameState.EXIT
@@ -128,7 +131,7 @@ class Game:
                     luck=self.state_creation.luck,
                     speed=self.state_creation.speed,
                 )
-                self.build_world()
+                self.new_game()
                 self.state = GameState.EXPLORING
             else:
                 self.state_creation = CharacterCreationState()
@@ -150,12 +153,13 @@ class Game:
                 choice_list = ["Use Item", "Equip Item", "Back to Exploration"]
             choice = self.ui.choose("What do you want to do?", choice_list)
             if choice == "Move":
-                directions = list(self.hero.current_room.exits.keys())
-                direction = self.ui.choose("Choose a direction to move:", directions)
-                response = self.move_hero(direction)
+                DIRECTIONS = ["North", "South", "East", "West", "Cancel"]
+                direction = self.ui.choose("Choose a direction to move:", DIRECTIONS)
+                if direction != "Cancel":
+                    response = self.move_hero(direction)
             elif choice == "Look Around":
                 response = GameResponse(
-                    message=self.hero.current_room.describe(),
+                    message=self.hero.current_room.get_description,
                     type=ResponseType.EXPLORATION,
                     payload={"room": self.hero.current_room}
                 )
@@ -206,14 +210,14 @@ class Game:
         pass
 
     def move_hero(self, direction) -> GameResponse:
-        if self.hero.current_room and direction in self.hero.current_room.exits:
-            if self.hero.current_room.exits[direction] is None:
+        if self.hero.current_room and direction in self.hero.current_room.neighbors:
+            if self.hero.current_room.neighbors[direction] is None:
                 return GameResponse(
                     message=f"You cannot go {direction} from here.",
                     type=ResponseType.MOVE_BLOCKED,
                 )
             else:
-                new_room = self.hero.current_room.exits[direction]
+                new_room = self.hero.current_room.neighbors[direction]
                 return self.change_room(new_room)
         else:
             return GameResponse(
@@ -222,14 +226,13 @@ class Game:
             )
 
     def change_room(self, new_room) -> GameResponse:
-        if new_room["type"] == "room":
-            self.hero.current_room = self.hero.current_zone.get_room_by_id(new_room["target"])
-        elif new_room["type"] == "zone":
-            self.hero.current_zone = self.world.get_zone(new_room["target"])
-            self.hero.current_room = self.hero.current_zone.get_room_by_id(new_room["entry_room_id"])
+        new_room_instance = self.world.get_room_by_id(new_room)
+        self.hero.current_room = new_room_instance
+        self.hero.visited_rooms.add(new_room_instance.instance_id)
+        new_room_instance.marked_visited()
             
         response = GameResponse(
-            message=f"You move to {self.hero.current_room.name}.",
+            message=f"You move to {self.hero.current_room.get_label}.",
             type=ResponseType.ROOM_ENTERED,
             tags=["move", "room_change"],
             payload={
@@ -274,8 +277,27 @@ class Game:
         )
         return hero
 
-    def build_world(self):
-        self.world = load_world("world/zones")
-        self.hero.current_zone = self.world.get_world_starting_zone()
-        self.hero.current_room = self.world.get_world_starting_room()
+    def new_game(self, seed: int = None):
+        self.world = WorldGraph(seed=seed)
+        room_templates = load_room_templates(Path("world_folder/datas/room_templates.json"))
+        proc_gen = ProcGenerator(room_templates, self.world)
+        
+        spawn_id = proc_gen.create_spawn("village_square", position=(0,0))
+        
+        DIRECTIONS = {
+            "North": (0, 1),
+            "South": (0, -1),
+            "East": (1, 0),
+            "West": (-1, 0),
+        }
+        for _ in range(300):
+            parent_id = self.world.rng.choice(list(self.world.rooms.keys()))
+            direction, offset = self.world.rng.choice(list(DIRECTIONS.items()))
+            proc_gen.generate_neighbor(parent_id, direction, offset)
+        
+        print(f"Generated world with {len(self.world.rooms)} rooms.")
+        self.current_room_id = spawn_id
+        self.hero.current_room = self.world.get_room_by_id(spawn_id)
+        self.hero.current_room.marked_visited()
+        self.hero.visited_rooms.add(spawn_id)
     

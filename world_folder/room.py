@@ -29,6 +29,7 @@ class ContentParameters:
 class RoomTemplate:
     id: str
     label: str
+    describe: str
     tags: List[str]
     biome: str
     generation_parameters: GenerationParameters
@@ -63,6 +64,18 @@ class RoomInstance():
         self.visited = True
         for f in self.template.content.story_flag_set:
             self.state_flags.add(f)
+    
+    @property    
+    def get_description(self) -> str:
+        desc = self.template.describe
+        if self.visited:
+            desc += " (visited)"
+        return desc
+
+    @property
+    def get_label(self) -> str:
+        return self.template.label
+    
           
     
     
@@ -76,6 +89,7 @@ def load_room_templates(path: Path) -> Dict[str, RoomTemplate]:
         tpl = RoomTemplate(
             id=r["id"],
             label=r["label"],
+            describe= r["describe"] if "describe" in r else "",
             tags=r["tags"],
             biome=r["biome"],
             generation_parameters=GenerationParameters(
