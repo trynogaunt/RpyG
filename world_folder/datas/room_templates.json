@@ -1,0 +1,130 @@
+[
+    {
+        "id": "village_square",
+        "label": "Village Square",
+        "biome": "village",
+        "role": "hub",
+        "difficulty": 1,
+        "tags": ["village", "safe", "outdoor"],
+
+        "generation":{
+            "weight": 1,
+            "min_depth": 0,
+            "max_depth": 0,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["village"],
+            "required_prev_tags_any": [],
+            "forbidden_prev_tags_all": ["dangerous", "gate"],
+            "unique_per_run": true
+        },
+
+        "content": {
+            "encounter_table": null,
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": true,
+            "story_flag_set": ["village_square_visited"]
+        }
+    },
+    {
+        "id": "village_street",
+        "label": "Village Street",
+        "biome": "village",
+        "role": "path",
+        "difficulty": 1,
+        "tags": ["village", "safe", "outdoor", "road"],
+        "generation":{
+            "weight": 5,
+            "min_depth": 1,
+            "max_depth": 3,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["village"],
+            "required_prev_tags_any": ["village"],
+            "forbidden_prev_tags_all": ["dangerous", "gate"],
+            "unique_per_run": false
+        },
+        "content": {
+            "encounter_table": null,
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": false,
+            "story_flag_set": []
+        }
+    },
+    {
+        "id": "village_gate",
+        "label": "Village Gate",
+        "biome": "village",
+        "role": "gate",
+        "difficulty": 2,
+        "tags": ["village", "safe", "outdoor", "gate"],
+        "generation":{
+            "weight": 2,
+            "min_depth": 2,
+            "max_depth": 4,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["village", "forest"],
+            "required_prev_tags_any": ["village"],
+            "forbidden_prev_tags_all": ["dangerous"],
+            "unique_per_run": true
+        },
+        "content": {
+            "encounter_table": null,
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": false,
+            "story_flag_set": ["village_gate_visited"]
+        }
+    },
+    {
+        "id": "forest_clearing",
+        "label": "Forest Clearing",
+        "biome": "forest",
+        "role": "neutral",
+        "difficulty": 2,
+        "tags": ["forest", "safe", "outdoor", "clearing"],
+        "generation":{
+            "weight": 3,
+            "min_depth": 1,
+            "max_depth": 4,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["forest"],
+            "required_prev_tags_any": [],
+            "forbidden_prev_tags_all": ["dangerous"],
+            "unique_per_run": false
+        },
+        "content": {
+            "encounter_table": "forest_clearing_encounters",
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": true,
+            "story_flag_set": []
+        }
+    },
+    {
+        "id": "forest_edge",
+        "label": "Forest Edge",
+        "biome": "forest",
+        "role": "entrance",
+        "difficulty": 2,
+        "tags": ["forest", "edge", "outdoor"],
+
+        "generation":{
+            "weight": 1,
+            "min_depth": 2,
+            "max_depth": 6,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["forest", "village", "farmland"],
+            "required_prev_tags_any": ["gate"],    
+            "forbidden_prev_tags_all": [],
+            "unique_per_run": true
+        },
+        "content": {
+            "encounter_table": null,
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": false,
+            "story_flag_set": ["forest_edge_visited"]
+        }
+    }
+]
