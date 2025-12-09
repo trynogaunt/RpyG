@@ -36,7 +36,57 @@
         "generation":{
             "weight": 5,
             "min_depth": 1,
+            "max_depth": 99,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["village"],
+            "required_prev_tags_any": ["village"],
+            "forbidden_prev_tags_all": ["dangerous", "gate"],
+            "unique_per_run": false
+        },
+        "content": {
+            "encounter_table": null,
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": false,
+            "story_flag_set": []
+        }
+    },
+    {  
+        "id": "village_blacksmith",
+        "label": "Village Blacksmith",
+        "biome": "village",
+        "role": "shop",
+        "difficulty": 1,
+        "tags": ["village", "safe", "indoor", "shop"],
+        "generation":{
+            "weight": 2,
+            "min_depth": 1,
             "max_depth": 3,
+            "max_neighbors": 1,
+            "allowed_biome_neighbors": ["village"],
+            "required_prev_tags_any": ["village"],
+            "forbidden_prev_tags_all": ["dangerous", "gate"],
+            "unique_per_run": true
+        },
+        "content": {
+            "encounter_table": null,
+            "fixed_npcs": ["blacksmith"],
+            "shop_id": "blacksmith_shop",
+            "rest_point": false,
+            "story_flag_set": ["village_blacksmith_visited"]       
+        }
+    },
+    {
+        "id": "village_fourways",
+        "label": "Village Fourways",
+        "biome": "village",
+        "role": "intersection",
+        "difficulty": 1,
+        "tags": ["village", "safe", "outdoor", "intersection"],
+        "generation":{
+            "weight": 1,
+            "min_depth": 1,
+            "max_depth": 99,
             "max_neighbors": 4,
             "allowed_biome_neighbors": ["village"],
             "required_prev_tags_any": ["village"],
@@ -52,6 +102,31 @@
         }
     },
     {
+        "id": "village_inn",
+        "label": "Village Inn",
+        "biome": "village",
+        "role": "rest",
+        "difficulty": 1,
+        "tags": ["village", "safe", "indoor", "rest"],
+        "generation":{
+            "weight": 2,
+            "min_depth": 2,
+            "max_depth": 99,
+            "max_neighbors": 2,
+            "allowed_biome_neighbors": ["village"],
+            "required_prev_tags_any": ["village"],
+            "forbidden_prev_tags_all": ["dangerous", "gate"],
+            "unique_per_run": true
+        },
+        "content": {
+            "encounter_table": null,
+            "fixed_npcs": ["innkeeper"],
+            "shop_id": null,
+            "rest_point": true,
+            "story_flag_set": ["village_inn_visited"]
+        }
+    },
+    {
         "id": "village_gate",
         "label": "Village Gate",
         "biome": "village",
@@ -60,11 +135,11 @@
         "tags": ["village", "safe", "outdoor", "gate"],
         "generation":{
             "weight": 2,
-            "min_depth": 2,
-            "max_depth": 4,
+            "min_depth": 1,
+            "max_depth": 99,
             "max_neighbors": 4,
-            "allowed_biome_neighbors": ["village", "forest"],
-            "required_prev_tags_any": ["village"],
+            "allowed_biome_neighbors": ["village", "forest", "farmland"],
+            "required_prev_tags_any": ["village", "edge"],
             "forbidden_prev_tags_all": ["dangerous"],
             "unique_per_run": true
         },
@@ -86,7 +161,7 @@
         "generation":{
             "weight": 3,
             "min_depth": 1,
-            "max_depth": 4,
+            "max_depth": 99,
             "max_neighbors": 4,
             "allowed_biome_neighbors": ["forest"],
             "required_prev_tags_any": [],
@@ -112,12 +187,12 @@
         "generation":{
             "weight": 1,
             "min_depth": 2,
-            "max_depth": 6,
+            "max_depth": 99,
             "max_neighbors": 4,
             "allowed_biome_neighbors": ["forest", "village", "farmland"],
-            "required_prev_tags_any": ["gate"],    
+            "required_prev_tags_any": ["gate", "edge"],    
             "forbidden_prev_tags_all": [],
-            "unique_per_run": true
+            "unique_per_run": false
         },
         "content": {
             "encounter_table": null,
@@ -125,6 +200,106 @@
             "shop_id": null,
             "rest_point": false,
             "story_flag_set": ["forest_edge_visited"]
+        }
+    },
+    {
+        "id": "farmland_field",
+        "label": "Farmland Field",
+        "biome": "farmland",
+        "role": "neutral",
+        "difficulty": 2,
+        "tags": ["farmland", "outdoor", "field"],
+        "generation":{
+            "weight": 4,
+            "min_depth": 2,
+            "max_depth": 99,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["farmland"],
+            "required_prev_tags_any": [],
+            "forbidden_prev_tags_all": ["dangerous"],
+            "unique_per_run": false
+        },
+        "content": {
+            "encounter_table": "farmland_field_encounters",
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": false,
+            "story_flag_set": []
+        }
+    },
+    {
+        "id": "farmland_edge",
+        "label": "Farmland Edge",
+        "biome": "farmland",
+        "role": "entrance",
+        "difficulty": 2,
+        "tags": ["farmland", "edge", "outdoor"],
+        "generation":{
+            "weight": 1,
+            "min_depth": 2,
+            "max_depth": 99,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["farmland", "village", "forest"],
+            "required_prev_tags_any": ["gate", "edge"],
+            "forbidden_prev_tags_all": [],
+            "unique_per_run": false
+        },
+        "content": {
+            "encounter_table": null,
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": false,
+            "story_flag_set": ["farmland_edge_visited"] 
+        }
+    },
+    {
+        "id": "dangerous_road",
+        "label": "Dangerous Road",
+        "biome": "forest",
+        "role": "path",
+        "difficulty": 3,
+        "tags": ["forest", "dangerous", "outdoor", "road"],
+        "generation":{
+            "weight": 4,
+            "min_depth": 3,
+            "max_depth": 99,
+            "max_neighbors": 4,
+            "allowed_biome_neighbors": ["forest", "farmland"],
+            "required_prev_tags_any": ["forest", "farmland"],
+            "forbidden_prev_tags_all": [],
+            "unique_per_run": false
+        },
+        "content": {
+            "encounter_table": "dangerous_road_encounters",
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": false,
+            "story_flag_set": []
+        }
+    },
+    {
+        "id": "abandoned_hut",
+        "label": "Abandoned Hut",
+        "biome": "forest",
+        "role": "neutral",
+        "difficulty": 3,
+        "tags": ["forest", "dangerous", "indoor", "hut"],
+        "generation":{
+            "weight": 1,
+            "min_depth": 3,
+            "max_depth": 10,
+            "max_neighbors": 1,
+            "allowed_biome_neighbors": ["forest"],
+            "required_prev_tags_any": ["dangerous"],
+            "forbidden_prev_tags_all": [],
+            "unique_per_run": true
+        },
+        "content": {
+            "encounter_table": "abandoned_hut_encounters",
+            "fixed_npcs": [],
+            "shop_id": null,
+            "rest_point": false,
+            "story_flag_set": ["abandoned_hut_visited"]
         }
     }
 ]

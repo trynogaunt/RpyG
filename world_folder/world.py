@@ -119,23 +119,29 @@ class ProcGenerator:
             g = tpl.generation_parameters 
     
             if not (g.min_depth <= new_depth <= g.max_depth):
+                print(f"Template {tpl.id} depth {new_depth} not in range {g.min_depth}-{g.max_depth}.")
                 continue
 
           
             if g.unique_per_run and tpl.id in self._used_unique_templates:
+                print(f"Skipping unique template {tpl.id} already used.")
                 continue
 
             
             if len(parent.neighbors) >= parent.template.generation_parameters.max_neighbors:
+                print(f"Parent room {parent.instance_id} has reached max neighbors.")
                 continue
             
             if g.allowed_biome_neighbors and parent.biome not in g.allowed_biome_neighbors:
+                print(f"Template {tpl.id} not allowed next to biome {parent.biome}.")
                 continue
             
             if g.required_prev_tags_any and not any(tag in parent.tags for tag in g.required_prev_tags_any):
+                print(f"Template {tpl.id} requires tags {g.required_prev_tags_any} not found in parent tags {parent.tags}.")
                 continue
             
             if g.forbidden_prev_tags_all and any(tag in parent.tags for tag in g.forbidden_prev_tags_all):
+                print(f"Template {tpl.id} has forbidden tags {g.forbidden_prev_tags_all} found in parent tags {parent.tags}.")
                 continue
             
             eligible.append(tpl)
@@ -232,23 +238,34 @@ if __name__ == "__main__":
     from pathlib import Path
     from world_folder.room import RoomTemplate, GenerationParameters, ContentParameters, load_room_templates
     
-    seed = WorldGraph.seed_from_string("AliceTestSeed")
-    print(f"Using seed: {seed}")
+    DIRECTIONS = {
+        "North": (0, 1),
+        "South": (0, -1),
+        "East": (1, 0),
+        "West": (-1, 0),
+    }
     
+
     room_templates = load_room_templates(Path("world_folder/datas/room_templates.json"))
 
-    world = WorldGraph(seed=seed) # Create a new world graph with a random seed
+    world = WorldGraph() # Create a new world graph with a random seed
     gen = ProcGenerator(room_templates, world)
     
     spawn_id = gen.create_spawn("village_square")
     
-    current = spawn_id
-    for _ in range(20):
-        nid = gen.generate_neighbor(current, "North", (0, 1))
-        if nid:
-            current = nid
-        else:
-            break
     
-    for room in world.rooms.values():
+    frontier = [spawn_id]
+    successful_generations = 0
+    failed_generations = 0
+    for _ in range(1000): # Generate 10 neighbor rooms
+        parent_id = world.rng.choice(frontier)
+        dir_name, offset = world.rng.choice(list(DIRECTIONS.items()))
+        nid = gen.generate_neighbor(parent_id, dir_name, offset)
+        if nid and nid not in frontier:
+            successful_generations += 1
+            frontier.append(nid)
+        else:
+            failed_generations += 1
+    print(f"Generated {successful_generations} rooms, {failed_generations} failed attempts.")
+    for room in sorted(world.rooms.values(), key=lambda r: r.position):
         print(room)
