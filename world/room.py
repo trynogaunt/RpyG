@@ -51,6 +51,10 @@ class RoomInstance():
     @property
     def biome(self) -> str:
         return self.template.biome
+    
+    @property
+    def tags(self) -> List[str]:
+        return self.template.tags
 
     def connect(self, direction: str, other_room_id: str):
         self.neighbors[direction] = other_room_id
