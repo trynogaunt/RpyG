@@ -213,8 +213,12 @@ class Game:
         if self.hero.current_room and direction in self.hero.current_room.neighbors:
             if self.hero.current_room.neighbors[direction] is None:
                 return GameResponse(
-                    message=f"You cannot go {direction} from here.",
-                    type=ResponseType.MOVE_BLOCKED,
+                    message=f"You cannot go {direction} from here.",   
+                    type=ResponseType.EXPLORATION,
+                    tags=["move_blocked"],
+                    payload={
+                        "room": self.hero.current_room,
+                    }, 
                 )
             else:
                 new_room = self.hero.current_room.neighbors[direction]
@@ -222,7 +226,11 @@ class Game:
         else:
             return GameResponse(
                 message=f"There is no exit to the {direction}.",
-                type=ResponseType.MOVE_BLOCKED,
+                type=ResponseType.EXPLORATION,
+                tags=["move_blocked"],
+                payload={
+                    "room": self.hero.current_room,
+                },
             )
 
     def change_room(self, new_room) -> GameResponse:
@@ -233,7 +241,7 @@ class Game:
             
         response = GameResponse(
             message=f"You move to {self.hero.current_room.get_label}.",
-            type=ResponseType.ROOM_ENTERED,
+            type=ResponseType.EXPLORATION,
             tags=["move", "room_change"],
             payload={
                 "room": self.hero.current_room,

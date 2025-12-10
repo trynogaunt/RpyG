@@ -16,20 +16,14 @@ class DamageResult:
 
 
 class ResponseType(Enum):
-    DAMAGE = auto()
-    EFFECT = auto()
-    IN_COMBAT = auto()
-    BATTLE_END = auto()
     SYSTEM = auto()
     DIALOGUE = auto()
-    STATE_CHANGE = auto()
-    EXPLORATION = auto()
-    MOVE_BLOCKED = auto()
-    MAIN_MENU = auto()
-    CHARACTER_CREATION = auto()
-    ROOM_ENTERED = auto()
-    LOOK_AROUND = auto()
+    DESCRIPTION = auto()
+    MOVE_FEEDBACK = auto()
     INVENTORY = auto()
+    COMBAT_LOG = auto()
+    STATUS_CHANGE = auto()
+    EVENT = auto()
 
 @dataclass
 class MoveResult:
