@@ -2,8 +2,8 @@ from ui.ui_controller import UIController
 from game import game
 import json
 from pathlib import Path
-from .locales.i18n import I18n
-from game.game_context import GameContext
+from game.locales.i18n import I18n
+from models.game_context import GameContext
 from integrations.discord_presence import DiscordPresence
 
 
@@ -24,9 +24,9 @@ def load_discord_presence() -> DiscordPresence | None:
 
 def main():
     ctx = GameContext(
-        i18n=I18n(locale="fr", fallback_locale="en"),  # You can initialize this with your I18n instance if needed
+        i18n=I18n(locale="fr", fallback_locale="en")
     )
-    game_ui = UIController(ctx=ctx, width=100, border_char="=", padding=4)
+    game_ui = UIController(ctx=ctx, width=100, border_char="|", padding=4)
     game_instance = game.Game(ui=game_ui, ctx=ctx)
     discord = load_discord_presence()
     if discord:

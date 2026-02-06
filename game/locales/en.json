@@ -1,0 +1,45 @@
+{
+    "ui" : {
+        "main_menu": {
+            "title": "R P y G  -  L E G A C Y",
+            "version_info": "Version 0.1 - Early Access",
+            "splash_title": "Your CPU will handle all the dragons",
+            "prompt_start": "In a world where dragons roam the skies and ancient magic floats in the air, you are a brave adventurer seeking glory and fortune. Will you rise to the challenges ahead and become a legend?",
+            "exit_message": "Thank you for playing! See you soon for new adventures!",
+            "choose":{
+                "start_game": "New Game",
+                "load_game": "Load Game",
+                "exit": "Exit"
+            }
+        },
+        "creation": {
+            "name_prompt": "Enter your character's name:",
+            "stats": {
+                "health": "Health",
+                "speed": "Speed",
+                "luck": "Luck",
+                "strength": "Strength"
+            }
+        },
+        "inventory": {
+            "gold_label": "Gold",
+            "backpack_label": "Backpack",
+            "equipped_items_label": "Equipped Items",
+            "empty_inventory": "No items in inventory"
+        },
+        "room": {
+            "no_room": "You are nowhere. The game seems to be broken.",
+            "exits_label": "Exits",
+            "east": "East",
+            "west": "West",
+            "north": "North",
+            "south": "South"
+        },
+        "combat": {
+            "attack": "Attack",
+            "defend": "Defend",
+            "use_item": "Use Item",
+            "flee": "Flee"
+        }
+    }
+}

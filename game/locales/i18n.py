@@ -1,7 +1,7 @@
 import json
 import os
-from dataclasses import dataclass
 from typing import Dict, Any, Optional
+from time import time, sleep
 
 
 def _get_deep(d: Dict[str, Any], key: str) -> Optional[Any]:
@@ -14,17 +14,17 @@ def _get_deep(d: Dict[str, Any], key: str) -> Optional[Any]:
             return None
     return current
 
-@dataclass
-class I18n:
-    locale: str = "fr"
-    fallback_locale: str = "en"
+
+class I18n():
     
-    def __post_init__(self):
+    
+    def __init__(self, locale: str = "fr", fallback_locale: str = "en"):
         
-    
-        base_path = os.path.dirname(os.path.abspath(__file__))
-        self.locales_path = os.path.join(base_path)
-        self.translations :  Dict[str, Any] = {}
+        self.locale: str = locale
+        self.fallback_locale: str = fallback_locale
+        self.base_path = os.path.dirname(os.path.abspath(__file__))
+        self.locales_path = os.path.join(self.base_path)
+        self.translations : Dict[str, Any] = {}
         self.fallback_translations : Dict[str, Any] = {}
         self._cache : Dict[str, Any] = {}
         
@@ -37,13 +37,13 @@ class I18n:
         
         if not self.translations and self.locale != self.fallback_locale:
             print(f"Warning: No translations found for locale '{self.locale}'. \n Falling back to '{self.fallback_locale}'.")
-            
+            sleep(2)  # Small delay to ensure the warning is seen before fallback translations are loaded.
         if not self.fallback_translations:
             print(f"Warning: No translations found for fallback locale '{self.fallback_locale}'.")
-        
+            sleep(2)
         if not self.translations and not self.fallback_translations:
             print("Warning: No translations found for both primary and fallback locales. All keys will return the key itself.")
-            
+            sleep(2)
         self._cache.clear()
     
     def _load_locale_file(self, locale: str) -> Optional[Dict[str, Any]]:
@@ -53,7 +53,6 @@ class I18n:
                 translations = json.load(f)
                 return translations if isinstance(translations, dict) else {}
         except FileNotFoundError:
-            print(f"Warning: Translation file for locale '{locale}' not found.")
             return {}
     
     def _resolve(self, key: str) -> Optional[str]:

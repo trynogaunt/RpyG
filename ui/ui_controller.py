@@ -3,6 +3,7 @@ from ui import toolkit as tk
 from events.response import GameResponse, ResponseType
 from ui.screens import main_menu_screen, creation_screen, room_screen, inventory_screen, combat_screen
 from models.game_context import GameContext
+from typing import Dict
 
 class UIController:
     def __init__(self, ctx: GameContext, width=80, border_char="|",header_char="=", padding=2):
@@ -14,13 +15,16 @@ class UIController:
         self.padding = padding
         self.ctx = ctx
     
-    def choose(self, prompt:str, choices:list[str], value=None) -> str:
-        if value is None:
-            return questionary.select(
-                prompt,
-                choices=choices
-            ).ask()
-    
+    def choose(self, prompt:str, choices:list[str|tuple], value=None) -> str:
+        if isinstance(choices[0], tuple):
+            choices = [questionary.Choice(title=title, value=val) for title, val in choices]
+        if isinstance(choices[0], str):
+            choices = [questionary.Choice(title=title, value=title) for title in choices]
+        return questionary.select(
+            prompt,
+            choices=choices
+        ).ask()
+            
     def confirm(self, prompt:str) -> bool:
         return questionary.confirm(prompt).ask()
 

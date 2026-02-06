@@ -1,17 +1,35 @@
 {
     "ui" : {
         "main_menu": {
-            "start_game": "Démarrer le jeu",
-            "load_game": "Charger le jeu",
-            "exit": "Quitter"
+            "title": "R P y G  -  L E G A C Y",
+            "version_info": "Version 0.1 - Early Access",
+            "splash_title": "Ton CPU gérera tous les dragons",
+            "prompt_start": "Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un brave aventurier à la recherche de gloire et de fortune. Serez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
+            "exit_message": "Merci d'avoir joué ! À bientôt pour de nouvelles aventures !",
+            "choose":{
+                "start_game": "Nouvelle partie",
+                "load_game": "Charger le jeu",
+                "exit": "Quitter"
+            }
         },
         "creation": {
             "name_prompt": "Entrez le nom de votre personnage :",
+            "error_empty_name": "Le nom ne peut pas être vide.",
             "stats": {
+                "prompt":{
+                    "count":{
+                        "one": "Vous avez {count} point à répartir entre les statistiques suivantes :",
+                        "other": "Vous avez {count} points à répartir entre les statistiques suivantes :"
+                    }
+                },
                 "health": "Santé",
+                "health_desc": "Détermine combien de dégâts vous pouvez encaisser avant de mourir.",
                 "speed": "Vitesse",
+                "speed_desc": "Détermine votre ordre d'action en combat et votre capacité à esquiver les attaques.",
                 "luck": "Chance",
-                "strength": "Force"
+                "luck_desc": "Augmente vos chances de coups critiques et de trouver des objets rares.",
+                "strength": "Force",
+                "strength_desc": "Augmente les dégâts que vous infligez aux ennemis."
             }
         },
         "inventory": {

@@ -34,6 +34,6 @@ class CharacterCreationState:
     luck: int = 0
     speed: int = 1
     points_to_spend: int = 5
-    step: str = "name"  
+    step: int = 1  
     error : str = ""
 
