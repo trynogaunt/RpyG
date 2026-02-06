@@ -206,7 +206,7 @@ def empty_line(count:int = 1, width:int = 0, border_char:str = " ") -> List[str]
             lines.append("")
     return lines
 
-def two_column(left_lines: List[str], right_lines: List[str], width:int, border_char:str, col_width:tuple = (50,50), separator:str="|", indent:int=0) -> List[str]:
+def two_column(left_lines: List[str], right_lines: List[str], width:int, border_char:str, col_width:tuple = (50,50), separator:str="|", indent:int=0, linked:bool=False) -> List[str]:
     """
     Affiche deux colonnes côte à côte, avec une largeur totale définie.
     :param left_lines: Les lignes à afficher dans la colonne de gauche
@@ -233,25 +233,39 @@ def two_column(left_lines: List[str], right_lines: List[str], width:int, border_
     
     lines = []
     max_lines = max(len(left_lines), len(right_lines))
-    for i in range(max_lines):
-        left_part = left_lines[i].strip() if i < len(left_lines) else ""
-        right_part = right_lines[i].strip() if i < len(right_lines) else ""
-        
-        wrap_l = textwrap.wrap(left_part, width=l_width) if left_part else [""]
-        wrap_r = textwrap.wrap(right_part, width=r_width) if right_part else [""]
-        
-        if not wrap_l:
-            wrap_l = [""]
-        if not wrap_r:
-            wrap_r = [""]
-        
-        row_height = max(len(wrap_l), len(wrap_r))   
-        
-        for j in range(row_height):
-            l_line = wrap_l[j] if j < len(wrap_l) else ""
-            r_line = wrap_r[j] if j < len(wrap_r) else "" 
-            left_part = ljust_visible(l_line, indent, int(l_width), " ")
-            right_part = ljust_visible(r_line, indent, int(r_width), " ")
+    if linked:
+        for i in range(max_lines):
+            left_part = left_lines[i].strip() if i < len(left_lines) else ""
+            right_part = right_lines[i].strip() if i < len(right_lines) else ""
+            
+            wrap_l = textwrap.wrap(left_part, width=l_width) if left_part else [""]
+            wrap_r = textwrap.wrap(right_part, width=r_width) if right_part else [""]
+            
+            if not wrap_l:
+                wrap_l = [""]
+            if not wrap_r:
+                wrap_r = [""]
+            
+            row_height = max(len(wrap_l), len(wrap_r))   
+            
+            for j in range(row_height):
+                l_line = wrap_l[j] if j < len(wrap_l) else ""
+                r_line = wrap_r[j] if j < len(wrap_r) else "" 
+                left_part = ljust_visible(l_line, indent, int(l_width), " ")
+                right_part = ljust_visible(r_line, indent, int(r_width), " ")
+                line = f"{border_char}{left_part}{separator}{right_part}{border_char}"
+                
+                # Last resort patch for line without enough spaces, need fixing the root cause later (undetermined, maybe related to ANSI codes or textwrap)
+                if len_visible(line) < width:
+                    line = line[:-1] + " " * (width - len_visible(line)) + border_char
+                lines.append(line)
+    else:
+        for i in range(max_lines):
+            left_part = left_lines[i] if i < len(left_lines) else ""
+            right_part = right_lines[i] if i < len(right_lines) else ""
+            
+            left_part = ljust_visible(left_part, indent, int(l_width), " ")
+            right_part = ljust_visible(right_part, indent, int(r_width), " ")
             line = f"{border_char}{left_part}{separator}{right_part}{border_char}"
             
             # Last resort patch for line without enough spaces, need fixing the root cause later (undetermined, maybe related to ANSI codes or textwrap)

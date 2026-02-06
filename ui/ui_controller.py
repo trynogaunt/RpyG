@@ -1,4 +1,5 @@
 import questionary
+from ui import toolkit as tk
 from events.response import GameResponse, ResponseType
 from ui.screens import main_menu_screen, creation_screen, room_screen, inventory_screen
 
@@ -25,7 +26,7 @@ class UIController:
         return questionary.text(prompt).ask()
     
     def render(self, response: GameResponse):
-      
+        tk.clear()
         match response.type:
             case ResponseType.MAIN_MENU:
                 lines = main_menu_screen.render(self, response)

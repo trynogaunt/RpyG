@@ -51,6 +51,9 @@ class Inventory:
             if item is not None
         ]
     
+    def list_all_slots(self):
+        return [(slot, item) for slot, item in self.equipped_items.items()]
+    
     def get_equipped_weapons(self):
         weapons = []
         left_item = self.equipped_items.get("left_hand")

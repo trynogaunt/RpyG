@@ -197,7 +197,7 @@ class Game:
 
     def handle_inventory(self) -> GameResponse:
         items = self.hero.inventory.list_items()
-        equipped = self.hero.inventory.list_equipped_items()
+        equipped = self.hero.inventory.list_all_slots()
         response = GameResponse(
             message="", type=ResponseType.INVENTORY, payload={"equipped": equipped, "items": items, "gold": self.hero.gold}
         )
