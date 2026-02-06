@@ -1,7 +1,6 @@
 import os
 import textwrap
 import questionary
-import time
 from events.response import GameResponse, ResponseType
 from ui.screens import main_menu_screen, creation_screen, room_screen, inventory_screen
 
@@ -89,7 +88,6 @@ class UIController:
         self.clear()
         match response.type:
             case ResponseType.MAIN_MENU:
-                actions = response.payload.get("actions", [])
                 lines = main_menu_screen.splash(self)
             case ResponseType.CHARACTER_CREATION:
                 lines = creation_screen.build_creation_menu(self,response)

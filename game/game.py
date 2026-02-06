@@ -1,11 +1,13 @@
 from models.hero import Hero
 from enum import Enum, auto
 from world.build_world import load_world
-
+from enums import MainMenuOption, CreationMenuOption, AttributeType
 # from game import combat
 from events.response import GameResponse, ResponseType
 from classes.interface_class import CharacterCreationState
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:   
+    from ui.ui_controller import UIController
 
 class GameState(Enum):
     EXPLORING = auto()
@@ -33,7 +35,7 @@ class Game:
 
     def run(self):
         while (
-            self.hero == None or self.hero.is_alive() and self.state != GameState.EXIT
+            self.hero is None or self.hero.is_alive() and self.state != GameState.EXIT
         ):
             if self.discord_presence:
                 self.discord_presence.update(self)
@@ -62,13 +64,13 @@ class Game:
             message="", type=ResponseType.MAIN_MENU, payload={"type": "splash_screen"}
         )
         self.ui.render(response)
-        choice = self.ui.choose("", ["Start New Game", "Load Game", "Exit"])
-        if choice == "Start New Game":
+        choice = self.ui.choose("", [MainMenuOption.NEW_GAME.value, MainMenuOption.LOAD_GAME.value, MainMenuOption.EXIT.value])
+        if choice == MainMenuOption.NEW_GAME.value:
             self.state = GameState.CHARACTER_CREATION
-        elif choice == "Load Game":
+        elif choice == MainMenuOption.LOAD_GAME.value:
             # self.load("savefile.sav")
             self.state = GameState.EXPLORING
-        elif choice == "Exit":
+        elif choice == MainMenuOption.EXIT.value:
             self.state = GameState.EXIT
 
     def handle_character_creation(self):
@@ -84,14 +86,14 @@ class Game:
         elif self.state_creation.step == "attributes" and self.state_creation.points_to_spend > 0:
             attr = response.payload["attributes"]
             choices = [f"{a['label']}: {a['value']}" for a in attr]
-            choices.append("Finish Creation")
+            choices.append(CreationMenuOption.FINISH.value)
             choice = self.ui.choose(
                 f"Distribute your attribute points. Points left: {self.state_creation.points_to_spend}",
                 choices,
             )
             attr_id = choice.split(":")[0].lower()
 
-            if choice.startswith("Finish Creation"):
+            if choice.startswith(CreationMenuOption.FINISH.value):
                 if self.state_creation.points_to_spend == 0:
                     self.state_creation.step = "summary"
                 else:
@@ -102,16 +104,16 @@ class Game:
                     )
                     if choice:
                         self.state_creation.step = "summary"
-            elif choice.startswith("Health"):
+            elif choice.startswith(AttributeType.HEALTH.value):
                 self.state_creation.health += 5
                 self.state_creation.points_to_spend -= 1
-            elif choice.startswith("Strength"):
+            elif choice.startswith(AttributeType.STRENGTH.value):
                 self.state_creation.strength += 1
                 self.state_creation.points_to_spend -= 1
-            elif choice.startswith("Luck"):
+            elif choice.startswith(AttributeType.LUCK.value):
                 self.state_creation.luck += 1
                 self.state_creation.points_to_spend -= 1
-            elif choice.startswith("Speed"):
+            elif choice.startswith(AttributeType.SPEED.value):
                 self.state_creation.speed += 1
                 self.state_creation.points_to_spend -= 1
             
@@ -119,7 +121,7 @@ class Game:
                 self.state_creation.points_to_spend = 0
                 self.state_creation.step = "summary"
         elif self.state_creation.step == "summary":
-            confirm = self.ui.confirm(f"Confirm your character ?")
+            confirm = self.ui.confirm("Confirm your character ?")
             if confirm:
                 self.hero = Hero(
                     name=self.state_creation.name,

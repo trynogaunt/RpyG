@@ -1,8 +1,8 @@
 from ui.screens.combat_screen import build_combat_ui
 from dataclasses import dataclass
 from typing import Literal
-from classes.hero import Hero
-from classes.ennemy import Enemy
+from models.hero import Hero
+from models.ennemy import Enemy
 from classes.interface_class import ActionCombatChoice, ActionType
 @dataclass
 class CombatLog:
