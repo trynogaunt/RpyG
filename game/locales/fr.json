@@ -1,0 +1,38 @@
+{
+    "ui" : {
+        "main_menu": {
+            "start_game": "Démarrer le jeu",
+            "load_game": "Charger le jeu",
+            "exit": "Quitter"
+        },
+        "creation": {
+            "name_prompt": "Entrez le nom de votre personnage :",
+            "stats": {
+                "health": "Santé",
+                "speed": "Vitesse",
+                "luck": "Chance",
+                "strength": "Force"
+            }
+        },
+        "inventory": {
+            "gold_label": "Or",
+            "backpack_label": "Sac à dos",
+            "equipped_items_label": "Objets équipés",
+            "empty_inventory": "Aucun objet dans l'inventaire"
+        },
+        "room": {
+            "no_room": "Vous êtes nulle part. Le jeu semble être cassé.",
+            "exits_label": "Sorties",
+            "east": "Est",
+            "west": "Ouest",
+            "north": "Nord",
+            "south": "Sud"
+        },
+        "combat": {
+            "attack": "Attaquer",
+            "defend": "Défendre",
+            "use_item": "Utiliser un objet",
+            "flee": "Fuir"
+        }
+    }
+}

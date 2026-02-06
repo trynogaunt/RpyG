@@ -1,16 +1,18 @@
 import questionary
 from ui import toolkit as tk
 from events.response import GameResponse, ResponseType
-from ui.screens import main_menu_screen, creation_screen, room_screen, inventory_screen
+from ui.screens import main_menu_screen, creation_screen, room_screen, inventory_screen, combat_screen
+from models.game_context import GameContext
 
 class UIController:
-    def __init__(self, width=80, border_char="|",header_char="=", padding=2):
+    def __init__(self, ctx: GameContext, width=80, border_char="|",header_char="=", padding=2):
         if width < 70:
             width = 70  
         self.width = width
         self.border_char = border_char
         self.header_char = header_char
         self.padding = padding
+        self.ctx = ctx
     
     def choose(self, prompt:str, choices:list[str], value=None) -> str:
         if value is None:
@@ -33,7 +35,7 @@ class UIController:
             case ResponseType.CHARACTER_CREATION:
                 lines = creation_screen.render(self, response)
             case ResponseType.IN_COMBAT:
-               pass
+                lines = combat_screen.render(self, response)
             case ResponseType.EXPLORATION:
                  lines = room_screen.render(self, response)
             case ResponseType.ROOM_ENTERED:

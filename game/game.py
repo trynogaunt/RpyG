@@ -1,10 +1,11 @@
 from models.hero import Hero
 from enum import Enum, auto
 from world.build_world import load_world
-from enums import MainMenuOption, CreationMenuOption, AttributeType
+from .enums import MainMenuOption, CreationMenuOption, AttributeType
 # from game import combat
 from events.response import GameResponse, ResponseType
 from classes.interface_class import CharacterCreationState
+from models.game_context import GameContext
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:   
     from ui.ui_controller import UIController
@@ -20,7 +21,7 @@ class GameState(Enum):
 
 
 class Game:
-    def __init__(self, ui: "UIController"):
+    def __init__(self, ui: "UIController", ctx: GameContext):
         self.ui = ui
         self.hero = None
         self.state = GameState.MAIN_MENU
@@ -32,6 +33,7 @@ class Game:
         self.state_creation = CharacterCreationState()
         self.error_message = ""
         self.player_choice = None
+        self.context = ctx
 
     def run(self):
         while (
