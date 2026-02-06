@@ -16,7 +16,7 @@ def test_character_creation_render(character_name="", available_points=10, chara
     
     assert any("Character Creation" in line for line in lines), "Header not found in character creation render."
     assert any("Welcome to the character creation screen!" in line for line in lines), "Intro text not found in character creation render."
-    assert any("Step 1 of 3" in line for line in lines), "Step info not found in character creation render."
+    assert any("1/3" in line for line in lines), "Step info not found in character creation render."
     print("Character creation render test passed.")
     
 

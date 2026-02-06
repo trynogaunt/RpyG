@@ -21,13 +21,16 @@ def render(ui: "UIController", response : "GameResponse") -> List[str]:
     lines.extend(tk.empty_line(count=1, width=width, border_char=b_char))
     lines.extend(tk.text_block("Welcome to the character creation screen! Here you can customize your adventurer before embarking on your journey. Follow the steps to create a unique character that suits your playstyle.", width, indent=padding, border_char=b_char))
     lines.extend(tk.empty_line(count=1, width=width, border_char=b_char))
-    lines.extend(tk.center_text(f"Step {step} of 3", width, b_char))
     lines.extend(tk.empty_line(count=1, width=width, border_char=b_char))
     lines.extend(tk.text_block(f"Character Name: {character_name}", width, indent=padding, border_char=b_char))
-    if step == 2:
+    if step == 2 or character_name is not None:
         lines.extend(tk.empty_line(count=1, width=width, border_char=b_char))
         lines.extend(tk.text_block(f"Available Points: {available_points}", width, indent=padding, border_char=b_char))
         lines.extend(tk.empty_line(count=1, width=width, border_char=b_char))
-        stats_text = "Character Stats:\n" + "\n".join([f"{stat}: {value}" for stat, value in character_stats.items()])
-        lines.extend(tk.text_block(stats_text, width, indent=padding, border_char=b_char))
+        lines.extend(tk.text_block("Character Stats:", width, indent=padding, border_char=b_char))
+        for stat, value in character_stats.items():
+            lines.extend(tk.text_block(f"{stat}: {value}", width, indent=padding*2, border_char=b_char))
+    lines.extend(tk.empty_line(count=1, width=width, border_char=b_char))
+    lines.extend(tk.right_text(f"{step}/3", width,border_char=b_char))
+    lines.extend(tk.bottom_bar(width, header_char))
     return lines

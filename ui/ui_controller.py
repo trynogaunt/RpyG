@@ -31,7 +31,7 @@ class UIController:
             case ResponseType.MAIN_MENU:
                 lines = main_menu_screen.render(self, response)
             case ResponseType.CHARACTER_CREATION:
-                lines = creation_screen.build_creation_menu(self,response)
+                lines = creation_screen.render(self, response)
             case ResponseType.IN_COMBAT:
                pass
             case ResponseType.EXPLORATION:
@@ -41,7 +41,7 @@ class UIController:
             case ResponseType.SYSTEM:
                 match response.payload.get("screen"):
                     case "character_creation":
-                        lines = creation_screen.build_creation_menu(self, response)
+                        lines = creation_screen.render(self, response)
             case ResponseType.INVENTORY:
                 lines = inventory_screen.build_inventory_screen(self, response)
             case _:
