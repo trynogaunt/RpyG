@@ -124,9 +124,9 @@ def header(text:str, width:int, border_char:str, h_char:str) -> List[str]:
     centered = center_text(text, width, border_char)
     return [h_border] + centered + [h_border]
 
-def sub_header(text: str, width:int) -> List[str]:
+def sub_header(text: str, width:int, indent:int=0, center_char:str="-") -> List[str]:
         round_text = f"{text}"
-        return [f"{round_text.center(width, "-")}" ]
+        return [f"{round_text.center(width, center_char)}" ]
 
 def bottom_bar(width:int, h_char:str) -> List[str]:
     h_border = h_char * width

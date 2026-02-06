@@ -35,15 +35,15 @@ class UIController:
             case ResponseType.IN_COMBAT:
                pass
             case ResponseType.EXPLORATION:
-                 lines = room_screen.build_room_screen(self, response)
+                 lines = room_screen.render(self, response)
             case ResponseType.ROOM_ENTERED:
-                lines = room_screen.build_room_screen(self, response)
+                lines = room_screen.render(self, response)
             case ResponseType.SYSTEM:
                 match response.payload.get("screen"):
                     case "character_creation":
                         lines = creation_screen.render(self, response)
             case ResponseType.INVENTORY:
-                lines = inventory_screen.build_inventory_screen(self, response)
+                lines = inventory_screen.render(self, response)
             case _:
                 lines = ["Unknown response type."]
         for line in lines:
