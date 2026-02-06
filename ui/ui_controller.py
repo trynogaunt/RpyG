@@ -1,4 +1,3 @@
-from ui import toolkit as tk
 import questionary
 from events.response import GameResponse, ResponseType
 from ui.screens import main_menu_screen, creation_screen, room_screen, inventory_screen
