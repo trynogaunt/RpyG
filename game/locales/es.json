@@ -1,0 +1,67 @@
+{
+    "ui" : {
+        "main_menu": {
+            "title": "R P y G  -  L E G A C Y",
+            "version_info": "Version 0.1 - Early Access",
+            "splash_title": "Tu CPU se encargará de todos los dragones",
+            "prompt_start": "En un mundo donde los dragones surcan los cielos y la magia antigua flota en el aire, eres un valiente aventurero en busca de gloria y fortuna. ¿Te enfrentarás a los desafíos que te esperan y te convertirás en una leyenda?",
+            "exit_message": "¡Gracias por jugar! ¡Hasta pronto para nuevas aventuras!",
+            "choose":{
+                "start_game": "Nueva Partida",
+                "load_game": "Cargar Partida",
+                "exit": "Salir"
+            }
+        },
+        "creation": {
+            "title": "Creación de Personaje",
+            "step_1": "Paso 1: Elige un nombre para tu personaje.",
+            "step_2": "Paso 2: Asigna tus puntos de estadística.",
+            "step_3": "Paso 3: Confirma tu personaje.",
+            "prompt_start": "¡Bienvenido a la pantalla de creación de personaje! Aquí puedes personalizar a tu aventurero antes de comenzar tu viaje. Sigue los pasos para crear un personaje único que se adapte a tu estilo de juego.",
+            "name_prompt": "Introduce el nombre de tu personaje:",
+            "character_name": "Nombre del Personaje: {name}",
+            "available_points": "Puntos Disponibles: {points} ",
+            "confirmation_prompt": "¿Estás satisfecho con tu personaje?",
+            "no_points": "No tienes más puntos para asignar.",
+            "error_empty_name": "El nombre no puede estar vacío.",
+            "stats": {
+                "prompt":{
+                    "count":{
+                        "one": "Tienes {count} punto para asignar entre las siguientes estadísticas:",
+                        "other": "Tienes {count} puntos para asignar entre las siguientes estadísticas:"
+                    },
+                    "attribute": "Elige una estadística para aumentar:",
+                    "title": "Estadísticas del Personaje:"
+                },
+                "health": "Salud",
+                "health_desc": "Determina cuánto daño puedes recibir antes de morir.",
+                "speed": "Velocidad",
+                "speed_desc": "  Determina tu orden de acción en combate y tu capacidad para esquivar ataques.",
+                "luck": "Suerte",
+                "luck_desc": "Aumenta tus posibilidades de golpes críticos y de encontrar objetos raros.",
+                "strength": "Fuerza",
+                "strength_desc": "Aumenta el daño que infliges a los enemigos."
+            }
+        },
+        "inventory": {
+            "gold_label": "Oro",
+            "backpack_label": "Mochila",
+            "equipped_items_label": "Objetos Equipados",
+            "empty_inventory": "No hay objetos en el inventario"
+        },
+        "room": {
+            "no_room": "No estás en ninguna parte. El juego parece estar roto.",
+            "exits_label": "Salidas",
+            "east": "Este",
+            "west": "Oeste",
+            "north": "Norte",
+            "south": "Sur"
+        },
+        "combat": {
+            "attack": "Atacar",
+            "defend": "Defender",
+            "use_item": "Usar Objeto",
+            "flee": "Huir"
+        }
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "ui" : {
+        "main_menu": {
+            "title": "R P y G  -  L E G A C Y",
+            "version_info": "Version 0.1 - Early Access",
+            "splash_title": "Deine CPU wird mit allen Drachen fertig",
+            "prompt_start": "In einer Welt, in der Drachen den Himmel durchstreifen und uralte Magie in der Luft liegt, bist du ein tapferer Abenteurer auf der Suche nach Ruhm und Reichtum. Wirst du dich den Herausforderungen stellen und zur Legende werden?",
+            "exit_message": "Danke fürs Spielen! Bis bald zu neuen Abenteuern!",
+            "choose":{
+                "start_game": "Neues Spiel",
+                "load_game": "Spiel laden",
+                "exit": "Beenden"
+            }
+        },
+        "creation": {
+            "title": "Charaktererstellung",
+            "step_1": "Schritt 1: Wähle einen Namen für deinen Charakter.",
+            "step_2": "Schritt 2: Verteile deine Statuspunkte.",
+            "step_3": "Schritt 3: Bestätige deinen Charakter.",
+            "prompt_start": "Willkommen bei der Charaktererstellung! Hier kannst du deinen Abenteurer anpassen, bevor deine Reise beginnt. Folge den Schritten, um einen einzigartigen Charakter zu erstellen, der zu deinem Spielstil passt.",
+            "name_prompt": "Gib den Namen deines Charakters ein:",
+            "character_name": "Charaktername: {name}",
+            "available_points": "Verfügbare Punkte: {points} ",
+            "confirmation_prompt": "Bist du mit deinem Charakter zufrieden?",
+            "no_points": "Du hast keine Punkte mehr zu verteilen.",
+            "error_empty_name": "Der Name darf nicht leer sein.",
+            "stats": {
+                "prompt":{
+                    "count":{
+                        "one": "Du hast {count} Punkt, den du auf folgende Werte verteilen kannst:",
+                        "other": "Du hast {count} Punkte, die du auf folgende Werte verteilen kannst:"
+                    },
+                    "attribute": "Wähle einen Wert, den du erhöhen möchtest:",
+                    "title": "Charakterwerte:"
+                },
+                "health": "Gesundheit",
+                "health_desc": "Bestimmt, wie viel Schaden du erleiden kannst, bevor du stirbst.",
+                "speed": "Geschwindigkeit",
+                "speed_desc": "  Bestimmt deine Zugreihenfolge im Kampf und deine Fähigkeit, Angriffen auszuweichen.",
+                "luck": "Glück",
+                "luck_desc": "Erhöht deine Chance auf kritische Treffer und das Finden seltener Gegenstände.",
+                "strength": "Stärke",
+                "strength_desc": "Erhöht den Schaden, den du Gegnern zufügst."
+            }
+        },
+        "inventory": {
+            "gold_label": "Gold",
+            "backpack_label": "Rucksack",
+            "equipped_items_label": "Ausrüstung",
+            "empty_inventory": "Keine Gegenstände im Inventar"
+        },
+        "room": {
+            "no_room": "Du bist nirgendwo. Das Spiel scheint defekt zu sein.",
+            "exits_label": "Ausgänge",
+            "east": "Osten",
+            "west": "Westen",
+            "north": "Norden",
+            "south": "Süden"
+        },
+        "combat": {
+            "attack": "Angreifen",
+            "defend": "Verteidigen",
+            "use_item": "Gegenstand nutzen",
+            "flee": "Fliehen"
+        }
+    }
+}
