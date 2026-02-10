@@ -4,7 +4,9 @@ import json
 from pathlib import Path
 from game.locales.i18n import I18n
 from models.game_context import GameContext
+from models.settings import Settings, load_settings
 from integrations.discord_presence import DiscordPresence
+from time import sleep
 
 
 def load_discord_presence() -> DiscordPresence | None:
@@ -23,11 +25,15 @@ def load_discord_presence() -> DiscordPresence | None:
     return presence
 
 def main():
-    ctx = GameContext(
+    settings : Settings = load_settings()
+    ctx : GameContext = GameContext(
+        settings=settings,
         i18n=I18n(locale="en", fallback_locale="en")
     )
-    game_ui = UIController(ctx=ctx, width=100, border_char="|", padding=1)
-    game_instance = game.Game(ui=game_ui, ctx=ctx)
+    print(settings.language)
+    sleep(5)
+    game_ui : UIController = UIController(ctx=ctx, width=settings.screen_width, border_char=settings.border_char, padding=settings.padding, header_char=settings.horizontal_char)
+    game_instance : game.Game = game.Game(ui=game_ui, ctx=ctx)
     discord = load_discord_presence()
     if discord:
         game_instance.discord_presence = discord

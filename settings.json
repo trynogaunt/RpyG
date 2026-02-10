@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "language": "fr",
+    "show_title": true,
+    "ui": {
+        "screen_width": 100,
+        "horizontal_char": "=",
+        "border_char": "|",
+        "sub_title_char": "-",
+        "split_char": "#",
+        "padding": 1
+    }
+}
