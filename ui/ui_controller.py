@@ -6,7 +6,7 @@ from models.game_context import GameContext
 from typing import Dict
 
 class UIController:
-    def __init__(self, ctx: GameContext, width=80, border_char="|",header_char="=", padding=2):
+    def __init__(self, ctx: GameContext, width=80, border_char="|",header_char="=", padding=0):
         if width < 70:
             width = 70  
         self.width = width

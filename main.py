@@ -24,9 +24,9 @@ def load_discord_presence() -> DiscordPresence | None:
 
 def main():
     ctx = GameContext(
-        i18n=I18n(locale="fr", fallback_locale="en")
+        i18n=I18n(locale="en", fallback_locale="en")
     )
-    game_ui = UIController(ctx=ctx, width=100, border_char="|", padding=4)
+    game_ui = UIController(ctx=ctx, width=100, border_char="|", padding=1)
     game_instance = game.Game(ui=game_ui, ctx=ctx)
     discord = load_discord_presence()
     if discord:

@@ -13,12 +13,34 @@
             }
         },
         "creation": {
+            "title": "Character Creation",
+            "step_1": "Step 1: Choose a name for your character.",
+            "step_2": "Step 2: Allocate your stat points.",
+            "step_3": "Step 3: Confirm your character.",
+            "prompt_start": "Welcome to the character creation screen! Here, you can customize your adventurer before starting your journey. Follow the steps to create a unique character that fits your playstyle.",
             "name_prompt": "Enter your character's name:",
+            "character_name": "Character Name: {name}",
+            "available_points": "Available Points: {points} ",
+            "confirmation_prompt": "Are you satisfied with your character?",
+            "no_points": "You have no more points to allocate.",
+            "error_empty_name": "Name cannot be empty.",
             "stats": {
+                "prompt":{
+                    "count":{
+                        "one": "You have {count} point to allocate among the following stats:",
+                        "other": "You have {count} points to allocate among the following stats:"
+                    },
+                    "attribute": "Choose a stat to increase:",
+                    "title": "Character Stats:"
+                },
                 "health": "Health",
+                "health_desc": "Determines how much damage you can take before dying.",
                 "speed": "Speed",
+                "speed_desc": "  Determines your action order in combat and your ability to dodge attacks.",
                 "luck": "Luck",
-                "strength": "Strength"
+                "luck_desc": "Increases your chances of critical hits and finding rare items.",
+                "strength": "Strength",
+                "strength_desc": "Increases the damage you deal to enemies."
             }
         },
         "inventory": {

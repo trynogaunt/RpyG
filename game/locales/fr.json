@@ -13,14 +13,25 @@
             }
         },
         "creation": {
+            "title": "Création de personnage",
+            "step_1": "Étape 1 : Choisissez un nom pour votre personnage.",
+            "step_2": "Étape 2 : Répartissez vos points de statistiques.",
+            "step_3": "Étape 3 : Confirmez votre personnage.",
+            "prompt_start": "Bienvenue dans l'écran de création de personnage ! Ici, vous pouvez personnaliser votre aventurier avant de commencer votre voyage. Suivez les étapes pour créer un personnage unique qui correspond à votre style de jeu.",
             "name_prompt": "Entrez le nom de votre personnage :",
+            "character_name": "Nom du personnage: {name}",
+            "available_points": "Points disponibles: {points} ",
+            "confirmation_prompt": "Êtes-vous satisfait de votre personnage ?",
+            "no_points": "Vous n'avez plus de points à répartir.",
             "error_empty_name": "Le nom ne peut pas être vide.",
             "stats": {
                 "prompt":{
                     "count":{
                         "one": "Vous avez {count} point à répartir entre les statistiques suivantes :",
                         "other": "Vous avez {count} points à répartir entre les statistiques suivantes :"
-                    }
+                    },
+                    "attribute": "Choisissez une statistique à augmenter :",
+                    "title": "Statistiques du personnage :"
                 },
                 "health": "Santé",
                 "health_desc": "Détermine combien de dégâts vous pouvez encaisser avant de mourir.",

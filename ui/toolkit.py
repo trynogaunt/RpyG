@@ -169,8 +169,8 @@ def text_block(text:str, width:int,indent:int=0, border_char:str=" ") -> List[st
     """
     
     inner_width = width - 2
-    wrapped_text = textwrap.fill(text, width=inner_width - indent)
-    lines = [f"{border_char}{' ' * indent}{line.ljust(inner_width - indent)}{border_char}" for line in wrapped_text.splitlines()]
+    wrapped_text = textwrap.fill(text, width=inner_width - indent*2)
+    lines = [f"{border_char}{' ' * indent}{line.ljust(inner_width - indent*2)}{' ' * indent}{border_char}" for line in wrapped_text.splitlines()]
     return lines
 
 def message_box(message:str, width:int, border_char:str, padding:int) -> List[str]:

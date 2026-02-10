@@ -82,15 +82,65 @@ class Game:
         self.ui.render(response)
 
         if self.state_creation.step == 1:
-            self.state_creation.name = self.ui.ask_text(self.ctx.t("ui.creation.name_prompt"))
-            if self.state_creation.name.strip() == "":
-                self.state_creation.error = "Name cannot be empty."
-            else:
+            name = self.ui.ask_text(self.ctx.t("ui.creation.name_prompt"))
+            if name:
+                self.state_creation.name = name
                 self.state_creation.step = 2
-        elif self.state_creation.step == 2 and self.state_creation.points_to_spend > 0:
-            attr = response.payload["character_stats"].items()
-            attr = [(f"{name} ({desc})", name) for name, desc in response.payload["stats_description"].items()]
-            choice = self.ui.choose(self.ctx.t("ui.creation.stats.prompt.choose"), attr)
+            else:
+                self.state_creation.error = self.ctx.t("ui.creation.name_error")
+        elif self.state_creation.step == 2:
+            choice = self.ui.choose(
+                self.ctx.t("ui.creation.stats.prompt.attribute"),
+                [
+                    (f"{self.ctx.t('ui.creation.stats.health')}: {self.state_creation.health}", AttributeType.HEALTH.value),
+                    (f"{self.ctx.t('ui.creation.stats.strength')}: {self.state_creation.strength}", AttributeType.STRENGTH.value),
+                    (f"{self.ctx.t('ui.creation.stats.speed')}: {self.state_creation.speed}", AttributeType.SPEED.value),
+                    (f"{self.ctx.t('ui.creation.stats.luck')}: {self.state_creation.luck}", AttributeType.LUCK.value),
+                ]
+            )
+            if choice:
+                match choice:
+                    case AttributeType.HEALTH.value:
+                        if self.state_creation.points_to_spend > 0:
+                            self.state_creation.health += 1
+                            self.state_creation.points_to_spend -= 1
+                        else:
+                            self.state_creation.error = self.ctx.t("ui.creation.stats.prompt.no_points")
+                    case AttributeType.STRENGTH.value:
+                        if self.state_creation.points_to_spend > 0:
+                            self.state_creation.strength += 1
+                            self.state_creation.points_to_spend -= 1
+                        else:
+                            self.state_creation.error = self.ctx.t("ui.creation.stats.prompt.no_points")
+                    case AttributeType.SPEED.value:
+                        if self.state_creation.points_to_spend > 0:
+                            self.state_creation.speed += 1
+                            self.state_creation.points_to_spend -= 1
+                        else:
+                            self.state_creation.error = self.ctx.t("ui.creation.stats.prompt.no_points")
+                    case AttributeType.LUCK.value:
+                        if self.state_creation.points_to_spend > 0:
+                            self.state_creation.luck += 1
+                            self.state_creation.points_to_spend -= 1
+                        else:
+                            self.state_creation.error = self.ctx.t("ui.creation.stats.prompt.no_points")
+     
+            if self.state_creation.points_to_spend == 0:
+                self.state_creation.step = 3
+        elif self.state_creation.step == 3:
+            choice = self.ui.confirm(self.ctx.t("ui.creation.confirmation_prompt").format(name=self.state_creation.name, health=self.state_creation.health, strength=self.state_creation.strength, speed=self.state_creation.speed, luck=self.state_creation.luck))
+            if choice:
+                self.hero = self.build_hero_from_creation_state()
+                self.build_world()
+                self.state = GameState.EXPLORING
+            else:
+                self.state_creation.step = 1  # Go back to the beginning of character creation
+                self.state_creation.points_to_spend = 5
+                self.state_creation.health = 10
+                self.state_creation.strength = 1
+                self.state_creation.luck = 0
+                self.state_creation.speed = 1
+                self.state_creation.error = None
 
     def handle_exploration(self):
         response = GameResponse(
@@ -213,6 +263,12 @@ class Game:
             "character_name": state.name,
             "step": state.step,
             "available_points": state.points_to_spend,
+            "stats_names": {
+                "health": self.ctx.t("ui.creation.stats.health"),
+                "strength": self.ctx.t("ui.creation.stats.strength"),
+                "speed": self.ctx.t("ui.creation.stats.speed"),
+                "luck": self.ctx.t("ui.creation.stats.luck"),
+            },
             "character_stats": {
                 "health": state.health,
                 "strength": state.strength,
@@ -220,10 +276,10 @@ class Game:
                 "speed": state.speed,
             },
             "stats_description": {
-                "Health": self.ctx.t("ui.creation.stats.health_desc"),
-                "Strength": self.ctx.t("ui.creation.stats.strength_desc"),
-                "Speed": self.ctx.t("ui.creation.stats.speed_desc"),
-                "Luck": self.ctx.t("ui.creation.stats.luck_desc"),
+                "health": self.ctx.t("ui.creation.stats.health_desc"),
+                "strength": self.ctx.t("ui.creation.stats.strength_desc"),
+                "speed": self.ctx.t("ui.creation.stats.speed_desc"),
+                "luck": self.ctx.t("ui.creation.stats.luck_desc"),
             },
             "error": state.error,
         }
