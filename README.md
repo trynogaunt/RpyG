@@ -53,14 +53,6 @@ More gameplay is coming:
 git clone https://github.com/tryogaunt/RPyG.git
 cd RPyG
 
-python -m venv .venv
-.venv\Scripts\activate     # Windows
-source .venv/bin/activate  # macOS / Linux
-
-pip install -r requirements.txt
-python main.py
-
-
 # Create and activate venv (optional, but recommended)
 python -m venv .venv
 .venv\Scripts\activate     # Windows
