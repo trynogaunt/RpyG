@@ -30,6 +30,7 @@ class ResponseType(Enum):
     ROOM_ENTERED = auto()
     LOOK_AROUND = auto()
     INVENTORY = auto()
+    ERROR = auto()
 
 @dataclass
 class MoveResult:
