@@ -1,0 +1,8 @@
+textual>=1.0
+
+[dev]
+pytest
+textual-dev
+
+[discord]
+pypresence>=4.6

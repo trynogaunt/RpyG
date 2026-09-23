@@ -1,0 +1,16 @@
+LICENSE
+README.md
+pyproject.toml
+core/enums.py
+core/game/actions.py
+core/game/game.py
+core/game/response.py
+core/ui/app.py
+core/ui/screens/main_menu.py
+rpyg.egg-info/PKG-INFO
+rpyg.egg-info/SOURCES.txt
+rpyg.egg-info/dependency_links.txt
+rpyg.egg-info/entry_points.txt
+rpyg.egg-info/requires.txt
+rpyg.egg-info/top_level.txt
+tests/test_game.py
