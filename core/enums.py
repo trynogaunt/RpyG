@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-class Screen(Enum):
+class Screens(Enum):
     MAIN_MENU = auto()
     INVENTORY = auto()
     CREATION = auto()
