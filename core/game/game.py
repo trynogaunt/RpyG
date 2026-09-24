@@ -1,10 +1,14 @@
 from core.enums import Screens
 from core.game.response import GameResponse
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation
+from core.game.creation import CreationState
+from core.game.player import Player
 
 class Game:
     def __init__(self):
         self.screen: Screens | None = None
+        self.creation: CreationState | None = None
+        self.player: Player | None = None
     
     def start(self) -> GameResponse:
         print("Starting game...")
@@ -13,14 +17,45 @@ class Game:
         return GameResponse(screen=self.screen)
     
     def handle_action(self, action: Action) -> GameResponse:
-
+        match self.screen:
+            case Screens.MAIN_MENU:
+                self._handle_main_menu(action)
+            case Screens.CREATION:
+                return self._handle_creation(action)
+            case _:
+                raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
+        return GameResponse(screen=self.screen)
+    
+    def _handle_main_menu(self, action: Action) -> GameResponse:
         match action:
-            case NewGame() if self.screen is Screens.MAIN_MENU:
-                self.screen = Screens.CREATION
             case NewGame():
-                pass
+                self.screen = Screens.CREATION
+                self.creation = CreationState()
             case Quit():
                 self.screen = Screens.EXIT
+            case _:
+                raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+        return GameResponse(screen=self.screen)
+    
+    def _handle_creation(self, action: Action) -> GameResponse:
+        match action:
+            case SetName(name=name):
+                cleaned = name.strip()
+                if cleaned:
+                    self.creation.name = cleaned
+            case AllocatePoints(stat=stat, delta=1):
+                if self.creation.can_add(stat):
+                    self.creation.allocated_points[stat] += 1
+            case AllocatePoints(stat=stat, delta=-1):
+                if self.creation.can_remove(stat):
+                    self.creation.allocated_points[stat] -= 1
+            case ConfirmCreation():
+                if self.creation.can_confirm():
+                    self.player = Player(name=self.creation.name, allocated_points=self.creation.allocated_points)
+                    self.creation = None
+                    self.screen = Screens.MAIN_MENU
+            case NewGame() | Quit():
+                pass
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
         return GameResponse(screen=self.screen)
