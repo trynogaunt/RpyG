@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 from core.enums import Stat
 from core.game.rules import STAT_RULES, CREATION_POINTS
-from core.views.CreationView import CreationView
+from core.views.creation_view import CreationView
 
 @dataclass
 class CreationState:

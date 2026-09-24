@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from core.enums import Screens
 from dataclasses import field
-from core.views.BaseView import BaseView
+from core.views.base_view import BaseView
 
 @dataclass(frozen=True)
 class GameResponse:

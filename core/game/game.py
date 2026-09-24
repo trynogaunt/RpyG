@@ -21,12 +21,13 @@ class Game:
             case Screens.MAIN_MENU:
                 self._handle_main_menu(action)
             case Screens.CREATION:
-                return self._handle_creation(action)
+                self._handle_creation(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
-        return GameResponse(screen=self.screen)
+        view = self.creation.to_view() if self.screen == Screens.CREATION else None
+        return GameResponse(screen=self.screen, view=view)
     
-    def _handle_main_menu(self, action: Action) -> GameResponse:
+    def _handle_main_menu(self, action: Action) -> None:
         match action:
             case NewGame():
                 self.screen = Screens.CREATION
@@ -35,9 +36,9 @@ class Game:
                 self.screen = Screens.EXIT
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
-        return GameResponse(screen=self.screen)
+
     
-    def _handle_creation(self, action: Action) -> GameResponse:
+    def _handle_creation(self, action: Action) -> None:
         match action:
             case SetName(name=name):
                 cleaned = name.strip()
@@ -58,4 +59,3 @@ class Game:
                 pass
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
-        return GameResponse(screen=self.screen)
