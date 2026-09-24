@@ -1,5 +1,5 @@
 from core.enums import Stat
-from core.rules import STAT_RULES
+from core.game.rules import STAT_RULES
 
 class Player:
     def __init__(self, name: str, allocated_points: dict[Stat, int] | None = None):
@@ -20,7 +20,7 @@ class Player:
     def get_stat(self, stat: Stat) -> int:
         rule = STAT_RULES[stat]
         base_stat = rule.base
-        stat_per_level = (self.level - 1) * rule.per_level
+        stat_per_level = (self.level - 1) * rule.growth_per_level
         stat_per_points = self.allocated_points[stat] * rule.per_point
         return base_stat + stat_per_points + stat_per_level
     

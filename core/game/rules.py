@@ -5,7 +5,7 @@ from core.enums import Stat
 class StatRule:
     base: int
     per_point: int
-    growth_per_level: int
+    growth_per_level: int = 1
 
 CREATION_POINTS: int = 10
 
