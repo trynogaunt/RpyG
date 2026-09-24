@@ -1,0 +1,4 @@
+{
+    "start": {"zone": "entry_village", "room": "village_square"},
+    "zones": ["entry_village", "flooded_cave"]
+}

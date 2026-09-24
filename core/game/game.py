@@ -41,9 +41,7 @@ class Game:
     def _handle_creation(self, action: Action) -> None:
         match action:
             case SetName(name=name):
-                cleaned = name.strip()
-                if cleaned:
-                    self.creation.name = cleaned
+                self.creation.name = name.strip()
             case AllocatePoints(stat=stat, delta=1):
                 if self.creation.can_add(stat):
                     self.creation.allocated_points[stat] += 1

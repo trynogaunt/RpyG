@@ -4,7 +4,7 @@ from textual.containers import Horizontal
 from textual.widgets import Button, Input, Static
 
 from core.enums import Stat
-from core.game.actions import AllocatePoint, ConfirmCreation, SetName
+from core.game.actions import AllocatePoints, ConfirmCreation, SetName
 from core.game.rules import STAT_RULES
 from core.ui.screens.base_screen import BaseScreen
 from core.views.creation_view import CreationView
@@ -30,7 +30,7 @@ class CreationScreen(BaseScreen):
         yield Button("Confirmer", id="confirm", variant="primary")
 
     def update_view(self, view: CreationView) -> None:
-        for stat, value in view.stat_values.items():
+        for stat, value in view.stats_values.items():
             self.query_one(f"#value-{stat.name}", Static).update(str(value))
             self.query_one(f"#add-{stat.name}", Button).disabled = not view.can_add[stat]
             self.query_one(f"#remove-{stat.name}", Button).disabled = not view.can_remove[stat]
@@ -48,4 +48,4 @@ class CreationScreen(BaseScreen):
             return
         kind, stat_name = event.button.id.split("-", 1)
         delta = +1 if kind == "add" else -1
-        self.app.dispatch(AllocatePoint(Stat[stat_name], delta))
+        self.app.dispatch(AllocatePoints(Stat[stat_name], delta))
