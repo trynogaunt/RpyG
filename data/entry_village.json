@@ -1,0 +1,42 @@
+{
+  "id": "entry_village",
+  "name": "Entry Village",
+  "description": "A small village that serves as the starting point for adventurers.",
+  "entry_room": "village_square",
+  "rooms": {
+    "village_square": {
+      "name": "Village Square",
+      "description": "The bustling center of the village, filled with villagers and market stalls.",
+      "look_around": "You see villagers going about their daily routines, children playing, and merchants selling their goods.",
+      "exits": {
+        "north": { "room": "blacksmith_shop" },
+        "east": { "room": "tavern" },
+        "south": { "room": "village_gate" }
+      }
+    },
+    "blacksmith_shop": {
+      "name": "Blacksmith's Shop",
+      "description": "A small shop where the blacksmith forges weapons and armor.",
+      "look_around": "Sparks fly from the anvil. Racks of freshly hammered blades line the walls.",
+      "exits": {
+        "south": { "room": "village_square" }
+      }
+    },
+    "tavern": {
+      "name": "The Drunken Dragon Tavern",
+      "description": "A lively tavern where adventurers gather to share stories and drinks.",
+      "look_around": "A bard strums a lute in the corner while a group of mercenaries argues over a map.",
+      "exits": {
+        "west": { "room": "village_square" }
+      }
+    },
+    "village_gate": {
+      "name": "Village Gate",
+      "description": "The main gate leading out of the village to the surrounding wilderness.",
+      "exits": {
+        "north": { "room": "village_square" },
+        "south": { "zone": "flooded_cave" }
+      }
+    }
+  }
+}

@@ -4,8 +4,8 @@ from dataclasses import field
 
 @dataclass(frozen=True)
 class RoomRef:
-    zone: str
-    room: str
+    zone_id: str
+    room_id: str
 
 @dataclass(frozen=True)
 class Room:
