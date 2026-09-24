@@ -7,3 +7,9 @@ class Screens(Enum):
     PAUSE_MENU = auto()
     GAME_OVER = auto()
     EXIT = auto()
+
+class Stat(Enum):
+    HEALTH = auto()
+    STRENGTH = auto()
+    SPEED = auto()
+    LUCK = auto()

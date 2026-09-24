@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from core.enums import Stat
 
 @dataclass(frozen=True)
 class Action:
@@ -15,3 +16,19 @@ class NewGame(Action):
 @dataclass(frozen=True)
 class Creation(Action):
     """Action representing the intention to enter the creation screen."""
+
+@dataclass(frozen=True)
+class SetName(Action):
+    """Action representing the intention to set the player's name."""
+    name: str
+
+@dataclass(frozen=True)
+class AllocatePoints(Action):
+    """Action representing the intention to allocate points to the player's attributes."""
+    stat: Stat
+    delta: int = 1
+
+
+@dataclass(frozen=True)
+class ConfirmCreation(Action):
+    """Action representing the intention to confirm the creation of the player's character."""

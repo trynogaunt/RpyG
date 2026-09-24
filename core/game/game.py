@@ -1,12 +1,13 @@
 from core.enums import Screens
 from core.game.response import GameResponse
-from core.game.actions import Action, NewGame, Quit
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation
 
 class Game:
     def __init__(self):
         self.screen: Screens | None = None
     
     def start(self) -> GameResponse:
+        print("Starting game...")
         self.screen = Screens.MAIN_MENU
 
         return GameResponse(screen=self.screen)
