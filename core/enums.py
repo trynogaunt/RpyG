@@ -13,3 +13,9 @@ class Stat(Enum):
     STRENGTH = auto()
     SPEED = auto()
     LUCK = auto()
+
+class Direction(Enum):
+    NORTH = auto()
+    SOUTH = auto()
+    EAST = auto()
+    WEST = auto()

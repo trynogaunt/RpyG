@@ -53,10 +53,11 @@ def test_set_name_strips_spaces(game_in_creation):
 
 
 @pytest.mark.parametrize("blank", ["", "   "])
-def test_blank_name_is_ignored(game_in_creation, blank):
+def test_blank_name_prevents_confirm(game_in_creation, blank):
     game_in_creation.handle_action(SetName("Bob"))
     game_in_creation.handle_action(SetName(blank))
-    assert game_in_creation.creation.name == "Bob"
+    assert game_in_creation.creation.name == ""
+    assert not game_in_creation.creation.can_confirm()
 
 
 # --- Répartition des points ------------------------------------------------
