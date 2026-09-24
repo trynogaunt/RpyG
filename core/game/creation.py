@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from core.enums import Stat
 from core.game.rules import STAT_RULES, CREATION_POINTS
+from core.views.CreationView import CreationView
 
 @dataclass
 class CreationState:
@@ -24,3 +25,24 @@ class CreationState:
     def stat_value(self, stat: Stat) -> int:
         rule = STAT_RULES[stat]
         return rule.base + self.allocated_points[stat] * rule.per_point
+    
+    def to_view(self) -> CreationView:
+
+        stats_values = {}
+        can_add = {}
+        can_remove = {}
+
+        for stat in STAT_RULES:
+            stats_values[stat] = self.stat_value(stat)
+            can_add[stat] = self.can_add(stat)
+            can_remove[stat] = self.can_remove(stat)
+
+
+        return CreationView(
+            name=self.name,
+            stats_values=stats_values,
+            points_left=self.points_left,
+            can_confirm=self.can_confirm(),
+            can_add=can_add,
+            can_remove=can_remove
+        )
