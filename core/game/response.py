@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from core.enums import Screens
+from dataclasses import field
+from core.views.BaseView import BaseView
 
 @dataclass(frozen=True)
 class GameResponse:
     """Represents a response from the game to the player."""
-    message: str = ""
-    success: bool = True
-    screen: Screens | None = None
+    screen: Screens
+    view: BaseView | None = None
+    
 
