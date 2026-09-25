@@ -1,6 +1,6 @@
 from core.enums import Screens
 from core.game.response import GameResponse
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move
 from core.game.creation import CreationState
 from core.game.player import Player
 from core.world.loader import World, RoomRef
@@ -64,6 +64,9 @@ class Game:
     
     def _handle_exploration(self, action: Action) -> None:
         match action:
+            case Move(direction=direction):
+                
+                pass
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:
