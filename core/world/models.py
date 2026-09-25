@@ -38,3 +38,7 @@ class World:
         if not room:
             raise ValueError(f"Room '{ref.room_id}' not found in zone '{ref.zone_id}'")
         return room
+    
+    def exit_from(self, location: RoomRef, direction: Direction) -> RoomRef | None:
+        room = self.get_room(location)
+        return room.exits.get(direction)

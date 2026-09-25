@@ -1,6 +1,7 @@
 from core.enums import Screens
 from core.game.response import GameResponse
 from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move
+from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.player import Player
 from core.world.loader import World, RoomRef
@@ -17,6 +18,13 @@ class Game:
         self.screen = Screens.MAIN_MENU
 
         return GameResponse(screen=self.screen)
+    
+    def _move_player(self, direction: Direction) -> None:
+        if not self.player or not self.world:
+            return
+        next_room = self.world.exit_from(self.player.location, direction)
+        if next_room:
+            self.player.location = next_room
     
     def handle_action(self, action: Action) -> GameResponse:
         match self.screen:
@@ -63,10 +71,9 @@ class Game:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
     
     def _handle_exploration(self, action: Action) -> None:
-        match action:
+        match action:       
             case Move(direction=direction):
-                
-                pass
+                self._move_player(direction)
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:
