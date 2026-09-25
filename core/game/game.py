@@ -5,16 +5,18 @@ from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.player import Player
 from core.world.loader import World, RoomRef
+from core.world.models import WorldState
 from core.views.base_view import BaseView
 from core.views.exploration_view import ExplorationView
 
 
 class Game:
-    def __init__(self, world: World | None = None):
+    def __init__(self, world: World | None = None, world_state: WorldState | None = None):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
         self.world: World = world
+        self.world_state: WorldState = world_state or WorldState()
         self._messages: list[Message] = []
     
     def start(self) -> GameResponse:
@@ -103,7 +105,11 @@ class Game:
             case Move(direction=direction):
                 self._move_player(direction)
             case Explore():
-                self._messages.append(self._explore_current_room())
+                if self.player.location not in self.world_state.explored:
+                    self.world_state.explored.add(self.player.location)
+                    self._messages.append(self._explore_current_room())
+                else:
+                    self._messages.append(Message(key="already_explored", text="Vous avez déjà exploré cette pièce."))
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:

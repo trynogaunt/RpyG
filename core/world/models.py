@@ -1,5 +1,9 @@
 from core.enums import Direction
 from dataclasses import field, dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from core.world.models import WorldState
 
 @dataclass(frozen=True)
 class RoomRef:
