@@ -1,5 +1,6 @@
 from textual.app import App 
 from textual.screen import Screen
+from pathlib import Path
 
 from core.game.response import GameResponse
 from core.enums import Screens
@@ -8,6 +9,8 @@ from core.ui.screens.creation import CreationScreen
 from core.ui.screens.exploration import ExplorationScreen
 
 class RpygApp(App):
+
+    CSS_PATH = Path("rpyg.tcss")
     def __init__(self, game, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.game = game

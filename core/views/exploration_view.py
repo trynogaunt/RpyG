@@ -6,5 +6,5 @@ from core.enums import Direction
 class ExplorationView(BaseView):
     zone_name: str
     room_name: str
-    room_desc: str
+    room_description: str
     can_move: dict[Direction, bool]

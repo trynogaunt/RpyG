@@ -5,13 +5,16 @@ from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.player import Player
 from core.world.loader import World, RoomRef
+from core.views.base_view import BaseView
+from core.views.exploration_view import ExplorationView
+
 
 class Game:
     def __init__(self, world: World | None = None):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
-        self.world: World | None = world
+        self.world: World = world
     
     def start(self) -> GameResponse:
         print("Starting game...")
@@ -20,11 +23,29 @@ class Game:
         return GameResponse(screen=self.screen)
     
     def _move_player(self, direction: Direction) -> None:
-        if not self.player or not self.world:
-            return
         next_room = self.world.exit_from(self.player.location, direction)
         if next_room:
             self.player.location = next_room
+    
+    def _build_to_view(self) -> BaseView | None:
+        match self.screen:
+            case Screens.CREATION:
+                return self.creation.to_view()
+            case Screens.EXPLORATION:
+                return self._exploration_to_view()
+            case _:
+                return None
+    
+    def _exploration_to_view(self) -> ExplorationView | None:
+        zone = self.world.get_zone(self.player.location)
+        room = self.world.get_room(self.player.location)
+        return ExplorationView(
+            zone_name=zone.name, 
+            room_name=room.name,
+            room_description=room.description,
+            can_move={direction: self.world.exit_from(self.player.location, direction) is not None for direction in Direction}
+        )
+        return None
     
     def handle_action(self, action: Action) -> GameResponse:
         match self.screen:
@@ -36,7 +57,7 @@ class Game:
                 self._handle_exploration(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
-        view = self.creation.to_view() if self.screen == Screens.CREATION else None
+        view = self._build_to_view()
         return GameResponse(screen=self.screen, view=view)
     
     def _handle_main_menu(self, action: Action) -> None:

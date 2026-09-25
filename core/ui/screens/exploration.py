@@ -9,7 +9,9 @@ class ExplorationScreen(BaseScreen):
     def compose(self):
         yield Static("", id="zone_name")
         yield Static("", id="room_name")
+        yield Static("", id="room_description")
     
     def update_view(self, view: ExplorationView):
-        self.query_one(Static, id="zone_name").update(view.zone_name)
-        self.query_one(Static, id="room_name").update(view.room_name)
+        self.query_one("#zone_name", Static).update(view.zone_name)
+        self.query_one("#room_name", Static).update(view.room_name)
+        self.query_one("#room_description", Static).update(view.room_description)
