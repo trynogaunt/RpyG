@@ -43,7 +43,8 @@ class Game:
             zone_name=zone.name, 
             room_name=room.name,
             room_description=room.description,
-            can_move={direction: self.world.exit_from(self.player.location, direction) is not None for direction in Direction}
+            can_move={direction: self.world.exit_from(self.player.location, direction) is not None for direction in Direction},
+            player_summary=self.player.to_summary()
         )
         return None
     

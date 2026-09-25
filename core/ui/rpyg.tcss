@@ -1,0 +1,39 @@
+# RpyG Textual CSS file
+
+$amber: #ffb000;
+
+#main   { layout: horizontal; height: 1fr; }
+#left   { width: 2fr; }
+#right  { width: 1fr; }
+
+.panel {
+    border: round $amber;
+    border-title-color: $amber;
+    border-title-style: bold;
+    padding: 0 1;
+    height: 1fr;
+}
+
+#room-name        { text-style: bold; color: $amber; margin-bottom: 1; }
+#room-description { color: $text-muted; }
+
+#directions {
+    layout: grid;
+    grid-size: 3 3;
+    grid-gutter: 0 1;
+    height: auto;
+}
+#directions Button { width: 100%; min-width: 5; }
+#directions Button:disabled { opacity: 40%; }
+
+#log-panel {
+    background: $background;
+    overflow-y: auto;          /* la barre n'apparaît que si le texte dépasse */
+    scrollbar-size-vertical: 1;
+}
+
+#hp-row   { height: 1; }
+#hp-label { width: auto; margin-right: 1; }
+#hp-bar   { width: 1fr; }
+#hp-bar Bar { width: 1fr; }
+#hp-text  { width: auto; margin-left: 1; }

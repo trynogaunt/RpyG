@@ -1,6 +1,7 @@
 from core.enums import Stat
 from core.game.rules import STAT_RULES
 from core.world.models import RoomRef
+from core.views.player_summary import PlayerSummary
 
 class Player:
     def __init__(self, name: str, allocated_points: dict[Stat, int] | None = None, location: RoomRef | None = None):
@@ -25,4 +26,15 @@ class Player:
         stat_per_level = (self.level - 1) * rule.growth_per_level
         stat_per_points = self.allocated_points[stat] * rule.per_point
         return base_stat + stat_per_points + stat_per_level
+    
+    def to_summary(self) -> PlayerSummary:
+
+
+        return PlayerSummary(
+            name=self.name,
+            level=self.level,
+            health=self.health,
+            max_health=self.max_health,
+            stats={stat: self.get_stat(stat) for stat in STAT_RULES},
+        )
     
