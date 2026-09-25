@@ -11,9 +11,10 @@ from core.ui.screens.exploration import ExplorationScreen
 class RpygApp(App):
 
     CSS_PATH = Path("rpyg.tcss")
-    def __init__(self, game, *args, **kwargs):
+    def __init__(self, game, translation, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.game = game
+        self.translation = translation
         self.current_screen_id: int = None
         self.all_screens = {
             Screens.MAIN_MENU: MainMenuScreen,
@@ -27,6 +28,9 @@ class RpygApp(App):
             return screen_class(view=view)
         else:
             raise ValueError(f"No screen found for {screen_id}")
+
+    def t(self, key: str, **params) -> str:
+        return self.translation.t(key, **params)
 
     def on_mount(self):
         response = self.game.start()

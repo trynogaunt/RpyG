@@ -9,8 +9,8 @@ class MainMenuScreen(BaseScreen):
     def compose(self):
         yield Static("Main Menu")
         yield OptionList(
-            Option("New Game", id="new_game"),
-            Option("Exit", id="exit")
+            Option(self.app.t("ui.main_menu.new_game"), id="new_game"),
+            Option(self.app.t("ui.main_menu.quit"), id="exit")
         )
     
     @on(OptionList.OptionSelected)
