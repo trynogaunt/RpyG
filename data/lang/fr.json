@@ -1,0 +1,14 @@
+{
+    "ui": {
+        "main_menu": {
+            "new_game": "Nouvelle Partie",
+            "quit": "Quitter"
+        },
+        "stat": {
+            "health": "Santé",
+            "strength": "Force",
+            "speed": "Vitesse",
+            "luck": "Chance"
+        }
+    }
+}

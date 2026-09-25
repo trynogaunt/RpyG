@@ -1,0 +1,14 @@
+{
+    "ui": {
+        "main_menu": {
+            "new_game": "New Game",
+            "quit": "Quit"
+        },
+        "stat": {
+            "health": "Health",
+            "strength": "Strength",
+            "speed": "Speed",
+            "luck": "Luck"
+        }
+    }
+}
