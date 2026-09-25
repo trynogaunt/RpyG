@@ -37,3 +37,12 @@ $amber: #ffb000;
 #hp-bar   { width: 1fr; }
 #hp-bar Bar { width: 1fr; }
 #hp-text  { width: auto; margin-left: 1; }
+
+Footer {
+    border: round $amber;
+    border-title-color: $amber;
+    border-title-style: bold;
+    padding: 0 1;
+    height: auto;
+    color: $amber;
+}

@@ -40,7 +40,7 @@ class ExplorationScreen(BaseScreen):
                     yield Button("S", id="move-SOUTH")
                     yield Static("")
         with Footer(id="footer"):
-            yield Static("Footer content here")
+                yield Static("Footer content here")
 
     
     def update_view(self, view: ExplorationView):
