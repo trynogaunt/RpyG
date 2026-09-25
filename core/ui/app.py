@@ -5,6 +5,7 @@ from core.game.response import GameResponse
 from core.enums import Screens
 from core.ui.screens.main_menu import MainMenuScreen
 from core.ui.screens.creation import CreationScreen
+from core.ui.screens.exploration import ExplorationScreen
 
 class RpygApp(App):
     def __init__(self, game, *args, **kwargs):
@@ -14,6 +15,7 @@ class RpygApp(App):
         self.all_screens = {
             Screens.MAIN_MENU: MainMenuScreen,
             Screens.CREATION: CreationScreen,
+            Screens.EXPLORATION: ExplorationScreen,
         }
 
     def build_screen(self, screen_id: Screens, view=None) -> Screen:
