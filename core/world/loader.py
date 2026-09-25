@@ -21,7 +21,9 @@ def load_world(data_dir) -> World:
     }
 
     start = RoomRef(world_config["start"]["zone"], world_config["start"]["room"])
-    return World(start=start, zones=zones)
+    world = World(start=start, zones=zones)
+    validate_world(world)
+    return world
 
 
 def _read_json(file_path: Path) -> dict:
@@ -80,3 +82,25 @@ def load_exits(raw_exits: dict, zone_id: str, room_id: str,
         else:
             exits[direction] = entries[target_zone]
     return exits
+
+def validate_world(world: World) -> None:
+
+    try:
+        world.get_room(world.start)
+    except ValueError as e:
+        raise ValueError(f"Départ invalide : {e}") from None
+
+    for zone in world.zones.values():
+        try:
+            world.get_room(RoomRef(zone.id, zone.entry_room))
+        except ValueError as e:
+            raise ValueError(f"Entrée de la zone '{zone.id}' invalide : {e}") from None
+
+        for room_id, room in zone.rooms.items():
+            for direction, target in room.exits.items():
+                try:
+                    world.get_room(target)
+                except ValueError as e:
+                    raise ValueError(
+                        f"Sortie {direction.name} de {zone.id}/{room_id} invalide : {e}"
+                    ) from None

@@ -101,7 +101,7 @@ def test_get_room_returns_the_right_room(small_world):
 
 def test_get_room_across_zones(small_world):
     room = small_world.get_room(RoomRef("cave", "entrance"))
-    assert room.ref.zone == "cave"
+    assert room.ref.zone_id == "cave"
 
 
 def test_start_room_exists(small_world):

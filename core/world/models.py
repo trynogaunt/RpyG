@@ -31,10 +31,10 @@ class World:
     zones: dict[str, Zone] = field(default_factory=dict)
 
     def get_room(self, ref: RoomRef) -> Room:
-        zone = self.zones.get(ref.zone)
+        zone = self.zones.get(ref.zone_id)
         if not zone:
-            raise ValueError(f"Zone '{ref.zone}' not found")
-        room = zone.rooms.get(ref.room)
+            raise ValueError(f"Zone '{ref.zone_id}' not found")
+        room = zone.rooms.get(ref.room_id)
         if not room:
-            raise ValueError(f"Room '{ref.room}' not found in zone '{ref.zone}'")
+            raise ValueError(f"Room '{ref.room_id}' not found in zone '{ref.zone_id}'")
         return room
