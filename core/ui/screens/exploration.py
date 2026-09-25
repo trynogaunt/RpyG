@@ -1,14 +1,25 @@
 from core.ui.screens.base_screen import BaseScreen
 from textual.widgets import Static, OptionList, Footer, Header, ProgressBar
+from core.enums import Direction
+from textual.binding import Binding
 from core.enums import Stat
 from textual.containers import Grid, Horizontal, Vertical
 from textual.widgets import Button, Footer, RichLog, Static
 from textual.widgets.option_list import Option
 from textual import on
-from core.game.actions import NewGame, Quit
+from core.game.actions import NewGame, Quit, Move, Explore
 from core.views.exploration_view import ExplorationView
 
 class ExplorationScreen(BaseScreen):
+    BINDINGS = [
+        Binding("a",      "explore", "Explorer"),
+        Binding("z/q/s/d", "", "Naviguer"),
+        Binding("up,z",    "move('NORTH')", "Nord", show=False),
+        Binding("down,s",  "move('SOUTH')", "Sud", show=False),
+        Binding("left,q",  "move('WEST')",  "Ouest", show=False),
+        Binding("right,d", "move('EAST')",  "Est", show=False),
+        Binding("escape",  "quit_game",     "Quitter")]
+
     def compose(self):
         with Horizontal(id="main"):
             # Colonne de gauche : la salle, puis le journal
@@ -31,16 +42,15 @@ class ExplorationScreen(BaseScreen):
                         yield Static(f"{stat.name.capitalize()}: 0", id=f"stat-{stat.name.lower()}") 
                 with Grid(id="directions"):
                     yield Static("")
-                    yield Button("N", id="move-NORTH")
+                    yield Button("N", id="move-NORTH", action="move('NORTH')")
                     yield Static("")
-                    yield Button("O", id="move-WEST")
+                    yield Button("O", id="move-WEST", action="move('WEST')")
                     yield Static("")
-                    yield Button("E", id="move-EAST")
+                    yield Button("E", id="move-EAST", action="move('EAST')")
                     yield Static("")
-                    yield Button("S", id="move-SOUTH")
+                    yield Button("S", id="move-SOUTH", action="move('SOUTH')")
                     yield Static("")
-        with Footer(id="footer"):
-                yield Static("Footer content here")
+        yield Footer(id="footer")
 
     
     def update_view(self, view: ExplorationView):
@@ -59,3 +69,12 @@ class ExplorationScreen(BaseScreen):
         
         self.query_one("#log-panel").border_title = "JOURNAL"
         super().on_mount()   
+    
+    def action_move(self, direction: str) -> None:
+        self.app.dispatch(Move(Direction[direction]))
+    
+    def action_quit_game(self) -> None:
+        self.app.dispatch(Quit())
+    
+    def action_explore(self) -> None:
+        self.app.dispatch(Explore())

@@ -38,3 +38,7 @@ class Move(Action):
     """Action representing the intention to move the player in a given direction."""
     direction: Direction
 
+@dataclass(frozen=True)
+class Explore(Action):
+    """Action representing the intention to explore the current room."""
+

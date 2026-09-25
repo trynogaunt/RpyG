@@ -22,8 +22,11 @@ $amber: #ffb000;
     grid-size: 3 3;
     grid-gutter: 0 1;
     height: auto;
+    width: 100%;
+    padding: 1 1;
+    dock: bottom;
 }
-#directions Button { width: 100%; min-width: 5; }
+#directions Button { width: 100%;  }
 #directions Button:disabled { opacity: 40%; }
 
 #log-panel {
@@ -37,12 +40,16 @@ $amber: #ffb000;
 #hp-bar   { width: 1fr; }
 #hp-bar Bar { width: 1fr; }
 #hp-text  { width: auto; margin-left: 1; }
-
-Footer {
+#player-panel { height: auto; }
+#room-panel {
     border: round $amber;
     border-title-color: $amber;
     border-title-style: bold;
     padding: 0 1;
     height: auto;
     color: $amber;
+}
+
+Footer {
+    background: $background;
 }
