@@ -1,5 +1,6 @@
 from core.ui.screens.base_screen import BaseScreen
 from textual.widgets import Static, OptionList, Footer, Header, ProgressBar
+from core.enums import Stat
 from textual.containers import Grid, Horizontal, Vertical
 from textual.widgets import Button, Footer, RichLog, Static
 from textual.widgets.option_list import Option
@@ -25,6 +26,9 @@ class ExplorationScreen(BaseScreen):
                         yield Static("PV", id="hp-label")
                         yield ProgressBar(id="hp-bar", show_percentage=False, show_eta=False)
                         yield Static("", id="hp-text")
+                    yield Static("")
+                    for stat in [s for s in Stat if s != Stat.HEALTH]:
+                        yield Static(f"{stat.name.capitalize()}: 0", id=f"stat-{stat.name.lower()}") 
                 with Grid(id="directions"):
                     yield Static("")
                     yield Button("N", id="move-NORTH")
@@ -35,7 +39,9 @@ class ExplorationScreen(BaseScreen):
                     yield Static("")
                     yield Button("S", id="move-SOUTH")
                     yield Static("")
-        yield Footer()
+        with Footer(id="footer"):
+            yield Static("Footer content here")
+
     
     def update_view(self, view: ExplorationView):
         player = view.player_summary
@@ -46,6 +52,8 @@ class ExplorationScreen(BaseScreen):
         self.query_one("#player-level", Static).update(f"Lv. {view.player_summary.level}")
         self.query_one("#hp-bar", ProgressBar).update(total=player.max_health, progress=player.health)
         self.query_one("#hp-text", Static).update(f"{player.health}/{player.max_health}")
+        for stat in [s for s in Stat if s != Stat.HEALTH]:
+            self.query_one(f"#stat-{stat.name.lower()}", Static).update(f"{stat.name.capitalize()}: {player.stats.get(stat, 0)}")
 
     def on_mount(self) -> None:
         

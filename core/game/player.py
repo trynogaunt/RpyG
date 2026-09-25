@@ -35,6 +35,6 @@ class Player:
             level=self.level,
             health=self.health,
             max_health=self.max_health,
-            stats={stat: self.get_stat(stat) for stat in STAT_RULES},
+            stats={stat: self.get_stat(stat) for stat in STAT_RULES if stat != Stat.HEALTH},
         )
     
