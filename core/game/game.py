@@ -24,6 +24,8 @@ class Game:
                 self._handle_main_menu(action)
             case Screens.CREATION:
                 self._handle_creation(action)
+            case Screens.EXPLORATION:
+                self._handle_exploration(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
         view = self.creation.to_view() if self.screen == Screens.CREATION else None
@@ -52,10 +54,22 @@ class Game:
                     self.creation.allocated_points[stat] -= 1
             case ConfirmCreation():
                 if self.creation.can_confirm():
-                    self.player = Player(name=self.creation.name, allocated_points=self.creation.allocated_points)
+                    self.player = Player(name=self.creation.name, allocated_points=self.creation.allocated_points, location=self.world.start)
                     self.creation = None
-                    self.screen = Screens.MAIN_MENU
+                    self.screen = Screens.EXPLORATION
             case NewGame() | Quit():
                 pass
+            case _:
+                raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+    
+    def _handle_exploration(self, action: Action) -> None:
+        match action:
+            case Quit():
+                self.screen = Screens.MAIN_MENU
+            case _:
+                raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+    
+    def _handle_exit(self, action: Action) -> None:
+        match action:
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")

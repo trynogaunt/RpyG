@@ -2,21 +2,14 @@ import pytest
 
 from core.enums import Screens, Stat
 from core.game.actions import AllocatePoints, ConfirmCreation, NewGame, SetName
-from core.game.game import Game
 from core.game.rules import CREATION_POINTS, STAT_RULES
 
 ANY_STAT = next(iter(STAT_RULES))
 
-
-@pytest.fixture
-def game_in_creation() -> Game:
-    game = Game()
-    game.start()
-    game.handle_action(NewGame())
-    return game
+# La fixture `game_in_creation` vient de tests/conftest.py
 
 
-def spend_all_points(game: Game, stat: Stat = ANY_STAT) -> None:
+def spend_all_points(game, stat=ANY_STAT) -> None:
     for _ in range(CREATION_POINTS):
         game.handle_action(AllocatePoints(stat, +1))
 
@@ -130,23 +123,29 @@ def test_confirm_builds_player_from_creation(game_in_creation):
     assert player.health == player.max_health
 
 
-def test_confirm_leaves_creation(game_in_creation):
+def test_confirm_goes_to_exploration(game_in_creation):
+    game_in_creation.handle_action(SetName("Bob"))
+    response = game_in_creation.handle_action(ConfirmCreation())
+    assert response.screen is Screens.EXPLORATION
+    assert game_in_creation.creation is None
+
+
+def test_confirm_places_player_at_world_start(game_in_creation):
     game_in_creation.handle_action(SetName("Bob"))
     game_in_creation.handle_action(ConfirmCreation())
-    assert game_in_creation.creation is None
-    assert game_in_creation.screen is not Screens.CREATION
+    assert game_in_creation.player.location == game_in_creation.world.start
 
 
 # --- Recommencer ------------------------------------------------------------
 
-def test_second_new_game_starts_fresh():
-    game = Game()
-    game.start()
-    game.handle_action(NewGame())
+def test_new_game_after_quitting_starts_fresh(game_in_creation):
+    from core.game.actions import Quit
+
+    game = game_in_creation
     game.handle_action(SetName("Bob"))
     game.handle_action(AllocatePoints(ANY_STAT, +1))
-
-    game.handle_action(ConfirmCreation())   # retour au menu
-    game.handle_action(NewGame())           # nouvelle création
+    game.handle_action(ConfirmCreation())   # -> exploration
+    game.handle_action(Quit())              # -> menu
+    game.handle_action(NewGame())           # -> nouvelle création
     assert game.creation.name == ""
     assert game.creation.points_left == CREATION_POINTS

@@ -1,11 +1,12 @@
 from core.enums import Stat
 from core.game.rules import STAT_RULES
+from core.world.models import RoomRef
 
 class Player:
-    def __init__(self, name: str, allocated_points: dict[Stat, int] | None = None):
+    def __init__(self, name: str, allocated_points: dict[Stat, int] | None = None, location: RoomRef | None = None):
         self.name = name
         self.level = 1
-        self.location = None
+        self.location: RoomRef | None = location
 
         self.allocated_points = {stat: 0 for stat in STAT_RULES}
         if allocated_points:

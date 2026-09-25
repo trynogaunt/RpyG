@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from core.enums import Stat
+from core.enums import Stat, Direction
 
 @dataclass(frozen=True)
 class Action:
@@ -32,3 +32,9 @@ class AllocatePoints(Action):
 @dataclass(frozen=True)
 class ConfirmCreation(Action):
     """Action representing the intention to confirm the creation of the player's character."""
+
+@dataclass(frozen=True)
+class Move(Action):
+    """Action representing the intention to move the player in a given direction."""
+    direction: Direction
+

@@ -1,10 +1,10 @@
-from core.ui.screens.base_screen import BaseScreen as Screen
+from core.ui.screens.base_screen import BaseScreen
 from textual.widgets import Static, OptionList
 from textual.widgets.option_list import Option
 from textual import on
 from core.game.actions import NewGame, Quit
 
-class MainMenuScreen(Screen):
+class MainMenuScreen(BaseScreen):
 
     def compose(self):
         yield Static("Main Menu")

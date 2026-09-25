@@ -1,17 +1,15 @@
 from core.game.game import Game
 from core.ui.app import RpygApp
 from core.world.loader import load_world
+from pathlib import Path
 
-class Main:
-    def __init__(self):
-        self.game = Game(world=load_world())
+def main():
+    data_dir = Path(__file__).parent / "data"
+    game = Game(world=load_world(data_dir=data_dir))
 
-    
-    def run(self):
-        app = RpygApp(self.game)
-        app.run()
+    app = RpygApp(game)
+    app.run()
 
 
 if __name__ == "__main__":
-    main = Main()
-    main.run()
+    main()
