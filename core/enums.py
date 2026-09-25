@@ -4,6 +4,7 @@ class Screens(Enum):
     MAIN_MENU = auto()
     INVENTORY = auto()
     CREATION = auto()
+    EXPLORATION = auto()
     PAUSE_MENU = auto()
     GAME_OVER = auto()
     EXIT = auto()

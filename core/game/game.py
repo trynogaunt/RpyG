@@ -3,12 +3,14 @@ from core.game.response import GameResponse
 from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation
 from core.game.creation import CreationState
 from core.game.player import Player
+from core.world.loader import World, RoomRef
 
 class Game:
-    def __init__(self):
+    def __init__(self, world: World | None = None):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
+        self.world: World | None = world
     
     def start(self) -> GameResponse:
         print("Starting game...")

@@ -5,6 +5,7 @@ class Player:
     def __init__(self, name: str, allocated_points: dict[Stat, int] | None = None):
         self.name = name
         self.level = 1
+        self.location = None
 
         self.allocated_points = {stat: 0 for stat in STAT_RULES}
         if allocated_points:
