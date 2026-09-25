@@ -8,6 +8,7 @@ from textual.widgets import Button, Footer, RichLog, Static
 from textual.widgets.option_list import Option
 from textual import on
 from core.game.actions import NewGame, Quit, Move, Explore
+from core.game.response import Message
 from core.views.exploration_view import ExplorationView
 
 class ExplorationScreen(BaseScreen):
@@ -27,7 +28,7 @@ class ExplorationScreen(BaseScreen):
                 with Vertical(id="room-panel", classes="panel"):
                     yield Static("…", id="room-name")
                     yield Static("…", id="room-description")
-                yield RichLog(id="log-panel", classes="panel")
+                yield RichLog(id="log-panel", classes="panel", wrap=True, highlight=True, min_width=0)
 
             # Colonne de droite : la fiche, puis les directions
             with Vertical(id="right"):
@@ -64,6 +65,11 @@ class ExplorationScreen(BaseScreen):
         self.query_one("#hp-text", Static).update(f"{player.health}/{player.max_health}")
         for stat in [s for s in Stat if s != Stat.HEALTH]:
             self.query_one(f"#stat-{stat.name.lower()}", Static).update(f"{stat.name.capitalize()}: {player.stats.get(stat, 0)}")
+
+    def show_messages(self, messages: tuple[Message]) -> None:
+        log_panel = self.query_one("#log-panel", RichLog)
+        for message in messages:
+            log_panel.write(f"> {message.text}")
 
     def on_mount(self) -> None:
         

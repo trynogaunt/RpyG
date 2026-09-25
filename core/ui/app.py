@@ -46,3 +46,4 @@ class RpygApp(App):
         else:
             self.current_screen_id = response.screen
             self.switch_screen(self.build_screen(response.screen, response.view))
+        self.screen.show_messages(response.messages)

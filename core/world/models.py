@@ -1,6 +1,5 @@
-from dataclasses import dataclass
 from core.enums import Direction
-from dataclasses import field
+from dataclasses import field, dataclass
 
 @dataclass(frozen=True)
 class RoomRef:
@@ -46,3 +45,7 @@ class World:
     def exit_from(self, location: RoomRef, direction: Direction) -> RoomRef | None:
         room = self.get_room(location)
         return room.exits.get(direction)
+
+@dataclass
+class WorldState:
+    explored: set[RoomRef] = field(default_factory=set)

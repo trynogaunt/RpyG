@@ -12,3 +12,6 @@ class BaseScreen(Screen):
 
     def update_view(self, view) -> None:
         pass
+
+    def show_messages(self, messages: list[str]) -> None:
+        pass

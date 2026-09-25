@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from .base_view import BaseView
+from core.game.response import Message
 from core.enums import Direction
 from core.views.player_summary import PlayerSummary
 

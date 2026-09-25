@@ -1,6 +1,6 @@
 from core.enums import Screens
-from core.game.response import GameResponse
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move
+from core.game.response import GameResponse, Message
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.player import Player
@@ -15,6 +15,7 @@ class Game:
         self.creation: CreationState | None = None
         self.player: Player | None = None
         self.world: World = world
+        self._messages: list[Message] = []
     
     def start(self) -> GameResponse:
         print("Starting game...")
@@ -35,20 +36,25 @@ class Game:
                 return self._exploration_to_view()
             case _:
                 return None
+       
     
-    def _exploration_to_view(self) -> ExplorationView | None:
-        zone = self.world.get_zone(self.player.location)
-        room = self.world.get_room(self.player.location)
+    def _exploration_to_view(self) -> ExplorationView:
+        current_room = self.world.get_room(self.player.location)
         return ExplorationView(
-            zone_name=zone.name, 
-            room_name=room.name,
-            room_description=room.description,
+            zone_name=self.world.get_zone(self.player.location).name,
+            room_name=current_room.name,
+            room_description=current_room.description,
             can_move={direction: self.world.exit_from(self.player.location, direction) is not None for direction in Direction},
             player_summary=self.player.to_summary()
         )
-        return None
+
+    def _explore_current_room(self) -> None:
+        current_room = self.world.get_room(self.player.location)
+        text_message = current_room.look_around if current_room.look_around else "Il n'y a rien à voir ici."
+        return Message(key="LookAround", text=text_message)
     
     def handle_action(self, action: Action) -> GameResponse:
+        self._messages.clear()
         match self.screen:
             case Screens.MAIN_MENU:
                 self._handle_main_menu(action)
@@ -59,7 +65,7 @@ class Game:
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
         view = self._build_to_view()
-        return GameResponse(screen=self.screen, view=view)
+        return GameResponse(screen=self.screen, view=view, messages=tuple(self._messages))
     
     def _handle_main_menu(self, action: Action) -> None:
         match action:
@@ -96,6 +102,8 @@ class Game:
         match action:       
             case Move(direction=direction):
                 self._move_player(direction)
+            case Explore():
+                self._messages.append(self._explore_current_room())
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:
