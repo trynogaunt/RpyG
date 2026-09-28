@@ -10,6 +10,7 @@ class MainMenuScreen(BaseScreen):
         yield Static("Main Menu")
         yield OptionList(
             Option(self.app.t("ui.main_menu.new_game"), id="new_game"),
+            Option(self.app.t("ui.main_menu.options"), id="options"),
             Option(self.app.t("ui.main_menu.quit"), id="exit")
         )
     
