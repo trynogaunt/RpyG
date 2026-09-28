@@ -6,9 +6,8 @@ from core.game.I18n import Translation
 
 def main():
     data_dir = Path(__file__).parent / "data"
-    game = Game(world=load_world(data_dir=data_dir))
     translation: Translation = Translation(locales_dir=Path("data/lang"), locales="fr")
-
+    game = Game(world=load_world(data_dir=data_dir))
     app = RpygApp(game, translation=translation)
     app.run()
 

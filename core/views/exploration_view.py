@@ -7,8 +7,8 @@ from core.views.player_summary import PlayerSummary
 
 @dataclass(frozen=True)
 class ExplorationView(BaseView):
-    zone_name: str
-    room_name: str
+    zone_id: str
+    room_id: str
     room_description: str
     can_move: dict[Direction, bool]
     player_summary: PlayerSummary

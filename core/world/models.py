@@ -33,6 +33,19 @@ class World:
     start: RoomRef 
     zones: dict[str, Zone] = field(default_factory=dict)
 
+    def get_zone_id(self, ref: RoomRef) -> str:
+        zone = self.zones.get(ref.zone_id)
+        if not zone:
+            raise ValueError(f"Zone '{ref.zone_id}' not found")
+        return zone.id
+    
+    def get_room_id(self, ref: RoomRef) -> str:
+        zone = self.zones.get(ref.zone_id)
+        room = zone.rooms.get(ref.room_id)
+        if not room:
+            raise ValueError(f"Room '{ref.room_id}' not found in zone '{ref.zone_id}'")
+        return room.id
+
     def get_zone(self, ref: RoomRef) -> Zone:
         zone = self.zones.get(ref.zone_id)
         if not zone:

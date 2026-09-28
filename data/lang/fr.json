@@ -8,7 +8,33 @@
             "health": "Santé",
             "strength": "Force",
             "speed": "Vitesse",
-            "luck": "Chance"
+            "luck": "Chance",
+            "abrev": {
+                "health": "PV",
+                "strength": "FOR",
+                "speed": "VIT",
+                "luck": "CHA"
+            }
+        },
+        "bindings": {
+            "explore": "Explorer",
+            "quit": "Quitter",
+            "navigate": "Naviguer",
+            "move_north": "Aller au Nord",
+            "move_south": "Aller au Sud",
+            "move_west": "Aller à l'Ouest",
+            "move_east": "Aller à l'Est"
+        }
+    },
+    "text": {
+        "entry_village": {
+            "name": "Village d'entrée",
+            "rooms": {
+                "village_square": {
+                    "name": "Place du village",
+                    "description": "La place centrale du village, où les habitants se rassemblent pour diverses activités."
+                }
+            }
         }
     }
 }

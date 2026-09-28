@@ -45,8 +45,8 @@ class Game:
     def _exploration_to_view(self) -> ExplorationView:
         current_room = self.world.get_room(self.player.location)
         return ExplorationView(
-            zone_name=self.world.get_zone(self.player.location).name,
-            room_name=current_room.name,
+            zone_id = self.player.location.zone_id,
+            room_id = self.player.location.room_id,
             room_description=current_room.description,
             can_move={direction: self.world.exit_from(self.player.location, direction) is not None for direction in Direction},
             player_summary=self.player.to_summary()

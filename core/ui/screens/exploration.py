@@ -13,13 +13,13 @@ from core.views.exploration_view import ExplorationView
 
 class ExplorationScreen(BaseScreen):
     BINDINGS = [
-        Binding("a",      "explore", "Explorer"),
-        Binding("z/q/s/d", "", "Naviguer"),
-        Binding("up,z",    "move('NORTH')", "Nord", show=False),
-        Binding("down,s",  "move('SOUTH')", "Sud", show=False),
-        Binding("left,q",  "move('WEST')",  "Ouest", show=False),
-        Binding("right,d", "move('EAST')",  "Est", show=False),
-        Binding("escape",  "quit_game",     "Quitter")]
+        Binding("a",      "explore", "ui.bindings.explore"),
+        Binding("z/q/s/d", "", "ui.bindings.navigate"),
+        Binding("up,z",    "move('NORTH')", "", show=False),
+        Binding("down,s",  "move('SOUTH')", "", show=False),
+        Binding("left,q",  "move('WEST')",  "", show=False),
+        Binding("right,d", "move('EAST')",  "", show=False),
+        Binding("escape",  "quit_game", "ui.bindings.quit")]
 
     def compose(self):
         with Horizontal(id="main"):
@@ -35,7 +35,7 @@ class ExplorationScreen(BaseScreen):
                 with Vertical(id="player-panel", classes="panel"):
                     yield Static("Lv.", id="player-level")
                     with Horizontal(id="hp-row"):
-                        yield Static("PV", id="hp-label")
+                        yield Static("HP", id="hp-label")
                         yield ProgressBar(id="hp-bar", show_percentage=False, show_eta=False)
                         yield Static("", id="hp-text")
                     yield Static("")
@@ -56,15 +56,16 @@ class ExplorationScreen(BaseScreen):
     
     def update_view(self, view: ExplorationView):
         player = view.player_summary
-        self.query_one("#room-panel").border_title = view.zone_name
-        self.query_one("#room-name", Static).update(view.room_name)
-        self.query_one("#room-description", Static).update(view.room_description)
+        self.query_one("#room-panel").border_title = self.app.t(f'text.{view.zone_id}.name')
+        self.query_one("#room-name", Static).update(self.app.t(f'text.{view.zone_id}.rooms.{view.room_id}.name'))
+        self.query_one("#room-description", Static).update(self.app.t(f'text.{view.zone_id}.rooms.{view.room_id}.description'))
         self.query_one("#player-panel").border_title = view.player_summary.name
         self.query_one("#player-level", Static).update(f"Lv. {view.player_summary.level}")
+        self.query_one("#hp-label", Static).update(self.app.t("ui.stat.abrev.health"))
         self.query_one("#hp-bar", ProgressBar).update(total=player.max_health, progress=player.health)
         self.query_one("#hp-text", Static).update(f"{player.health}/{player.max_health}")
         for stat in [s for s in Stat if s != Stat.HEALTH]:
-            self.query_one(f"#stat-{stat.name.lower()}", Static).update(f"{stat.name.capitalize()}: {player.stats.get(stat, 0)}")
+            self.query_one(f"#stat-{stat.name.lower()}", Static).update(f"{self.app.t(f'ui.stat.{stat.name.lower()}')}: {player.stats.get(stat, 0)}")
 
     def show_messages(self, messages: tuple[Message]) -> None:
         log_panel = self.query_one("#log-panel", RichLog)
