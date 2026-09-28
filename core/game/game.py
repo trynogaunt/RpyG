@@ -10,6 +10,7 @@ from core.world.loader import World, RoomRef
 from core.world.models import WorldState
 from core.views.base_view import BaseView
 from core.views.exploration_view import ExplorationView
+from core.game.text_keys import room_key
 
 
 class Game:
@@ -20,7 +21,7 @@ class Game:
         self.world: World = world
         self.world_state: WorldState = world_state or WorldState()
         self._messages: list[Message] = []
-    
+
     def start(self) -> GameResponse:
         print("Starting game...")
         self.screen = Screens.MAIN_MENU
@@ -54,8 +55,8 @@ class Game:
 
     def _explore_current_room(self) -> None:
         current_room = self.world.get_room(self.player.location)
-        text_message = current_room.look_around if current_room.look_around else "Il n'y a rien à voir ici."
-        return Message(key="LookAround", text=text_message)
+
+        return Message(key="look_around", text="<text.messages.look_around>")
     
     def handle_action(self, action: Action) -> GameResponse:
         self._messages.clear()
@@ -107,11 +108,15 @@ class Game:
             case Move(direction=direction):
                 self._move_player(direction)
             case Explore():
-                if self.player.location not in self.world_state.explored:
-                    self.world_state.explored.add(self.player.location)
-                    self._messages.append(self._explore_current_room())
+                ref = self.player.location
+                if ref in self.world_state.explored:
+                    self._messages.append(Message(key="ui.messages.already_explored"))
                 else:
-                    self._messages.append(Message(key="already_explored", text="Vous avez déjà exploré cette pièce."))
+                    self.world_state.explored.add(ref)
+                    self._messages.append(Message(
+                        key=room_key(ref, "look_around"),
+                        fallback_key="ui.messages.nothing_special",
+                    ))
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:

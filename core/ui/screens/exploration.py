@@ -10,6 +10,7 @@ from textual import on
 from core.game.actions import NewGame, Quit, Move, Explore
 from core.game.response import Message
 from core.views.exploration_view import ExplorationView
+from core.game.text_keys import room_key, zone_key
 
 class ExplorationScreen(BaseScreen):
     BINDINGS = [
@@ -56,7 +57,7 @@ class ExplorationScreen(BaseScreen):
     
     def update_view(self, view: ExplorationView):
         player = view.player_summary
-        self.query_one("#room-panel").border_title = self.app.t(f'text.{view.zone_id}.name')
+        self.query_one("#room-panel").border_title = self.app.t(zone_key(view.zone_id, "name"))
         self.query_one("#room-name", Static).update(self.app.t(f'text.{view.zone_id}.rooms.{view.room_id}.name'))
         self.query_one("#room-description", Static).update(self.app.t(f'text.{view.zone_id}.rooms.{view.room_id}.description'))
         self.query_one("#player-panel").border_title = view.player_summary.name
@@ -67,10 +68,13 @@ class ExplorationScreen(BaseScreen):
         for stat in [s for s in Stat if s != Stat.HEALTH]:
             self.query_one(f"#stat-{stat.name.lower()}", Static).update(f"{self.app.t(f'ui.stat.{stat.name.lower()}')}: {player.stats.get(stat, 0)}")
 
-    def show_messages(self, messages: tuple[Message]) -> None:
+    def show_messages(self, messages: tuple[Message, ...]) -> None:
         log_panel = self.query_one("#log-panel", RichLog)
         for message in messages:
-            log_panel.write(f"> {self.app.t(f'text.messages.{message.key}') if message.key else message.text}")
+            key = message.key
+            if message.fallback_key and not self.app.translation.has(key):
+                key = message.fallback_key
+            log_panel.write(f"> {self.app.t(key, **message.params)}")
 
     def on_mount(self) -> None:
         

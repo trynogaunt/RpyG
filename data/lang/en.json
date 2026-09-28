@@ -1,43 +1,27 @@
 {
     "ui": {
-        "main_menu": {
-            "new_game": "New Game",
-            "quit": "Quit"
-        },
+        "main_menu": { "new_game": "New Game", "quit": "Quit" },
         "stat": {
-            "health": "Health",
-            "strength": "Strength",
-            "speed": "Speed",
-            "luck": "Luck",
-            "abrev": {
-                "health": "HP",
-                "strength": "STR",
-                "speed": "SPD",
-                "luck": "LCK"
-            }
+            "health": "Health", "strength": "Strength", "speed": "Speed", "luck": "Luck",
+            "abrev": { "health": "HP", "strength": "STR", "speed": "SPD", "luck": "LCK" }
         },
         "bindings": {
-            "explore": "Explore",
-            "quit": "Quit",
-            "navigate": "Navigate",
-            "move_north": "Go to North",
-            "move_south": "Go to South",
-            "move_west": "Go to West",
-            "move_east": "Go to East"
+            "explore": "Explore", "quit": "Quit", "navigate": "Move"
+        },
+        "messages": {
+            "already_explored": "You have already searched this place.",
+            "nothing_special": "Nothing special here."
         }
     },
     "text": {
-        "messages": {
-            "already_explored": "You have already explored this area.",
-            "example_message": "This is an example message.",
-            "another_message": "This is another example message."
-        },
         "entry_village": {
-            "name": "Village Entrance",
+            "name": "Entry Village",
+            "description": "A small village that serves as the starting point for adventurers.",
             "rooms": {
                 "village_square": {
                     "name": "Village Square",
-                    "description": "The central square of the village, where the inhabitants gather for various activities."
+                    "description": "The bustling center of the village, filled with villagers and market stalls.",
+                    "look_around": "You see villagers going about their daily routines, children playing, and merchants selling their goods."
                 }
             }
         }

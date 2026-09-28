@@ -7,7 +7,8 @@ from core.views.base_view import BaseView
 class Message:
     """Represents a message from the game to the player."""
     key: str
-    text: str
+    params: dict = field(default_factory=dict)
+    fallback_key: str | None = None
 
 
 @dataclass(frozen=True)

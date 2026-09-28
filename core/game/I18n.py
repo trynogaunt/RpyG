@@ -33,3 +33,6 @@ class Translation:
             else:
                 flattened[full_key] = value
         return flattened
+
+    def has(self, key: str) -> bool:
+        return key in self.translations or key in self.fallback_translations
