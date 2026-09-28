@@ -27,6 +27,11 @@
         }
     },
     "text": {
+        "messages": {
+            "already_explored": "You have already explored this area.",
+            "example_message": "This is an example message.",
+            "another_message": "This is another example message."
+        },
         "entry_village": {
             "name": "Village Entrance",
             "rooms": {

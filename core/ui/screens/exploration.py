@@ -70,7 +70,7 @@ class ExplorationScreen(BaseScreen):
     def show_messages(self, messages: tuple[Message]) -> None:
         log_panel = self.query_one("#log-panel", RichLog)
         for message in messages:
-            log_panel.write(f"> {message.text}")
+            log_panel.write(f"> {self.app.t(f'text.messages.{message.key}') if message.key else message.text}")
 
     def on_mount(self) -> None:
         
