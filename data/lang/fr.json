@@ -1,6 +1,6 @@
 {
     "ui": {
-        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter" },
+        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options" },
         "stat": {
             "health": "Santé", "strength": "Force", "speed": "Vitesse", "luck": "Chance",
             "abrev": { "health": "PV", "strength": "FOR", "speed": "VIT", "luck": "CHA" }

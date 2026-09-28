@@ -11,10 +11,11 @@ from core.ui.screens.exploration import ExplorationScreen
 class RpygApp(App):
 
     CSS_PATH = Path("rpyg.tcss")
-    def __init__(self, game, translation, *args, **kwargs):
+    def __init__(self, game, translation, settings, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.game = game
         self.translation = translation
+        self.settings = settings
         self.current_screen_id: int = None
         self.all_screens = {
             Screens.MAIN_MENU: MainMenuScreen,
