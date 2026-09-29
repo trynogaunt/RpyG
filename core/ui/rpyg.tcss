@@ -66,13 +66,20 @@ MainMenuScreen {
 }
 
 #logo {
-    width: auto;
+    width: 100%;
     height: auto;
+    align: center top;
     margin: 1 0;
 }
-.logo-letter { width: auto; margin: 0 1; }
+
+.logo-letter {
+    width: auto;
+}
+
 .logo-a { color: #c6ccd6; }
 .logo-b { color: #c8d42a; }
+.logo-c { color: #c8d42a; }
+.logo-d { color: #c6ccd6; }
 
 #tagline {
     width: 100%;

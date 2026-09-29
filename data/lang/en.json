@@ -1,6 +1,9 @@
 {
     "ui": {
-        "main_menu": { "new_game": "New Game", "quit": "Quit" },
+        "main_menu": { "new_game": "New Game", "quit": "Quit", "options": "Options", "load_game": "Load Game", 
+        "title": "R P y G - L E G A C Y", "tagline": "Your CPU will handle all the dragons", 
+        "lore":"In a world where dragons roam the skies and ancient magic floats in the air, you are a brave adventurer seeking glory and fortune. \nWill you rise to the challenges ahead and become a legend?",
+        "version": "Version 0.1 - Early Access" },
         "stat": {
             "health": "Health", "strength": "Strength", "speed": "Speed", "luck": "Luck",
             "abrev": { "health": "HP", "strength": "STR", "speed": "SPD", "luck": "LCK" }
