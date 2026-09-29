@@ -4,7 +4,7 @@
         "title": "R P y G - L E G A C Y", "tagline": "Your CPU will handle all the dragons", 
         "lore":" Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un brave aventurier à la recherche de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
         "version": "Version 0.1 - Early Access" },
-        "stat": {
+        "stats": {
             "health": "Santé", "strength": "Force", "speed": "Vitesse", "luck": "Chance",
             "abrev": { "health": "PV", "strength": "FOR", "speed": "VIT", "luck": "CHA" }
         },

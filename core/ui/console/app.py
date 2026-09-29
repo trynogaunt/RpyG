@@ -1,5 +1,6 @@
 from core.enums import Screens
 from core.ui.console.screens.main_menu import MainMenuScreen
+from core.ui.console.screens.creation import CreationScreen
 
 class ConsoleApp:
     def __init__(self, game, translation, settings):
@@ -11,7 +12,7 @@ class ConsoleApp:
         self.running = False
         self.all_screens = {
             Screens.MAIN_MENU: MainMenuScreen,
-            # Screens.CREATION: CreationScreen,
+            Screens.CREATION: CreationScreen,
             # Screens.EXPLORATION: ExplorationScreen,
         }
 
@@ -34,9 +35,9 @@ class ConsoleApp:
     def dispatch(self, action):          # identique
         self.show(self.game.handle_action(action))
 
-    def show(self, response):            # quasi identique
+    def show(self, response):
         if response.screen is Screens.EXIT:
-            self.running = False         # ≈ self.exit()
+            self.running = False
             return
         if response.screen is self.current_screen_id:
             self.screen.update_view(response.view)
