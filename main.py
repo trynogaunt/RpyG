@@ -1,5 +1,4 @@
 from core.game.game import Game
-from core.ui.app import RpygApp
 from core.world.loader import load_world
 from pathlib import Path
 from core.game.I18n import Translation
@@ -26,8 +25,8 @@ def resolve_frontend(cli_choice, settings):
             continue
         try:
             return importlib.import_module(FRONTENDS[name])
-        except ImportError:
-            print(f"Failed to import frontend '{name}'")
+        except ImportError as e:
+            raise ImportError(f"Failed to import frontend '{name}'") from e
     raise ImportError("No suitable frontend found.")
 
 def main():
@@ -35,16 +34,24 @@ def main():
     lang_dir = data_dir / "lang"
     args = parse_args()
 
+    # Load settings from the default settings path
     settings = Settings.load(default_settings_path())
-    frontend = resolve_frontend(args.ui, settings)
+    
+    # Ensure the locale specified in the settings is available
     available = {p.stem for p in lang_dir.glob("*.json")}
     if settings.locale not in available:
         settings.locale = "en"
 
+    # Initialize the translation system with the resolved locale
     translation = Translation(lang_dir, locales=settings.locale)
+
+    # Load the game world from the data directory
     game = Game(world=load_world(data_dir=data_dir))
-    app = RpygApp(game, translation=translation, settings=settings)
-    app.run()
+
+    # Resolve and initialize the selected frontend - Fallback to console without external libraries if necessary
+    frontend = resolve_frontend(args.ui, settings)
+    frontend.run(game, translation=translation, settings=settings)
+    
 
 
 if __name__ == "__main__":

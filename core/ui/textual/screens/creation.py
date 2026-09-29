@@ -6,7 +6,7 @@ from textual.widgets import Button, Input, Static
 from core.enums import Stat
 from core.game.actions import AllocatePoints, ConfirmCreation, SetName
 from core.game.rules import STAT_RULES
-from core.ui.screens.base_screen import BaseScreen
+from core.ui.textual.screens.base_screen import BaseScreen
 from core.views.creation_view import CreationView
 
 

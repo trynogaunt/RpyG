@@ -7,9 +7,9 @@ from textual.widgets import Static, OptionList
 from textual.widgets.option_list import Option
 
 from core.game.actions import NewGame, Quit
-from core.ui.logo import LETTERS  # dict {"R": "...", "P": "...", ...}
-from core.ui.screens.base_screen import BaseScreen
-
+from core.ui.textual.logo import LETTERS  # dict {"R": "...", "P": "...", ...}
+from core.ui.textual.screens.base_screen import BaseScreen
+    
 def app_version()-> str:
     try:
         return version("rpyg")

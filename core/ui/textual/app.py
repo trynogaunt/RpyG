@@ -4,11 +4,11 @@ from pathlib import Path
 
 from core.game.response import GameResponse
 from core.enums import Screens
-from core.ui.screens.main_menu import MainMenuScreen
-from core.ui.screens.creation import CreationScreen
-from core.ui.screens.exploration import ExplorationScreen
+from core.ui.textual.screens.main_menu import MainMenuScreen
+from core.ui.textual.screens.creation import CreationScreen
+from core.ui.textual.screens.exploration import ExplorationScreen
 
-class RpygApp(App):
+class TextualApp(App):
 
     CSS_PATH = Path("rpyg.tcss")
     def __init__(self, game, translation, settings, *args, **kwargs):

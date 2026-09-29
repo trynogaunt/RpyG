@@ -1,2 +1,2 @@
 [console_scripts]
-rpyg = rpyg.main:main
+rpyg = main:main

@@ -13,6 +13,7 @@ def default_settings_path() -> Path:
 @dataclass
 class Settings:
     locale: str = "en"
+    frontend: str = "console"
 
     path: Path | None = field(default=None, init=False, repr=False, compare=False)
 

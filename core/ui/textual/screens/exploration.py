@@ -1,4 +1,4 @@
-from core.ui.screens.base_screen import BaseScreen
+from core.ui.textual.screens.base_screen import BaseScreen
 from textual.widgets import Static, OptionList, Footer, Header, ProgressBar
 from core.enums import Direction
 from textual.binding import Binding

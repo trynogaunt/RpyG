@@ -15,7 +15,13 @@ discord = ["pypresence>=4.6"]
 dev = ["pytest", "textual-dev"]
 
 [project.scripts]
-rpyg = "rpyg.main:main"
+rpyg = "main:main"
+
+[tool.setuptools]
+py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+include = ["core*"]
 
 [build-system]
 requires = ["setuptools>=68"]

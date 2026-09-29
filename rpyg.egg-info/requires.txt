@@ -1,4 +1,5 @@
 textual>=1.0
+platformdirs>=4.12.1
 
 [dev]
 pytest
