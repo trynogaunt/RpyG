@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 import shutil
+import textwrap
 from core.game.actions import Quit, NewGame, SetName
+from core.ui.console import colors
 
 class BaseConsoleScreen(ABC):
     def __init__(self, app, view=None):
@@ -58,8 +60,25 @@ class BaseConsoleScreen(ABC):
     def rule(self, char: str = "=") -> None:
         print(char * self.width)
 
-    def centered(self, text: str) -> None:
-        print(text.center(self.width))
+    def centered(self, text: str, code: str = "") -> None:
+        line = text.center(self.width)
+        print(self.color(line, code) if code else line)
+
+    def box(self, lines: list[str], footer: str | None = None,
+            code: str = "", footer_code: str = "") -> None:
+        inner = self.width - 4
+        self.rule()
+        for line in lines:
+            for part in textwrap.wrap(line, inner) or [""]:
+                cell = part.ljust(inner)
+                print(f"| {self.color(cell, code) if code else cell} |")
+        if footer:
+            cell = footer.center(inner)
+            print(f"| {self.color(cell, footer_code) if footer_code else cell} |")
+        self.rule()
+    
+    def color(self, text: str, code: str) -> str:
+        return f"{code}{text}{colors.RESET}"
     
     def ask_text(self, prompt: str) -> str:
         try:
@@ -70,3 +89,65 @@ class BaseConsoleScreen(ABC):
     def ask_name(self):
         name = self.ask_text(self.t("ui.creation.name_prompt"))
         return Quit() if name is None else SetName(name)
+    
+    def splash(self) -> list[str]:
+
+        R = [
+            "██████╗",
+            "██╔══██╗",
+            "██║  ██║",
+            "██████╔╝",
+            "██╔══██╗",
+            "██║  ██║",
+            "╚═╝  ╚═╝",
+        ]
+
+        P = [
+            "██████╗",
+            "██╔══██╗",
+            "██████╔╝",
+            "██╔═══╝ ",
+            "██║     ",
+            "██║     ",
+            "╚═╝     ",
+        ]
+
+        Y = [
+            "██╗   ██╗",
+            "╚██╗ ██╔╝",
+            " ╚████╔╝ ",
+            "  ╚██╔╝  ",
+            "   ██║   ",
+            "   ██║   ",
+            "   ╚═╝   ",
+        ]
+
+        G = [
+            " ██████╗",
+            "██╔════╝",
+            "██║  ███╗",
+            "██║   ██║",
+            "██║   ██║",
+            "╚██████╔╝",
+            " ╚═════╝ ",
+        ]
+
+        return [R, P, Y, G]
+
+
+    LETTER_COLORS = [colors.LIGHT_GRAY, colors.YELLOW, colors.YELLOW, colors.LIGHT_GRAY]  # R, P, Y, G (tuples RGB)
+
+
+    def draw_splash(self) -> None:
+        letters = self.splash()
+        widths = [max(len(line) for line in letter) for letter in letters]
+        gap = "  "
+        total = sum(widths) + len(gap) * (len(letters) - 1)
+        margin = " " * max((self.width - total) // 2, 0)
+
+        for row in range(7):
+            parts = [
+                self.color(letter[row].ljust(width), rgb)
+                for letter, width, rgb in zip(letters, widths, self.LETTER_COLORS)
+            ]
+            print(margin + gap.join(parts))
