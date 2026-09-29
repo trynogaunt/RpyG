@@ -53,3 +53,43 @@ $amber: #ffb000;
 Footer {
     background: $background;
 }
+
+MainMenuScreen {
+    align: center top;
+}
+
+#title-bar {
+    width: 100%;
+    border: double $amber;
+    content-align: center middle;
+    text-style: bold;
+}
+
+#logo {
+    width: auto;
+    height: auto;
+    margin: 1 0;
+}
+.logo-letter { width: auto; margin: 0 1; }
+.logo-a { color: #c6ccd6; }
+.logo-b { color: #c8d42a; }
+
+#tagline {
+    width: 100%;
+    content-align: center middle;
+    color: $text-muted;
+}
+
+#lore {
+    width: 100%;
+    height: auto;
+    padding: 1 2;
+    border-subtitle-align: center;
+}
+
+#menu {
+    width: 30;
+    height: auto;
+    border: none;
+    margin-top: 1;
+}
