@@ -13,6 +13,7 @@ from core.world.loader import World, RoomRef
 from core.world.models import WorldState
 from core.views.base_view import BaseView
 from core.views.exploration_view import ExplorationView
+from core.views.slot_view import SlotsView, SlotView
 from core.game.text_keys import room_key
 from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot
@@ -30,6 +31,9 @@ class Game:
         self.world_state: WorldState = world_state or WorldState()
         self._messages: list[Message] = []
         self.store = store
+        self.slot_mode: str = "load"
+        self._previous_screen: Screens | None = None
+
 
     def start(self) -> GameResponse:
         print("Starting game...")
@@ -48,6 +52,8 @@ class Game:
                 return self.creation.to_view()
             case Screens.EXPLORATION:
                 return self._exploration_to_view()
+            case Screens.SLOTS:
+                return self._slots_to_view(mode=self.slot_mode)
             case _:
                 return None
        
@@ -61,6 +67,9 @@ class Game:
             can_move={direction: self.world.exit_from(self.player.location, direction) is not None for direction in Direction},
             player_summary=self.player.to_summary()
         )
+
+    def _slots_to_view(self, mode: str) -> SlotsView:
+        return SlotsView(mode=mode)
 
     def _explore_current_room(self) -> None:
         current_room = self.world.get_room(self.player.location)
@@ -150,6 +159,7 @@ class Game:
             case OpenSlots(mode=mode):
                 self.screen = Screens.SLOTS
                 self.slot_mode = mode
+                return self._slots_to_view(mode=mode)
             case Quit():
                 self.screen = Screens.EXIT
             case _:

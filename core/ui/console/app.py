@@ -16,7 +16,7 @@ class ConsoleApp:
             Screens.MAIN_MENU: MainMenuScreen,
             Screens.CREATION: CreationScreen,
             Screens.EXPLORATION: ExplorationScreen,
-            Screens.SLOT: SlotScreen,
+            Screens.SLOTS: SlotScreen,
         }
 
     def build_screen(self, screen_id, view=None):
