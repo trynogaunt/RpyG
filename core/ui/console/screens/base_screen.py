@@ -17,6 +17,7 @@ class BaseConsoleScreen(ABC):
         self.clear()
         self.draw()
         self.draw_messages(messages)
+        print()
 
   
     @abstractmethod
@@ -63,11 +64,33 @@ class BaseConsoleScreen(ABC):
     def centered(self, text: str, code: str = "") -> None:
         line = text.center(self.width)
         print(self.color(line, code) if code else line)
+    
+    def empty_line_box(self) -> None:
+        print(f"| {' ' * (self.width - 4)} |")
 
-    def box(self, lines: list[str], footer: str | None = None,
+    def box(self, lines: list[str], footer: str | None = None, header: str | None = None, title: str | None = None,
         code: str = "", footer_code: str = "") -> None:
         inner = self.width - 4
-        self.rule()
+        
+        if header:
+            label = f" {header} "
+            left = (self.width - len(label)) // 2
+            right = self.width - len(label) - left
+            label = self.color(label, code) if code else label
+            print("=" * left + label + "=" * right)
+        else:
+            self.rule()
+
+        if title:
+            title = title[: self.width - 8]
+            label = f" {title} "
+            left = 2
+            right = self.width - left - len(label)
+            label = self.color(label, code) if code else label
+            print("|" + label + " " * (right) + "|")
+            self.empty_line_box()
+
+
         for line in lines:
             for part in textwrap.wrap(line, inner) or [""]:
                 cell = part.ljust(inner)

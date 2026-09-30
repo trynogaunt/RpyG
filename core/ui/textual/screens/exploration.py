@@ -14,13 +14,13 @@ from core.game.text_keys import room_key, zone_key
 
 class ExplorationScreen(BaseScreen):
     BINDINGS = [
-        Binding("a",      "explore", "ui.bindings.explore"),
-        Binding("z/q/s/d", "", "ui.bindings.navigate"),
+        Binding("a",      "explore", "ui.exploration.look_around"),
+        Binding("z/q/s/d", "", "ui.exploration.navigation"),
         Binding("up,z",    "move('NORTH')", "", show=False),
         Binding("down,s",  "move('SOUTH')", "", show=False),
         Binding("left,q",  "move('WEST')",  "", show=False),
         Binding("right,d", "move('EAST')",  "", show=False),
-        Binding("escape",  "quit_game", "ui.bindings.quit")]
+        Binding("escape",  "quit_game", "ui.common.quit")]
 
     def compose(self):
         with Horizontal(id="main"):
@@ -58,15 +58,15 @@ class ExplorationScreen(BaseScreen):
     def update_view(self, view: ExplorationView):
         player = view.player_summary
         self.query_one("#room-panel").border_title = self.app.t(zone_key(view.zone_id, "name"))
-        self.query_one("#room-name", Static).update(self.app.t(f'text.{view.zone_id}.rooms.{view.room_id}.name'))
-        self.query_one("#room-description", Static).update(self.app.t(f'text.{view.zone_id}.rooms.{view.room_id}.description'))
+        self.query_one("#room-name", Static).update(self.app.t(f'zones.{view.zone_id}.rooms.{view.room_id}.name'))
+        self.query_one("#room-description", Static).update(self.app.t(f'zones.{view.zone_id}.rooms.{view.room_id}.description'))
         self.query_one("#player-panel").border_title = view.player_summary.name
         self.query_one("#player-level", Static).update(f"Lv. {view.player_summary.level}")
-        self.query_one("#hp-label", Static).update(self.app.t("ui.stat.abrev.health"))
+        self.query_one("#hp-label", Static).update(self.app.t("ui.stats.abrev.health"))
         self.query_one("#hp-bar", ProgressBar).update(total=player.max_health, progress=player.health)
         self.query_one("#hp-text", Static).update(f"{player.health}/{player.max_health}")
         for stat in [s for s in Stat if s != Stat.HEALTH]:
-            self.query_one(f"#stat-{stat.name.lower()}", Static).update(f"{self.app.t(f'ui.stat.{stat.name.lower()}')}: {player.stats.get(stat, 0)}")
+            self.query_one(f"#stat-{stat.name.lower()}", Static).update(f"{self.app.t(f'ui.stats.{stat.name.lower()}')}: {player.stats.get(stat, 0)}")
 
     def show_messages(self, messages: tuple[Message, ...]) -> None:
         log_panel = self.query_one("#log-panel", RichLog)

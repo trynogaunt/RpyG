@@ -33,6 +33,8 @@ $amber: #ffb000;
     background: $background;
     overflow-y: auto;          /* la barre n'apparaît que si le texte dépasse */
     scrollbar-size-vertical: 1;
+    dock: bottom;
+    height: 50%;
 }
 
 #hp-row   { height: 1; }
