@@ -7,6 +7,7 @@ from core.game.response import GameResponse, Message
 from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame
 from core.enums import Direction
 from core.game.creation import CreationState
+from core.game.rules import STAT_RULES, CREATION_POINTS
 from core.game.player import Player
 from core.world.loader import World, RoomRef
 from core.world.models import WorldState
@@ -17,13 +18,14 @@ from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot
 
 class Game:
-    def __init__(self, world: World | None = None, world_state: WorldState | None = None):
+    def __init__(self, world: World | None = None, world_state: WorldState | None = None, store=None):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
         self.world: World = world
         self.world_state: WorldState = world_state or WorldState()
         self._messages: list[Message] = []
+        self.store = store
 
     def start(self) -> GameResponse:
         print("Starting game...")
@@ -61,6 +63,28 @@ class Game:
 
         return Message(key="look_around", text="<text.messages.look_around>")
 
+    def save_game(self, slot: int) -> None:
+        if self.store is None or self.player is None:
+            self._messages.append(Message(key="ui.messages.save_failed"))
+            return
+        try:
+            self.store.save(slot, self.snapshot())
+        except OSError:                      # disque plein, droits...
+            self._messages.append(Message(key="ui.messages.save_failed"))
+            return
+        self._messages.append(Message(key="ui.messages.game_saved"))
+
+    def load_game(self, slot: int) -> None:
+        if self.store is None:
+            self._messages.append(Message(key="ui.messages.invalid_save"))
+            return
+        try:
+            self.restore(self.store.load(slot))
+        except InvalidSave:
+            self._messages.append(Message(key="ui.messages.invalid_save"))
+            return
+        self._messages.append(Message(key="ui.messages.game_loaded"))
+
     def snapshot(self) -> GameSnapshot:
         p = self.player
         return GameSnapshot(
@@ -68,22 +92,27 @@ class Game:
                 name=p.name,
                 health=p.health,
                 level=p.level,
-                allocated=tuple(p.allocated.items()),
+                allocated_points=tuple(sorted(p.allocated_points.items(), key=lambda kv: kv[0].name)),
             ),
             location=p.location,
-            world_state=self.world_state,
             explored=tuple(sorted(self.world_state.explored, key=lambda r: (r.zone_id, r.room_id))),
-            messages=tuple(self._messages)
         )
     
+    def _check_room(self, ref: RoomRef) -> None:
+        try:
+            self.world.get_room(ref)
+        except ValueError as e:
+            raise InvalidSave(f"Salle inconnue : {ref}") from e
+        
     def restore(self, snap: GameSnapshot) -> None:
-        if snap.location not in self.world:            # adapte à ton API de World
-            raise InvalidSave(f"Salle inconnue : {snap.location}")
+        self._check_room(snap.location)
+        for ref in snap.explored:
+            self._check_room(ref)
 
         player = Player(name=snap.player.name)
         player.level = snap.player.level
-        player.allocated = dict(snap.player.allocated)
-        if sum(player.allocated.values()) > player.total_points():   # règle à toi
+        player.allocated_points = dict(snap.player.allocated_points)
+        if sum(player.allocated_points.values()) > CREATION_POINTS:     # nom réel de la constante ou de la fonction
             raise InvalidSave("Points alloués incohérents")
         player.health = min(snap.player.health, player.max_health)
         player.location = snap.location
@@ -91,18 +120,6 @@ class Game:
         self.player = player
         self.world_state.explored = set(snap.explored)
         self.screen = Screens.EXPLORATION
-    
-    def load_game(self) -> None:
-        # Implémentation de la logique de chargement de la sauvegarde
-        try:
-            with open("save_file.json", "r") as f:
-                import json
-                data = json.load(f)
-            snapshot = decode(data)
-            self.restore(snapshot)
-        except (FileNotFoundError, InvalidSave, KeyError, ValueError) as e:
-            self._messages.append(Message(key="load_error", text=f"Erreur lors du chargement de la sauvegarde : {e}"))
-            self.screen = Screens.MAIN_MENU
             
     def handle_action(self, action: Action) -> GameResponse:
         self._messages.clear()
@@ -123,8 +140,8 @@ class Game:
             case NewGame():
                 self.screen = Screens.CREATION
                 self.creation = CreationState()
-            case LoadGame():
-                self.load_game()
+            case LoadGame(slot=slot):
+                self.load_game(slot)
             case Quit():
                 self.screen = Screens.EXIT
             case _:
@@ -166,8 +183,8 @@ class Game:
                         key=room_key(ref, "look_around"),
                         fallback_key="ui.messages.nothing_special",
                     ))
-            case SaveGame():
-                self.save_game()
+            case SaveGame(slot=slot):
+                self.save_game(slot)
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:

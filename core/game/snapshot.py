@@ -8,12 +8,10 @@ class PlayerSnapshot:
     name: str
     health: int
     level: int
-    allocated: tuple[tuple[Stat, int], ...]
+    allocated_points: tuple[tuple[Stat, int], ...]
 
 @dataclass(frozen=True)
 class GameSnapshot:
     player: PlayerSnapshot
     location: RoomRef
-    world_state: WorldState
     explored: tuple[RoomRef, ...]
-    messages: tuple[Message, ...]

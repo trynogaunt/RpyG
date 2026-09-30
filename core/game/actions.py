@@ -45,8 +45,10 @@ class Explore(Action):
 @dataclass(frozen=True)
 class SaveGame(Action):
     """Action representing the intention to save the current game state."""
+    slot: int
 
 @dataclass(frozen=True)
 class LoadGame(Action):
     """Action representing the intention to load a previously saved game state."""
+    slot: int
 
