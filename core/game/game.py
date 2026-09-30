@@ -17,6 +17,10 @@ from core.game.text_keys import room_key
 from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot
 
+import logging
+
+log = logging.getLogger(__name__)
+
 class Game:
     def __init__(self, world: World | None = None, world_state: WorldState | None = None, store=None):
         self.screen: Screens | None = None
@@ -64,12 +68,15 @@ class Game:
         return Message(key="look_around", text="<text.messages.look_around>")
 
     def save_game(self, slot: int) -> None:
+        log.info("Tentative de sauvegarde slot=%s", slot)
         if self.store is None or self.player is None:
+            log.warning("Sauvegarde annulée : store=%s player=%s", self.store, self.player)
             self._messages.append(Message(key="ui.messages.save_failed"))
             return
         try:
             self.store.save(slot, self.snapshot())
-        except OSError:                      # disque plein, droits...
+        except Exception as e:
+            log.exception("Échec de la sauvegarde (slot %s)", slot)
             self._messages.append(Message(key="ui.messages.save_failed"))
             return
         self._messages.append(Message(key="ui.messages.game_saved"))

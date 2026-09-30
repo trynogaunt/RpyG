@@ -5,6 +5,11 @@ from core.game.I18n import Translation
 from core.game.settings import Settings, default_settings_path
 import argparse
 import importlib
+import logging
+from core.save.store import SaveStore
+
+log = logging.getLogger(__name__)
+logging.basicConfig(filename="rpyg.log", level=logging.INFO)
 
 FRONTENDS = {
     "textual": "core.ui.textual",
@@ -46,7 +51,7 @@ def main():
     translation = Translation(lang_dir, locales=settings.locale)
 
     # Load the game world from the data directory
-    game = Game(world=load_world(data_dir=data_dir))
+    game = Game(world=load_world(data_dir=data_dir), store=SaveStore())
 
     # Resolve and initialize the selected frontend - Fallback to console without external libraries if necessary
     frontend = resolve_frontend(args.ui, settings)

@@ -27,11 +27,15 @@
         "exploration": {
             "look_around": "Look Around",
             "back_to_menu": "Back to Menu",
-            "navigation": "Navigation"
+            "navigation": "Navigation",
+            "save_game": "Save Game"
         },
         "messages": {
             "already_explored": "You have already searched this place.",
-            "nothing_special": "Nothing special here."
+            "nothing_special": "Nothing special here.",
+            "game_saved": "Game saved successfully.",
+            "game_loaded": "Game loaded successfully.",
+            "save_failed": "Failed to save the game."
         }
     },
     "zones": {
