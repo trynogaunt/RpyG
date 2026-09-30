@@ -1,8 +1,10 @@
 from core.enums import Screens
 from core.game.I18n import Translation
+from core.enums import Stat
+from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.player import Player
@@ -11,7 +13,8 @@ from core.world.models import WorldState
 from core.views.base_view import BaseView
 from core.views.exploration_view import ExplorationView
 from core.game.text_keys import room_key
-
+from core.errors import InvalidSave
+from core.game.snapshot import GameSnapshot, PlayerSnapshot
 
 class Game:
     def __init__(self, world: World | None = None, world_state: WorldState | None = None):
@@ -57,7 +60,50 @@ class Game:
         current_room = self.world.get_room(self.player.location)
 
         return Message(key="look_around", text="<text.messages.look_around>")
+
+    def snapshot(self) -> GameSnapshot:
+        p = self.player
+        return GameSnapshot(
+            player=PlayerSnapshot(
+                name=p.name,
+                health=p.health,
+                level=p.level,
+                allocated=tuple(p.allocated.items()),
+            ),
+            location=p.location,
+            world_state=self.world_state,
+            explored=tuple(sorted(self.world_state.explored, key=lambda r: (r.zone_id, r.room_id))),
+            messages=tuple(self._messages)
+        )
     
+    def restore(self, snap: GameSnapshot) -> None:
+        if snap.location not in self.world:            # adapte à ton API de World
+            raise InvalidSave(f"Salle inconnue : {snap.location}")
+
+        player = Player(name=snap.player.name)
+        player.level = snap.player.level
+        player.allocated = dict(snap.player.allocated)
+        if sum(player.allocated.values()) > player.total_points():   # règle à toi
+            raise InvalidSave("Points alloués incohérents")
+        player.health = min(snap.player.health, player.max_health)
+        player.location = snap.location
+
+        self.player = player
+        self.world_state.explored = set(snap.explored)
+        self.screen = Screens.EXPLORATION
+    
+    def load_game(self) -> None:
+        # Implémentation de la logique de chargement de la sauvegarde
+        try:
+            with open("save_file.json", "r") as f:
+                import json
+                data = json.load(f)
+            snapshot = decode(data)
+            self.restore(snapshot)
+        except (FileNotFoundError, InvalidSave, KeyError, ValueError) as e:
+            self._messages.append(Message(key="load_error", text=f"Erreur lors du chargement de la sauvegarde : {e}"))
+            self.screen = Screens.MAIN_MENU
+            
     def handle_action(self, action: Action) -> GameResponse:
         self._messages.clear()
         match self.screen:
@@ -77,6 +123,8 @@ class Game:
             case NewGame():
                 self.screen = Screens.CREATION
                 self.creation = CreationState()
+            case LoadGame():
+                self.load_game()
             case Quit():
                 self.screen = Screens.EXIT
             case _:
@@ -109,6 +157,7 @@ class Game:
                 self._move_player(direction)
             case Explore():
                 ref = self.player.location
+                self.world_state.explored.add(ref)
                 if ref in self.world_state.explored:
                     self._messages.append(Message(key="ui.messages.already_explored"))
                 else:
@@ -117,6 +166,8 @@ class Game:
                         key=room_key(ref, "look_around"),
                         fallback_key="ui.messages.nothing_special",
                     ))
+            case SaveGame():
+                self.save_game()
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:

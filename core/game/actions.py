@@ -42,3 +42,11 @@ class Move(Action):
 class Explore(Action):
     """Action representing the intention to explore the current room."""
 
+@dataclass(frozen=True)
+class SaveGame(Action):
+    """Action representing the intention to save the current game state."""
+
+@dataclass(frozen=True)
+class LoadGame(Action):
+    """Action representing the intention to load a previously saved game state."""
+
