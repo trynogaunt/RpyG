@@ -4,7 +4,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -147,8 +147,9 @@ class Game:
             case NewGame():
                 self.screen = Screens.CREATION
                 self.creation = CreationState()
-            case LoadGame(slot=slot):
-                self.load_game(slot)
+            case OpenSlots(mode=mode):
+                self.screen = Screens.SLOTS
+                self.slot_mode = mode
             case Quit():
                 self.screen = Screens.EXIT
             case _:

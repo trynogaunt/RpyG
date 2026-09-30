@@ -12,3 +12,9 @@ class SaveStore:
 
     def list_slots(self) -> list[int]:
         return storage.slots()
+    
+    def list_slots_info(self) -> list[dict[str, int | str | None]]:
+        return storage.slots_info()
+
+    def delete(self, slot: int) -> None:
+        storage.delete(slot)

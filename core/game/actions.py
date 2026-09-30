@@ -52,3 +52,11 @@ class LoadGame(Action):
     """Action representing the intention to load a previously saved game state."""
     slot: int
 
+@dataclass(frozen=True)
+class Back(Action):
+    """Action representing the intention to go back to the previous screen."""
+
+@dataclass(frozen=True)
+class OpenSlots(Action):
+    """Action representing the intention to open the slot selection screen."""
+    mode: str

@@ -2,6 +2,7 @@ from core.enums import Screens
 from core.ui.console.screens.main_menu import MainMenuScreen
 from core.ui.console.screens.creation import CreationScreen
 from core.ui.console.screens.exploration import ExplorationScreen
+from core.ui.console.screens.slot_screen import SlotScreen
 
 class ConsoleApp:
     def __init__(self, game, translation, settings):
@@ -15,6 +16,7 @@ class ConsoleApp:
             Screens.MAIN_MENU: MainMenuScreen,
             Screens.CREATION: CreationScreen,
             Screens.EXPLORATION: ExplorationScreen,
+            Screens.SLOT: SlotScreen,
         }
 
     def build_screen(self, screen_id, view=None):
