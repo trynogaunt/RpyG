@@ -1,5 +1,6 @@
 {
     "ui": {
+        "common": { "quit": "Quitter" },
         "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger une Partie", 
         "title": "R P y G - L E G A C Y", "tagline": "Your CPU will handle all the dragons", 
         "lore":" Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un brave aventurier à la recherche de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
