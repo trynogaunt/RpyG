@@ -65,17 +65,22 @@ class BaseConsoleScreen(ABC):
         print(self.color(line, code) if code else line)
 
     def box(self, lines: list[str], footer: str | None = None,
-            code: str = "", footer_code: str = "") -> None:
+        code: str = "", footer_code: str = "") -> None:
         inner = self.width - 4
         self.rule()
         for line in lines:
             for part in textwrap.wrap(line, inner) or [""]:
                 cell = part.ljust(inner)
                 print(f"| {self.color(cell, code) if code else cell} |")
+
         if footer:
-            cell = footer.center(inner)
-            print(f"| {self.color(cell, footer_code) if footer_code else cell} |")
-        self.rule()
+            label = f" {footer} "
+            left = (self.width - len(label)) // 2
+            right = self.width - len(label) - left
+            label = self.color(label, footer_code) if footer_code else label
+            print("=" * left + label + "=" * right)
+        else:
+            self.rule()
     
     def color(self, text: str, code: str) -> str:
         return f"{code}{text}{colors.RESET}"

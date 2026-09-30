@@ -5,11 +5,17 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical, Center
 from textual.widgets import Static, OptionList
 from textual.widgets.option_list import Option
+from rich.text import Text
+from core.ui import splash
 
 from core.game.actions import NewGame, Quit
 from core.ui.textual.logo import LETTERS  # dict {"R": "...", "P": "...", ...}
 from core.ui.textual.screens.base_screen import BaseScreen
-    
+from textual.widgets import Static
+from core.ui.textual.widgets.splash import build_splash
+
+LETTER_STYLES = ["#c5cdd9", "#ffb000", "#ffb000", "#c5cdd9"] 
+
 def app_version()-> str:
     try:
         return version("rpyg")
@@ -20,11 +26,8 @@ class MainMenuScreen(BaseScreen):
 
     def compose(self):
         yield Static(id="title-bar")
-        with Horizontal(id="logo"):
-            for letter, cls in (("R", "logo-a"), ("P", "logo-b"), ("Y", "logo-c"), ("G", "logo-d")):
-                s = Static(LETTERS[letter], classes=f"logo-letter {cls}")
-                s.styles.width = "auto"
-                yield s
+        with Center():
+            yield Static(build_splash(), id="splash")
         yield Static(id="tagline")
         yield Static(id="lore", classes="panel")
         with Center():

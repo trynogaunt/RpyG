@@ -100,3 +100,9 @@ MainMenuScreen {
     border: none;
     margin-top: 1;
 }
+
+#splash {
+    padding-top: 1;
+    width: auto;
+    height: auto;
+}
