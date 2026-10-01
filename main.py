@@ -1,41 +1,63 @@
-from ui.ui_controller import UIController
-from game import game
-import json
+from core.game.game import Game
+from core.world.loader import load_world
 from pathlib import Path
-from game.locales.i18n import I18n
-from models.game_context import GameContext
-from integrations.discord_presence import DiscordPresence
+from core.game.I18n import Translation
+from core.game.settings import Settings, default_settings_path
+import argparse
+import importlib
+import logging
+from core.save.store import SaveStore
 
+log = logging.getLogger(__name__)
+logging.basicConfig(filename="rpyg.log", level=logging.INFO)
 
-def load_discord_presence() -> DiscordPresence | None:
-    config_path = Path("config.json")
-    if not config_path.exists():
-        return None
+FRONTENDS = {
+    "textual": "core.ui.textual",
+    "console": "core.ui.console"
+}
 
-    with config_path.open("r", encoding="utf-8") as f:
-        data = json.load(f)
+FALLBACK = "console"
 
-    client_id = data.get("discord_client_id")
-    if not client_id:
-        return None
+def parse_args():
+    parser = argparse.ArgumentParser(prog="rpyg")
+    parser.add_argument("--ui", choices=FRONTENDS.keys())
+    return parser.parse_args()
 
-    presence = DiscordPresence(client_id)
-    return presence
+def resolve_frontend(cli_choice, settings):
+    candidates = [cli_choice, settings.frontend, FALLBACK]
+    for name in candidates:
+        if name not in FRONTENDS:
+            continue
+        try:
+            return importlib.import_module(FRONTENDS[name])
+        except ImportError as e:
+            raise ImportError(f"Failed to import frontend '{name}'") from e
+    raise ImportError("No suitable frontend found.")
 
 def main():
-    ctx = GameContext(
-        i18n=I18n(locale="en", fallback_locale="en")
-    )
-    game_ui = UIController(ctx=ctx, width=100, border_char="|", padding=1)
-    game_instance = game.Game(ui=game_ui, ctx=ctx)
-    discord = load_discord_presence()
-    if discord:
-        game_instance.discord_presence = discord
-    game_instance.run()
-    if discord:
-        discord.close()
-        
-        
+    data_dir = Path(__file__).parent / "data"
+    lang_dir = data_dir / "lang"
+    args = parse_args()
+
+    # Load settings from the default settings path
+    settings = Settings.load(default_settings_path())
+    
+    # Ensure the locale specified in the settings is available
+    available = {p.stem for p in lang_dir.glob("*.json")}
+    if settings.locale not in available:
+        settings.locale = "en"
+
+    # Initialize the translation system with the resolved locale
+    translation = Translation(lang_dir, locales=settings.locale)
+
+    # Load the game world from the data directory
+    game = Game(world=load_world(data_dir=data_dir), store=SaveStore())
+
+    # Resolve and initialize the selected frontend - Fallback to console without external libraries if necessary
+    frontend = resolve_frontend(args.ui, settings)
+    frontend.run(game, translation=translation, settings=settings)
+    
+
+
 if __name__ == "__main__":
     main()
-    

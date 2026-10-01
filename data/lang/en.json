@@ -1,0 +1,92 @@
+{
+    "ui": {
+        "common": { "quit": "Quit", "level": "Level", "unavailable": "Unavailable", "back": "Back", "invalid_choice": "Invalid Choice" },
+        "slots": {"empty": "--Empty Slot--", "title_load": "Load Game", "title_save": "Save Game", "unreadable": "--Unreadable Slot--"},
+        "main_menu": { "new_game": "New Game", "quit": "Quit", "options": "Options", "load_game": "Load Game", 
+        "title": "R P y G - L E G A C Y", "tagline": "Your CPU will handle all the dragons", 
+        "lore":"In a world where dragons roam the skies and ancient magic floats in the air, you are a brave adventurer seeking glory and fortune. \nWill you rise to the challenges ahead and become a legend?",
+        "version": "Version 0.1 - Early Access" },
+        "creation": {
+            "title": "Character Creation",
+            "name": "Name",
+            "points_left": "Points Left",
+            "set_name": "Set Name",
+            "name_prompt": "Enter your character's name:",
+            "confirm": "Confirm"
+        },
+
+        "stats": {
+            "health": "Health", "strength": "Strength", "speed": "Speed", "luck": "Luck",
+            "abrev": { "health": "HP", "strength": "STR", "speed": "SPD", "luck": "LCK" }
+        },
+        "directions": {
+            "north": "North",
+            "south": "South",
+            "east": "East",
+            "west": "West"
+        },
+        "exploration": {
+            "look_around": "Look Around",
+            "back_to_menu": "Back to Menu",
+            "navigation": "Navigation",
+            "save_game": "Save Game"
+        },
+        "messages": {
+            "already_explored": "You have already searched this place.",
+            "nothing_special": "Nothing special here.",
+            "game_saved": "Game saved successfully.",
+            "game_loaded": "Game loaded successfully.",
+            "save_failed": "Failed to save the game.", 
+            "invalid_save":"Invalid Save"
+        }
+    },
+    "zones": {
+        "entry_village": {
+            "name": "Entry Village",
+            "description": "A small village that serves as the starting point for adventurers.",
+            "rooms": {
+                "village_square": {
+                    "name": "Village Square",
+                    "description": "The bustling center of the village, filled with villagers and market stalls.",
+                    "look_around": "You see villagers going about their daily routines, children playing, and merchants selling their goods."
+                },
+                "blacksmith_shop": {
+                    "name": "Blacksmith Shop",
+                    "description": "A small workshop filled with the sounds of hammering metal.",
+                    "look_around": "You see the blacksmith working diligently, crafting weapons and armor."
+                },
+                "village_gate": {
+                    "name": "Village Gate",
+                    "description": "The main entrance to the village, guarded by vigilant sentries.",
+                    "look_around": "You see the guards keeping watch and travelers coming and going through the gate."
+                },
+                "tavern": {
+                    "name": "Tavern",
+                    "description": "A cozy tavern where villagers gather to relax and share stories.",
+                    "look_around": "You see villagers enjoying their drinks and chatting with each other."
+                }
+            }
+        },
+        "flooded_cave": {
+            "name": "Flooded Cave",
+            "description": "A dark cave partially submerged in water, with the sound of dripping echoing through the chambers.",
+            "rooms": {
+                "entrance": {
+                    "name": "Cave Entrance",
+                    "description": "The entrance to the cave, where the water begins to pool.",
+                    "look_around": "You see the water slowly rising and the dark interior of the cave beckoning you in."
+                },
+                "water_pool": {
+                    "name": "Water Pool",
+                    "description": "A deep pool of water within the cave, reflecting the dim light from above.",
+                    "look_around": "You see the water shimmering and hear the distant drip of water echoing through the cave."
+                },
+                "narrow_passage": {
+                    "name": "Narrow Passage",
+                    "description": "A tight, winding passage within the cave, barely wide enough to squeeze through.",
+                    "look_around": "You see the walls of the passage closing in and the faint light from the water pool behind you."
+                }
+            }
+        }
+    }
+}

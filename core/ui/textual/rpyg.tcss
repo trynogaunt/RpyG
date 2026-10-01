@@ -1,0 +1,168 @@
+# RpyG Textual CSS file
+
+$amber: #ffb000;
+
+#main   { layout: horizontal; height: 1fr; }
+#left   { width: 2fr; }
+#right  { width: 1fr; }
+
+.panel {
+    border: round $amber;
+    border-title-color: $amber;
+    border-title-style: bold;
+    padding: 0 1;
+    height: 1fr;
+}
+
+#room-name        { text-style: bold; color: $amber; margin-bottom: 1; }
+#room-description { color: $text-muted; }
+
+#directions {
+    layout: grid;
+    grid-size: 3 3;
+    grid-gutter: 0 1;
+    height: auto;
+    width: 100%;
+    padding: 1 1;
+    dock: bottom;
+}
+#directions Button { width: 100%;  }
+#directions Button:disabled { opacity: 40%; }
+
+#log-panel {
+    background: $background;
+    overflow-y: auto;          /* la barre n'apparaît que si le texte dépasse */
+    scrollbar-size-vertical: 1;
+    dock: bottom;
+    height: 50%;
+}
+
+#hp-row   { height: 1; }
+#hp-label { width: auto; margin-right: 1; }
+#hp-bar   { width: 1fr; }
+#hp-bar Bar { width: 1fr; }
+#hp-text  { width: auto; margin-left: 1; }
+#player-panel { height: auto; }
+#room-panel {
+    border: round $amber;
+    border-title-color: $amber;
+    border-title-style: bold;
+    padding: 0 1;
+    height: auto;
+    color: $amber;
+}
+
+Footer {
+    background: $background;
+}
+
+MainMenuScreen {
+    align: center top;
+}
+
+#title-bar {
+    width: 100%;
+    border: double $amber;
+    content-align: center middle;
+    text-style: bold;
+}
+
+#logo {
+    width: 100%;
+    height: auto;
+    align: center top;
+    margin: 1 0;
+}
+
+.logo-letter {
+    width: auto;
+}
+
+.logo-a { color: #c6ccd6; }
+.logo-b { color: #c8d42a; }
+.logo-c { color: #c8d42a; }
+.logo-d { color: #c6ccd6; }
+
+#tagline {
+    width: 100%;
+    content-align: center middle;
+    color: $text-muted;
+}
+
+#lore {
+    width: 100%;
+    height: auto;
+    padding: 1 2;
+    border-subtitle-align: center;
+}
+
+#menu {
+    width: 30;
+    height: auto;
+    border: none;
+    margin-top: 1;
+}
+
+#splash {
+    padding-top: 1;
+    width: auto;
+    height: auto;
+}
+
+SlotsScreen {
+    align: center middle;
+}
+
+/* ===== Écran des slots ===== */
+
+#slots-center {
+    width: 100%;
+    height: 100%;
+    align: center middle;
+}
+
+#slots-box {
+    width: 80%;
+    max-width: 90;
+    height: auto;
+}
+
+#slots-title {
+    width: 100%;
+    height: 3;
+    content-align: center middle;
+    text-style: bold;
+    color: #ffb000;
+}
+
+#slots-list {
+    width: 100%;
+    height: auto;
+    max-height: 24;
+    padding: 1 2;
+    border: round #ffb000;
+    background: transparent;
+    scrollbar-color: #ffb000;
+    scrollbar-background: #222222;
+}
+
+#slots-list > .option-list--option {
+    padding: 0 1;
+}
+
+#slots-list > .option-list--option-highlighted {
+    background: #ffb000;
+    color: #111111;
+    text-style: bold;
+}
+
+#slots-list > .option-list--option-disabled {
+    color: #666666;
+}
+
+#slots-message {
+    width: 100%;
+    height: 3;
+    content-align: center middle;
+    color: #ff6b6b;
+}
