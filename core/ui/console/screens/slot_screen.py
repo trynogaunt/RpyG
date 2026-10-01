@@ -1,5 +1,6 @@
 from core.ui.console.screens.base_screen import BaseConsoleScreen
 from core.game.actions import LoadGame, SaveGame, Back
+from datetime import datetime
 
 
 class SlotScreen(BaseConsoleScreen):

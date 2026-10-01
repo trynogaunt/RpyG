@@ -108,3 +108,61 @@ MainMenuScreen {
     width: auto;
     height: auto;
 }
+
+SlotsScreen {
+    align: center middle;
+}
+
+/* ===== Écran des slots ===== */
+
+#slots-center {
+    width: 100%;
+    height: 100%;
+    align: center middle;
+}
+
+#slots-box {
+    width: 80%;
+    max-width: 90;
+    height: auto;
+}
+
+#slots-title {
+    width: 100%;
+    height: 3;
+    content-align: center middle;
+    text-style: bold;
+    color: #ffb000;
+}
+
+#slots-list {
+    width: 100%;
+    height: auto;
+    max-height: 24;
+    padding: 1 2;
+    border: round #ffb000;
+    background: transparent;
+    scrollbar-color: #ffb000;
+    scrollbar-background: #222222;
+}
+
+#slots-list > .option-list--option {
+    padding: 0 1;
+}
+
+#slots-list > .option-list--option-highlighted {
+    background: #ffb000;
+    color: #111111;
+    text-style: bold;
+}
+
+#slots-list > .option-list--option-disabled {
+    color: #666666;
+}
+
+#slots-message {
+    width: 100%;
+    height: 3;
+    content-align: center middle;
+    color: #ff6b6b;
+}

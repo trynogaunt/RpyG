@@ -1,4 +1,5 @@
 from importlib.metadata import version, PackageNotFoundError
+from core.enums import Screens
 
 from textual import on
 from textual.app import ComposeResult
@@ -8,7 +9,7 @@ from textual.widgets.option_list import Option
 from rich.text import Text
 from core.ui import splash
 
-from core.game.actions import NewGame, Quit
+from core.game.actions import NewGame, Quit, OpenSlots
 from core.ui.textual.logo import LETTERS  # dict {"R": "...", "P": "...", ...}
 from core.ui.textual.screens.base_screen import BaseScreen
 from textual.widgets import Static
@@ -44,7 +45,7 @@ class MainMenuScreen(BaseScreen):
             menu = self.query_one("#menu", OptionList)
             menu.add_options([
                 Option(t("ui.main_menu.new_game"), id="new_game"),
-                Option(t("ui.main_menu.load_game"), id="load_game", disabled=True),
+                Option(t("ui.main_menu.load_game"), id="load_game"),
                 Option(t("ui.main_menu.quit"), id="quit"),
             ])
             menu.focus()
@@ -55,6 +56,6 @@ class MainMenuScreen(BaseScreen):
             case "new_game":
                 self.app.dispatch(NewGame())
             case "load_game":
-                pass  # Implement load game functionality here
+                self.app.dispatch(OpenSlots(mode="load"))
             case "quit":
                 self.app.dispatch(Quit())

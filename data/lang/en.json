@@ -1,6 +1,6 @@
 {
     "ui": {
-        "common": { "quit": "Quit", "level": "Level", "unavailable": "Unavailable", "back": "Back" },
+        "common": { "quit": "Quit", "level": "Level", "unavailable": "Unavailable", "back": "Back", "invalid_choice": "Invalid Choice" },
         "slots": {"empty": "--Empty Slot--", "title_load": "Load Game", "title_save": "Save Game", "unreadable": "--Unreadable Slot--"},
         "main_menu": { "new_game": "New Game", "quit": "Quit", "options": "Options", "load_game": "Load Game", 
         "title": "R P y G - L E G A C Y", "tagline": "Your CPU will handle all the dragons", 

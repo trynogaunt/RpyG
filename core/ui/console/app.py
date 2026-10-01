@@ -49,7 +49,6 @@ class ConsoleApp:
             self.screen = self.build_screen(response.screen, response.view)
         self.screen.render(response.messages)
     
-    # core/ui/messages.py
     def resolve_message(translation, message) -> str:
         text = translation.t(message.key, **message.params)
         if text == message.key and message.fallback_key:

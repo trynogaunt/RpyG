@@ -7,6 +7,10 @@ from core.enums import Screens
 from core.ui.textual.screens.main_menu import MainMenuScreen
 from core.ui.textual.screens.creation import CreationScreen
 from core.ui.textual.screens.exploration import ExplorationScreen
+from core.ui.textual.screens.slot_screen import SlotsScreen
+
+import logging
+log = logging.getLogger(__name__)
 
 class TextualApp(App):
 
@@ -21,9 +25,11 @@ class TextualApp(App):
             Screens.MAIN_MENU: MainMenuScreen,
             Screens.CREATION: CreationScreen,
             Screens.EXPLORATION: ExplorationScreen,
+            Screens.SLOTS: SlotsScreen,
         }
 
     def build_screen(self, screen_id: Screens, view=None) -> Screen:
+        log.info("build_screen %s view=%r", screen_id, view)
         screen_class = self.all_screens.get(screen_id)
         if screen_class:
             return screen_class(view=view)
@@ -40,6 +46,7 @@ class TextualApp(App):
 
     def dispatch(self, action):
         response = self.game.handle_action(action)
+        log.info("dispatch %r -> screen=%s view=%r", action, response.screen, response.view)
         self.show(response)
     
     def show(self, response):
@@ -52,3 +59,9 @@ class TextualApp(App):
             self.current_screen_id = response.screen
             self.switch_screen(self.build_screen(response.screen, response.view))
         self.screen.show_messages(response.messages)
+    
+    def resolve_message(self, translation, message) -> str:
+        text = translation.t(message.key, **message.params)
+        if text == message.key and message.fallback_key:
+            text = translation.t(message.fallback_key, **message.params)
+        return text
