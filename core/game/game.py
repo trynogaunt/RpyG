@@ -4,7 +4,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -17,6 +17,7 @@ from core.views.slot_view import SlotsView, SlotView
 from core.game.text_keys import room_key
 from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot
+from core.views.slot_view import SlotsView, SlotView
 
 import logging
 
@@ -69,12 +70,24 @@ class Game:
         )
 
     def _slots_to_view(self, mode: str) -> SlotsView:
-        return SlotsView(mode=mode)
+        return SlotsView(slots=self.store.list_slots_info() if self.store else [], mode=mode)
 
     def _explore_current_room(self) -> None:
         current_room = self.world.get_room(self.player.location)
 
         return Message(key="look_around", text="<text.messages.look_around>")
+    
+    def _handle_slots(self, action: str) -> None:
+        match action:
+            case LoadGame(slot=slot):
+                self.load_game(slot)
+            case SaveGame(slot=slot):
+                self.save_game(slot)
+                self.screen = self._previous_screen
+            case Back():
+                self.screen = self._previous_screen
+            case _:
+                raise ValueError(f"Action inconnue : {action}")
 
     def save_game(self, slot: int) -> None:
         log.info("Tentative de sauvegarde slot=%s", slot)
@@ -146,6 +159,8 @@ class Game:
                 self._handle_creation(action)
             case Screens.EXPLORATION:
                 self._handle_exploration(action)
+            case Screens.SLOTS:
+                self._handle_slots(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
         view = self._build_to_view()
@@ -157,9 +172,9 @@ class Game:
                 self.screen = Screens.CREATION
                 self.creation = CreationState()
             case OpenSlots(mode=mode):
+                self._previous_screen = self.screen
                 self.screen = Screens.SLOTS
                 self.slot_mode = mode
-                return self._slots_to_view(mode=mode)
             case Quit():
                 self.screen = Screens.EXIT
             case _:

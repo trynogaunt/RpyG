@@ -8,28 +8,7 @@ from platformdirs import user_data_path
 from core.errors import InvalidSave
 
 APP_NAME = "rpyg"
-
-def slots_info() -> list[dict[str, int | str | None]]:
-    """Informations sur les slots existants."""
-    info = []
-    for slot in slots():
-        path = slot_path(slot)
-        readable = True
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError, UnicodeDecodeError):
-            data = {}
-            readable = False
-        slot_info = {
-            "slot": slot,
-            "name": data.get("name"),
-            "level": data.get("level"),
-            "location": data.get("location"),
-            "saved_at": data.get("saved_at"),
-            "readable": readable
-        }
-        info.append(slot_info)
-    return info
+MAX_SLOTS = 5
 
 
 def save_dir() -> Path:
