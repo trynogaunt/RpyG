@@ -2,3 +2,4 @@ INFO:core.game.game:Tentative de sauvegarde slot=1
 WARNING:core.game.game:Sauvegarde annulée : store=None player=<core.game.player.Player object at 0x7f4883d0fb00>
 INFO:core.game.game:Tentative de sauvegarde slot=1
 INFO:core.game.game:Tentative de sauvegarde slot=1
+INFO:core.game.game:Tentative de sauvegarde slot=2

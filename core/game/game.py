@@ -216,8 +216,10 @@ class Game:
                         key=room_key(ref, "look_around"),
                         fallback_key="ui.messages.nothing_special",
                     ))
-            case SaveGame(slot=slot):
-                self.save_game(slot)
+            case OpenSlots(mode=mode):
+                self._previous_screen = self.screen
+                self.screen = Screens.SLOTS
+                self.slot_mode = mode
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:

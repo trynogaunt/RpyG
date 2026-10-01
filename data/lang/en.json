@@ -1,7 +1,7 @@
 {
     "ui": {
         "common": { "quit": "Quit", "level": "Level", "unavailable": "Unavailable", "back": "Back" },
-        "slots": {"empty": "--Empty Slot--", "title_load": "Load Game", "title_save": "Save Game"},
+        "slots": {"empty": "--Empty Slot--", "title_load": "Load Game", "title_save": "Save Game", "unreadable": "--Unreadable Slot--"},
         "main_menu": { "new_game": "New Game", "quit": "Quit", "options": "Options", "load_game": "Load Game", 
         "title": "R P y G - L E G A C Y", "tagline": "Your CPU will handle all the dragons", 
         "lore":"In a world where dragons roam the skies and ancient magic floats in the air, you are a brave adventurer seeking glory and fortune. \nWill you rise to the challenges ahead and become a legend?",
@@ -36,7 +36,8 @@
             "nothing_special": "Nothing special here.",
             "game_saved": "Game saved successfully.",
             "game_loaded": "Game loaded successfully.",
-            "save_failed": "Failed to save the game."
+            "save_failed": "Failed to save the game.", 
+            "invalid_save":"Invalid Save"
         }
     },
     "zones": {

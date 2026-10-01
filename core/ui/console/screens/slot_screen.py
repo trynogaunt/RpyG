@@ -15,9 +15,9 @@ class SlotScreen(BaseConsoleScreen):
         options = []
         for s in sorted(v.slots, key=lambda x: x.slot):
             if not s.readable:
-                label, action = f"{s.slot}. {self.t('ui.slots.unreadable')}", None
+                label, action = f"{self.t('ui.slots.unreadable')}", None
             elif s.name is None:
-                label = f"{s.slot}. {self.t('ui.slots.empty')}"
+                label = f"{self.t('ui.slots.empty')}"
                 action = make_action(s.slot) if v.mode == "save" else None
             else:
                 label = f"{s.name}, {self.t('ui.common.level')} {s.level}, {s.location}"
