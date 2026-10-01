@@ -29,7 +29,7 @@ Your CPU will handle all the dragons.
 #### RPyG is a **retro console Role-Playing-Game** written in Python
 #### Inspired by old-school **MUD** adventures
 
-> Early development stage — contributions welcome!
+> Early development stage, contributions welcome!
 
 ⭐ If you like the project, give it a star, it really helps!
 
