@@ -1,7 +1,15 @@
 {
-    "lang": "fr",
-    "available_locales": ["fr", "en", "es", "de"],
+    "lang": "en",
+    "available_locales": [
+        "fr",
+        "en",
+        "es",
+        "de"
+    ],
     "interface": "console",
-    "available_interfaces": ["console", "textual"],
+    "available_interfaces": [
+        "console",
+        "textual"
+    ],
     "controls": "keyboard"
 }

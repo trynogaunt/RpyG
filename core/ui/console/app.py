@@ -4,9 +4,10 @@ from core.ui.console.screens.creation import CreationScreen
 from core.ui.console.screens.exploration import ExplorationScreen
 from core.ui.console.screens.slot_screen import SlotScreen
 from core.ui.console.screens.options import OptionsScreen
+from core.game.I18n import Translation
 
 class ConsoleApp:
-    def __init__(self, game, translation, settings):
+    def __init__(self, game, translation: Translation, settings):
         self.game = game
         self.translation = translation
         self.settings = settings
@@ -20,6 +21,10 @@ class ConsoleApp:
             Screens.SLOTS: SlotScreen,
             Screens.OPTIONS: OptionsScreen,
         }
+
+    def _sync_translation(self) -> None:
+        if self.translation.locale_file != self.settings.locale:
+            self.translation = Translation(locales=self.settings.locale, locales_dir=self.translation.locales_dir)
 
     def build_screen(self, screen_id, view=None):
         screen_class = self.all_screens.get(screen_id)
@@ -41,6 +46,7 @@ class ConsoleApp:
         self.show(self.game.handle_action(action))
 
     def show(self, response):
+        self._sync_translation()
         if response.screen is Screens.EXIT:
             self.running = False
             return

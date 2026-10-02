@@ -50,16 +50,6 @@ class Game:
         if next_room:
             self.player.location = next_room
     
-    def _change_locale(self, locale: str) -> None:
-        self.settings["locale"] = locale
-        with open(Path("data/params.json"), "r+", encoding="utf-8") as f:
-            import json
-            params = json.load(f)
-            params["lang"] = locale
-            f.seek(0)
-            json.dump(params, f, ensure_ascii=False, indent=4)
-            f.truncate()
-    
     def _build_to_view(self) -> BaseView | None:
         match self.screen:
             case Screens.CREATION:
@@ -217,10 +207,13 @@ class Game:
                 pass
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+
     def _handle_options(self, action: Action) -> None:
         match action:
             case SetLocale(locale=locale):
-                self.locale = locale
+                if locale in self.settings.available_locales:               
+                    self.settings.locale = locale
+                    self.settings.save()
             case Back():
                 self.screen = self._previous_screen
             case _:
