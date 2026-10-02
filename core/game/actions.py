@@ -60,3 +60,13 @@ class Back(Action):
 class OpenSlots(Action):
     """Action representing the intention to open the slot selection screen."""
     mode: str
+
+@dataclass(frozen=True)
+class OpenInventory(Action):
+    """Action representing the intention to open the player's inventory."""
+
+@dataclass(frozen=True)
+class UseItem(Action):
+    """Action representing the intention to use an item from the player's inventory."""
+    item_id: int
+
