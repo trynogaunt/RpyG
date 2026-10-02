@@ -38,7 +38,6 @@ class Game:
         self.slot_mode: str = "load"
         self._previous_screen: Screens | None = None
 
-
     def start(self) -> GameResponse:
         print("Starting game...")
         self.screen = Screens.MAIN_MENU

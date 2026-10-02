@@ -22,6 +22,7 @@ Your CPU will handle all the dragons.
 ![Code Style](https://img.shields.io/badge/code%20style-black-black)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![Release](https://img.shields.io/badge/Release-Pre--Alpha-red)
+[![pypresence](https://img.shields.io/badge/Discord-pypresence-00bb88.svg?logo=discord)](https://github.com/qwertyquerty/pypresence)
 
 
 # RPyG - Retro Python Command Line RPG

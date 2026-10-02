@@ -7,6 +7,7 @@ import argparse
 import importlib
 import logging
 from core.save.store import SaveStore
+from core.integrations.discord import DiscordIntegration
 
 log = logging.getLogger(__name__)
 logging.basicConfig(filename="rpyg.log", level=logging.INFO)
@@ -41,6 +42,14 @@ def main():
 
     # Load settings from the default settings path
     settings = Settings.load(default_settings_path())
+
+    presence = None
+    if settings.discord_integration:
+        try:
+            presence = DiscordIntegration(app_id="1439725986290860132")
+            presence.connect()
+        except Exception as e:
+            presence = None
     
     # Ensure the locale specified in the settings is available
     available = {p.stem for p in lang_dir.glob("*.json")}

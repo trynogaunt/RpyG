@@ -17,6 +17,7 @@ class Settings:
     available_locales: list[str] = field(default_factory=lambda: ["fr", "en", "es", "de"])
     available_interfaces: list[str] = field(default_factory=lambda: ["console", "textual"])
     controls: str = "keyboard"
+    discord_integration: bool = False
 
     path: Path | None = field(default=None, init=False, repr=False, compare=False)
 
