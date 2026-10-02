@@ -49,6 +49,7 @@ def main():
             presence = DiscordIntegration(app_id="1439725986290860132")
             presence.connect()
         except Exception as e:
+            print(f"Failed to connect to Discord: {e}")
             presence = None
     
     # Ensure the locale specified in the settings is available
@@ -64,7 +65,7 @@ def main():
 
     # Resolve and initialize the selected frontend - Fallback to console without external libraries if necessary
     frontend = resolve_frontend(args.ui, settings)
-    frontend.run(game, translation=translation, settings=settings)
+    frontend.run(game, translation=translation, settings=settings, presence=presence)
     
 
 
