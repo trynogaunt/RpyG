@@ -4,7 +4,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, ChangeLocale
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -13,6 +13,7 @@ from core.world.loader import World, RoomRef
 from core.world.models import WorldState
 from core.views.base_view import BaseView
 from core.views.exploration_view import ExplorationView
+from core.views.option_view import OptionView
 from core.views.slot_view import SlotsView, SlotView
 from core.game.text_keys import room_key
 from core.errors import InvalidSave
@@ -49,6 +50,16 @@ class Game:
         if next_room:
             self.player.location = next_room
     
+    def _change_locale(self, locale: str) -> None:
+        self.settings["locale"] = locale
+        with open(Path("data/params.json"), "r+", encoding="utf-8") as f:
+            import json
+            params = json.load(f)
+            params["lang"] = locale
+            f.seek(0)
+            json.dump(params, f, ensure_ascii=False, indent=4)
+            f.truncate()
+    
     def _build_to_view(self) -> BaseView | None:
         match self.screen:
             case Screens.CREATION:
@@ -57,6 +68,8 @@ class Game:
                 return self._exploration_to_view()
             case Screens.SLOTS:
                 return self._slots_to_view(mode=self.slot_mode)
+            case Screens.OPTIONS:
+                return self._options_to_view()
             case _:
                 return None
        
@@ -69,6 +82,15 @@ class Game:
             room_description=current_room.description,
             can_move={direction: self.world.exit_from(self.player.location, direction) is not None for direction in Direction},
             player_summary=self.player.to_summary()
+        )
+
+    def _options_to_view(self) -> OptionView:
+        return OptionView(
+            locale=self.settings.get("locale", "fr"),
+            available_locales=["fr", "en", "es", "de"],
+            interface=self.settings.get("interface", "console"),
+            available_interfaces=["console", "textual"],
+            controls=self.settings.get("controls", "keyboard")
         )
 
     def _slots_to_view(self, mode: str) -> SlotsView:
@@ -220,6 +242,8 @@ class Game:
     
     def _handle_settings(self, action: Action) -> None:
         match action:
+            case ChangeLocale(locale=locale):
+                self.settings["locale"] = locale
             case Back():
                 self.screen = self._previous_screen
             case _:

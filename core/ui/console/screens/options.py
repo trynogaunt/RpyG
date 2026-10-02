@@ -5,6 +5,7 @@ from core.ui.console import colors
 
 class OptionsScreen(BaseConsoleScreen):
     def draw(self):
+        v = self.view
         self.rule()
         print(f"| {self.t('ui.options.title').center(self.width - 4)} |")
         self.rule()
@@ -16,6 +17,8 @@ class OptionsScreen(BaseConsoleScreen):
             footer=self.t("ui.options.version"),
             footer_code=colors.LIGHT_GRAY,
         )
+
+        self.centered(f"Current locale: {v.locale}", colors.LIGHT_GRAY)
     print()
 
     def ask(self):
