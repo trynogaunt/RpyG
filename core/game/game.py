@@ -4,7 +4,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, ChangeLocale
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -86,11 +86,11 @@ class Game:
 
     def _options_to_view(self) -> OptionView:
         return OptionView(
-            locale=self.settings.get("locale", "fr"),
-            available_locales=["fr", "en", "es", "de"],
-            interface=self.settings.get("interface", "console"),
-            available_interfaces=["console", "textual"],
-            controls=self.settings.get("controls", "keyboard")
+            locale=self.settings.locale,
+            available_locales=self.settings.available_locales,
+            interface=self.settings.interface,
+            available_interfaces=self.settings.available_interfaces,
+            controls=self.settings.controls
         )
 
     def _slots_to_view(self, mode: str) -> SlotsView:
@@ -173,6 +173,8 @@ class Game:
                 self._handle_exploration(action)
             case Screens.SLOTS:
                 self._handle_slots(action)
+            case Screens.OPTIONS:
+                self._handle_options(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
         view = self._build_to_view()
@@ -215,7 +217,15 @@ class Game:
                 pass
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
-    
+    def _handle_options(self, action: Action) -> None:
+        match action:
+            case SetLocale(locale=locale):
+                self.locale = locale
+            case Back():
+                self.screen = self._previous_screen
+            case _:
+                raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+                s
     def _handle_exploration(self, action: Action) -> None:
         match action:       
             case Move(direction=direction):
@@ -237,15 +247,6 @@ class Game:
                 self.slot_mode = mode
             case Quit():
                 self.screen = Screens.MAIN_MENU
-            case _:
-                raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
-    
-    def _handle_settings(self, action: Action) -> None:
-        match action:
-            case ChangeLocale(locale=locale):
-                self.settings["locale"] = locale
-            case Back():
-                self.screen = self._previous_screen
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
     

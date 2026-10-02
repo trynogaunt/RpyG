@@ -13,7 +13,10 @@ def default_settings_path() -> Path:
 @dataclass
 class Settings:
     locale: str = "en"
-    frontend: str = "console"
+    interface: str = "console"
+    available_locales: list[str] = field(default_factory=lambda: ["fr", "en", "es", "de"])
+    available_interfaces: list[str] = field(default_factory=lambda: ["console", "textual"])
+    controls: str = "keyboard"
 
     path: Path | None = field(default=None, init=False, repr=False, compare=False)
 

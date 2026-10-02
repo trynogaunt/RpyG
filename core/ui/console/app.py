@@ -3,6 +3,7 @@ from core.ui.console.screens.main_menu import MainMenuScreen
 from core.ui.console.screens.creation import CreationScreen
 from core.ui.console.screens.exploration import ExplorationScreen
 from core.ui.console.screens.slot_screen import SlotScreen
+from core.ui.console.screens.options import OptionsScreen
 
 class ConsoleApp:
     def __init__(self, game, translation, settings):
@@ -17,6 +18,7 @@ class ConsoleApp:
             Screens.CREATION: CreationScreen,
             Screens.EXPLORATION: ExplorationScreen,
             Screens.SLOTS: SlotScreen,
+            Screens.OPTIONS: OptionsScreen,
         }
 
     def build_screen(self, screen_id, view=None):

@@ -24,7 +24,7 @@ def parse_args():
     return parser.parse_args()
 
 def resolve_frontend(cli_choice, settings):
-    candidates = [cli_choice, settings.frontend, FALLBACK]
+    candidates = [cli_choice, settings.interface, FALLBACK]
     for name in candidates:
         if name not in FRONTENDS:
             continue
@@ -51,7 +51,7 @@ def main():
     translation = Translation(locales_dir=lang_dir, locales=settings.locale)
 
     # Load the game world from the data directory
-    game = Game(world=load_world(data_dir=data_dir), store=SaveStore())
+    game = Game(world=load_world(data_dir=data_dir), store=SaveStore(), settings=settings)
 
     # Resolve and initialize the selected frontend - Fallback to console without external libraries if necessary
     frontend = resolve_frontend(args.ui, settings)
