@@ -1,33 +1,98 @@
 {
     "ui": {
-        "common": { "quit": "Quitter" },
-        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger une Partie", 
-        "title": "R P y G - L E G A C Y", "tagline": "Your CPU will handle all the dragons", 
-        "lore":" Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un brave aventurier à la recherche de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
-        "version": "Version 0.1 - Early Access" },
+        "common": { "quit": "Quitter", "level": "Niveau", "unavailable": "Indisponible", "back": "Retour", "invalid_choice": "Choix invalide" },
+        "slots": {"empty": "--Emplacement vide--", "title_load": "Charger une partie", "title_save": "Sauvegarder la partie", "unreadable": "--Emplacement illisible--"},
+        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger une partie",
+        "title": "R P y G - L E G A C Y", "tagline": "Votre CPU s'occupera de tous les dragons",
+        "lore": "Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un brave aventurier à la recherche de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
+        "version": "Version 0.1 - Accès anticipé" },
+        "creation": {
+            "title": "Création du personnage",
+            "name": "Nom",
+            "points_left": "Points restants",
+            "set_name": "Choisir le nom",
+            "name_prompt": "Entrez le nom de votre personnage :",
+            "confirm": "Confirmer"
+        },
+
         "stats": {
             "health": "Santé", "strength": "Force", "speed": "Vitesse", "luck": "Chance",
             "abrev": { "health": "PV", "strength": "FOR", "speed": "VIT", "luck": "CHA" }
         },
-        "bindings": {
-            "explore": "Explorer", "quit": "Quitter", "navigate": "Naviguer"
+        "directions": {
+            "north": "Nord",
+            "south": "Sud",
+            "east": "Est",
+            "west": "Ouest"
+        },
+        "exploration": {
+            "look_around": "Observer les alentours",
+            "back_to_menu": "Retour au menu",
+            "navigation": "Navigation",
+            "save_game": "Sauvegarder la partie"
         },
         "messages": {
-            "already_explored": "Vous avez déjà exploré cet endroit.",
-            "nothing_special": "Rien de particulier ici."
+            "already_explored": "Vous avez déjà fouillé cet endroit.",
+            "nothing_special": "Rien de spécial ici.",
+            "game_saved": "Partie sauvegardée avec succès.",
+            "game_loaded": "Partie chargée avec succès.",
+            "save_failed": "Échec de la sauvegarde de la partie.",
+            "invalid_save": "Sauvegarde invalide"
         }
     },
-    "text": {
+    "zones": {
         "entry_village": {
             "name": "Village d'entrée",
             "description": "Un petit village qui sert de point de départ aux aventuriers.",
             "rooms": {
                 "village_square": {
                     "name": "Place du village",
-                    "description": "La place centrale du village, où les habitants se rassemblent pour diverses activités.",
-                    "look_around": "Des villageois vaquent à leurs occupations, des enfants jouent et des marchands vantent leurs produits."
+                    "description": "Le centre animé du village, rempli de villageois et d'étals de marché.",
+                    "look_around": "Vous voyez des villageois vaquer à leurs occupations, des enfants jouer et des marchands vendre leurs marchandises."
+                },
+                "blacksmith_shop": {
+                    "name": "Forge",
+                    "description": "Un petit atelier rempli du bruit du métal martelé.",
+                    "look_around": "Vous voyez le forgeron s'affairer, fabriquant armes et armures."
+                },
+                "village_gate": {
+                    "name": "Porte du village",
+                    "description": "L'entrée principale du village, gardée par des sentinelles vigilantes.",
+                    "look_around": "Vous voyez les gardes monter la garde et des voyageurs aller et venir par la porte."
+                },
+                "tavern": {
+                    "name": "Taverne",
+                    "description": "Une taverne chaleureuse où les villageois se retrouvent pour se détendre et partager des histoires.",
+                    "look_around": "Vous voyez des villageois savourer leurs boissons et discuter entre eux."
                 }
             }
+        },
+        "flooded_cave": {
+            "name": "Grotte inondée",
+            "description": "Une grotte sombre en partie submergée, où le bruit des gouttes résonne dans les salles.",
+            "rooms": {
+                "entrance": {
+                    "name": "Entrée de la grotte",
+                    "description": "L'entrée de la grotte, là où l'eau commence à s'accumuler.",
+                    "look_around": "Vous voyez l'eau monter lentement et l'intérieur sombre de la grotte vous inviter à entrer."
+                },
+                "water_pool": {
+                    "name": "Bassin",
+                    "description": "Un bassin profond dans la grotte, qui reflète la faible lumière venue d'en haut.",
+                    "look_around": "Vous voyez l'eau scintiller et entendez au loin le bruit des gouttes résonner dans la grotte."
+                },
+                "narrow_passage": {
+                    "name": "Passage étroit",
+                    "description": "Un passage étroit et sinueux dans la grotte, à peine assez large pour s'y faufiler.",
+                    "look_around": "Vous voyez les parois du passage se resserrer et la faible lumière du bassin derrière vous."
+                }
+            }
+        }
+    },
+    "items": {
+        "wooden_sword": {
+            "name": "Épée en bois",
+            "description": "Une simple épée en bois, idéale pour les débutants."
         }
     }
 }

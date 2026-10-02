@@ -1,0 +1,98 @@
+{
+    "ui": {
+        "common": { "quit": "Beenden", "level": "Stufe", "unavailable": "Nicht verfügbar", "back": "Zurück", "invalid_choice": "Ungültige Auswahl" },
+        "slots": {"empty": "--Leerer Speicherplatz--", "title_load": "Spiel laden", "title_save": "Spiel speichern", "unreadable": "--Unlesbarer Speicherplatz--"},
+        "main_menu": { "new_game": "Neues Spiel", "quit": "Beenden", "options": "Optionen", "load_game": "Spiel laden",
+        "title": "R P y G - L E G A C Y", "tagline": "Deine CPU kümmert sich um alle Drachen",
+        "lore": "In einer Welt, in der Drachen den Himmel durchstreifen und uralte Magie in der Luft schwebt, bist du ein mutiger Abenteurer auf der Suche nach Ruhm und Reichtum. \nWirst du dich den kommenden Herausforderungen stellen und zur Legende werden?",
+        "version": "Version 0.1 - Early Access" },
+        "creation": {
+            "title": "Charaktererstellung",
+            "name": "Name",
+            "points_left": "Verbleibende Punkte",
+            "set_name": "Namen festlegen",
+            "name_prompt": "Gib den Namen deines Charakters ein:",
+            "confirm": "Bestätigen"
+        },
+
+        "stats": {
+            "health": "Gesundheit", "strength": "Stärke", "speed": "Geschwindigkeit", "luck": "Glück",
+            "abrev": { "health": "LP", "strength": "STÄ", "speed": "GES", "luck": "GLÜ" }
+        },
+        "directions": {
+            "north": "Norden",
+            "south": "Süden",
+            "east": "Osten",
+            "west": "Westen"
+        },
+        "exploration": {
+            "look_around": "Umgebung untersuchen",
+            "back_to_menu": "Zurück zum Menü",
+            "navigation": "Navigation",
+            "save_game": "Spiel speichern"
+        },
+        "messages": {
+            "already_explored": "Du hast diesen Ort bereits durchsucht.",
+            "nothing_special": "Hier gibt es nichts Besonderes.",
+            "game_saved": "Spiel erfolgreich gespeichert.",
+            "game_loaded": "Spiel erfolgreich geladen.",
+            "save_failed": "Das Spiel konnte nicht gespeichert werden.",
+            "invalid_save": "Ungültiger Spielstand"
+        }
+    },
+    "zones": {
+        "entry_village": {
+            "name": "Eingangsdorf",
+            "description": "Ein kleines Dorf, das als Ausgangspunkt für Abenteurer dient.",
+            "rooms": {
+                "village_square": {
+                    "name": "Dorfplatz",
+                    "description": "Das geschäftige Zentrum des Dorfes, voller Dorfbewohner und Marktstände.",
+                    "look_around": "Du siehst Dorfbewohner ihrem Alltag nachgehen, Kinder spielen und Händler ihre Waren anbieten."
+                },
+                "blacksmith_shop": {
+                    "name": "Schmiede",
+                    "description": "Eine kleine Werkstatt, erfüllt vom Klang hämmernden Metalls.",
+                    "look_around": "Du siehst den Schmied fleißig arbeiten und Waffen und Rüstungen herstellen."
+                },
+                "village_gate": {
+                    "name": "Dorftor",
+                    "description": "Der Haupteingang des Dorfes, bewacht von aufmerksamen Wachposten.",
+                    "look_around": "Du siehst die Wachen ihren Dienst versehen und Reisende, die das Tor passieren."
+                },
+                "tavern": {
+                    "name": "Taverne",
+                    "description": "Eine gemütliche Taverne, in der sich die Dorfbewohner entspannen und Geschichten austauschen.",
+                    "look_around": "Du siehst Dorfbewohner ihre Getränke genießen und sich miteinander unterhalten."
+                }
+            }
+        },
+        "flooded_cave": {
+            "name": "Überflutete Höhle",
+            "description": "Eine dunkle, teilweise unter Wasser stehende Höhle, in deren Kammern das Tropfen von Wasser widerhallt.",
+            "rooms": {
+                "entrance": {
+                    "name": "Höhleneingang",
+                    "description": "Der Eingang der Höhle, an dem sich das Wasser zu sammeln beginnt.",
+                    "look_around": "Du siehst das Wasser langsam steigen, und das dunkle Innere der Höhle lockt dich hinein."
+                },
+                "water_pool": {
+                    "name": "Wasserbecken",
+                    "description": "Ein tiefes Wasserbecken in der Höhle, in dem sich das schwache Licht von oben spiegelt.",
+                    "look_around": "Du siehst das Wasser schimmern und hörst das ferne Tropfen, das durch die Höhle hallt."
+                },
+                "narrow_passage": {
+                    "name": "Enger Gang",
+                    "description": "Ein enger, gewundener Gang in der Höhle, kaum breit genug, um sich hindurchzuzwängen.",
+                    "look_around": "Du siehst die Wände des Gangs näher rücken und das schwache Licht des Wasserbeckens hinter dir."
+                }
+            }
+        }
+    },
+    "items": {
+        "wooden_sword": {
+            "name": "Holzschwert",
+            "description": "Ein einfaches Holzschwert, geeignet für Anfänger."
+        }
+    }
+}

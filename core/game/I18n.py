@@ -1,8 +1,10 @@
 from pathlib import Path
 import json
 
+
+
 class Translation:
-    def __init__(self, locales_dir: Path, locales: str, fallback: str = "en"):
+    def __init__(self, locales: str, locales_dir: Path, fallback: str = "en"):
         self.locale_file = locales
         self.fallback_file = fallback
         self.locales_dir = locales_dir

@@ -48,7 +48,7 @@ def main():
         settings.locale = "en"
 
     # Initialize the translation system with the resolved locale
-    translation = Translation(lang_dir, locales=settings.locale)
+    translation = Translation(locales_dir=lang_dir, locales=settings.locale)
 
     # Load the game world from the data directory
     game = Game(world=load_world(data_dir=data_dir), store=SaveStore())
