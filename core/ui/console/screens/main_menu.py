@@ -1,5 +1,5 @@
 from core.ui.console.screens.base_screen import BaseConsoleScreen
-from core.game.actions import Quit, NewGame, LoadGame, OpenSlots
+from core.game.actions import Quit, NewGame, LoadGame, OpenSlots, Options
 from core.ui.console import colors
 
 
@@ -22,6 +22,7 @@ class MainMenuScreen(BaseConsoleScreen):
         return self.choose([
             (self.t("ui.main_menu.new_game"), NewGame()),
             (self.t("ui.main_menu.load_game"), OpenSlots(mode="load")),
+            (self.t("ui.main_menu.options"), Options()),
             (self.t("ui.main_menu.quit"), Quit()),
         ])
         def ask(self):

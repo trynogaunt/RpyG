@@ -18,6 +18,10 @@ class Creation(Action):
     """Action representing the intention to enter the creation screen."""
 
 @dataclass(frozen=True)
+class Options(Action):
+    """Action representing the intention to open the options screen."""
+
+@dataclass(frozen=True)
 class SetName(Action):
     """Action representing the intention to set the player's name."""
     name: str
