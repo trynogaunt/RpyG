@@ -4,7 +4,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -24,14 +24,16 @@ import logging
 log = logging.getLogger(__name__)
 
 class Game:
-    def __init__(self, world: World | None = None, world_state: WorldState | None = None, store=None):
+    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
+        self.settings = {}
         self.world: World = world
         self.world_state: WorldState = world_state or WorldState()
         self._messages: list[Message] = []
         self.store = store
+        self.settings = settings
         self.slot_mode: str = "load"
         self._previous_screen: Screens | None = None
 
@@ -76,18 +78,6 @@ class Game:
         current_room = self.world.get_room(self.player.location)
 
         return Message(key="look_around", text="<text.messages.look_around>")
-    
-    def _handle_slots(self, action: str) -> None:
-        match action:
-            case LoadGame(slot=slot):
-                self.load_game(slot)
-            case SaveGame(slot=slot):
-                self.save_game(slot)
-                self.screen = self._previous_screen
-            case Back():
-                self.screen = self._previous_screen
-            case _:
-                raise ValueError(f"Action inconnue : {action}")
 
     def save_game(self, slot: int) -> None:
         log.info("Tentative de sauvegarde slot=%s", slot)
@@ -175,6 +165,9 @@ class Game:
                 self._previous_screen = self.screen
                 self.screen = Screens.SLOTS
                 self.slot_mode = mode
+            case Options():
+                self._previous_screen = self.screen
+                self.screen = Screens.OPTIONS
             case Quit():
                 self.screen = Screens.EXIT
             case _:
@@ -225,7 +218,26 @@ class Game:
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
     
+    def _handle_settings(self, action: Action) -> None:
+        match action:
+            case Back():
+                self.screen = self._previous_screen
+            case _:
+                raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+    
     def _handle_exit(self, action: Action) -> None:
         match action:
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+
+    def _handle_slots(self, action: str) -> None:
+            match action:
+                case LoadGame(slot=slot):
+                    self.load_game(slot)
+                case SaveGame(slot=slot):
+                    self.save_game(slot)
+                    self.screen = self._previous_screen
+                case Back():
+                    self.screen = self._previous_screen
+                case _:
+                    raise ValueError(f"Action inconnue : {action}")

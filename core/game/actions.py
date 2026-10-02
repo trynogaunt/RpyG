@@ -22,6 +22,11 @@ class Options(Action):
     """Action representing the intention to open the options screen."""
 
 @dataclass(frozen=True)
+class ChangeLocale(Action):
+    """Action representing the intention to change the game's locale."""
+    locale: str
+
+@dataclass(frozen=True)
 class SetName(Action):
     """Action representing the intention to set the player's name."""
     name: str
