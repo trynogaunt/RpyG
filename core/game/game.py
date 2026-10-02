@@ -225,7 +225,7 @@ class Game:
                 self.screen = self._previous_screen
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
-                s
+                
     def _handle_exploration(self, action: Action) -> None:
         match action:       
             case Move(direction=direction):
