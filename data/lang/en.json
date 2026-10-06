@@ -16,6 +16,12 @@
                 "de": "Deutsch"
             }
         },
+        "presence": {
+            "main_menu": "In the main menu",
+            "creation": "Creating a character",
+            "exploring": "Exploring {room}",
+            "level": "Level {level}"
+        },
         "creation": {
             "title": "Character Creation",
             "name": "Name",
