@@ -5,6 +5,7 @@ from core.ui.console.screens.exploration import ExplorationScreen
 from core.ui.console.screens.slot_screen import SlotScreen
 from core.ui.console.screens.options import OptionsScreen
 from core.game.I18n import Translation
+from core.integrations.discord import presence_for
 import logging
 log = logging.getLogger(__name__)
 
@@ -24,20 +25,6 @@ class ConsoleApp:
             Screens.SLOTS: SlotScreen,
             Screens.OPTIONS: OptionsScreen,
         }
-
-    def presence_for(self, response, t):
-        match response.screen:
-            case Screens.MAIN_MENU | Screens.SLOTS | Screens.OPTIONS:
-                return t("ui.presence.main_menu"), None
-            case Screens.CREATION:
-                return t("ui.presence.creation"), None
-            case Screens.EXPLORATION:
-                v = response.view
-                room = t(f"zones.{v.zone_id}.rooms.{v.room_id}.name")
-                level = t("ui.presence.level", level=v.player_summary.level)
-                return t("ui.presence.exploring", room=room), level
-            case _:
-                return None, None
 
     def _sync_translation(self) -> None:
         if self.translation.locale_file != self.settings.locale:
@@ -75,13 +62,9 @@ class ConsoleApp:
             self.current_screen_id = response.screen
             self.screen = self.build_screen(response.screen, response.view)
         self.screen.render(response.messages)
-        log.info("show: screen=%s presence=%r", response.screen, self.presence)
-        info = self.presence_for(response, self.t)
-        log.info("presence_for -> %r", info)
-        if self.presence and info:
-            self.presence.update(*info)
-        
-        print("Current presence info:", info)
+
+        if self.presence:
+            self.presence.update(presence_for(response, self.t))
     
     def resolve_message(self, message) -> str:
         text = self.translation.t(message.key, **message.params)

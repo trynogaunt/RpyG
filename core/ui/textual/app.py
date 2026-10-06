@@ -8,6 +8,7 @@ from core.ui.textual.screens.main_menu import MainMenuScreen
 from core.ui.textual.screens.creation import CreationScreen
 from core.ui.textual.screens.exploration import ExplorationScreen
 from core.ui.textual.screens.slot_screen import SlotsScreen
+from core.integrations.discord import presence_for
 
 import logging
 log = logging.getLogger(__name__)
@@ -15,11 +16,12 @@ log = logging.getLogger(__name__)
 class TextualApp(App):
 
     CSS_PATH = Path("rpyg.tcss")
-    def __init__(self, game, translation, settings, *args, **kwargs):
+    def __init__(self, game, translation, settings, presence=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.game = game
         self.translation = translation
         self.settings = settings
+        self.presence = presence
         self.current_screen_id: int = None
         self.all_screens = {
             Screens.MAIN_MENU: MainMenuScreen,
@@ -59,6 +61,9 @@ class TextualApp(App):
             self.current_screen_id = response.screen
             self.switch_screen(self.build_screen(response.screen, response.view))
         self.screen.show_messages(response.messages)
+    
+        if self.presence:
+            self.presence.update(presence_for(response, self.t))
     
     def resolve_message(self, translation, message) -> str:
         text = translation.t(message.key, **message.params)

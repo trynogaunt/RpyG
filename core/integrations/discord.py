@@ -111,8 +111,6 @@ class DiscordIntegration:
             except Exception:
                 pass
 
-    # ---------- envoi ----------
-
     def update(self, info: PresenceInfo | None) -> None:
         if info is None:
             return
