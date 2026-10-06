@@ -1,23 +1,39 @@
 {
     "ui": {
         "common": { "quit": "Quitter", "level": "Niveau", "unavailable": "Indisponible", "back": "Retour", "invalid_choice": "Choix invalide" },
-        "slots": {"empty": "--Emplacement vide--", "title_load": "Charger une partie", "title_save": "Sauvegarder la partie", "unreadable": "--Emplacement illisible--"},
-        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger une partie",
-        "title": "R P y G - L E G A C Y", "tagline": "Votre CPU s'occupera de tous les dragons",
-        "lore": "Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un brave aventurier à la recherche de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
-        "version": "Version 0.1 - Accès anticipé" },
+        "slots": {"empty": "--Emplacement Vide--", "title_load": "Charger la Partie", "title_save": "Sauvegarder la Partie", "unreadable": "--Emplacement Illisible--"},
+        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger la Partie", 
+        "title": "R P y G - L E G A C Y", "tagline": "Votre CPU s'occupera de tous les dragons", 
+        "lore":"Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un courageux aventurier en quête de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
+        "version": "Version 0.1 - Early Access" },
+        "options": {
+            "title": "Options",
+            "language": "Langue",
+            "language_name": {
+                "en": "English",
+                "fr": "Français",
+                "es": "Español",
+                "de": "Deutsch"
+            }
+        },
+        "presence": {
+            "main_menu": "Dans le menu principal",
+            "creation": "Création d'un personnage",
+            "exploring": "Exploration de {room}",
+            "level": "Niveau {level}"
+        },
         "creation": {
-            "title": "Création du personnage",
+            "title": "Création de Personnage",
             "name": "Nom",
-            "points_left": "Points restants",
-            "set_name": "Choisir le nom",
+            "points_left": "Points Restants",
+            "set_name": "Définir le Nom",
             "name_prompt": "Entrez le nom de votre personnage :",
             "confirm": "Confirmer"
         },
 
         "stats": {
             "health": "Santé", "strength": "Force", "speed": "Vitesse", "luck": "Chance",
-            "abrev": { "health": "PV", "strength": "FOR", "speed": "VIT", "luck": "CHA" }
+            "abrev": { "health": "PV", "strength": "FOR", "speed": "VIT", "luck": "CHC" }
         },
         "directions": {
             "north": "Nord",
@@ -26,73 +42,73 @@
             "west": "Ouest"
         },
         "exploration": {
-            "look_around": "Observer les alentours",
-            "back_to_menu": "Retour au menu",
+            "look_around": "Regarder autour",
+            "back_to_menu": "Retour au Menu",
             "navigation": "Navigation",
-            "save_game": "Sauvegarder la partie"
+            "save_game": "Sauvegarder la Partie"
         },
         "messages": {
-            "already_explored": "Vous avez déjà fouillé cet endroit.",
+            "already_explored": "Vous avez déjà exploré cet endroit.",
             "nothing_special": "Rien de spécial ici.",
             "game_saved": "Partie sauvegardée avec succès.",
             "game_loaded": "Partie chargée avec succès.",
-            "save_failed": "Échec de la sauvegarde de la partie.",
-            "invalid_save": "Sauvegarde invalide"
+            "save_failed": "Échec de la sauvegarde de la partie.", 
+            "invalid_save":"Sauvegarde invalide"
         }
     },
     "zones": {
         "entry_village": {
-            "name": "Village d'entrée",
-            "description": "Un petit village qui sert de point de départ aux aventuriers.",
+            "name": "Village d'Entrée",
+            "description": "Un petit village qui sert de point de départ pour les aventuriers.",
             "rooms": {
                 "village_square": {
-                    "name": "Place du village",
+                    "name": "Place du Village",
                     "description": "Le centre animé du village, rempli de villageois et d'étals de marché.",
-                    "look_around": "Vous voyez des villageois vaquer à leurs occupations, des enfants jouer et des marchands vendre leurs marchandises."
+                    "look_around": "Vous voyez les villageois vaquer à leurs occupations quotidiennes, des enfants jouer et des marchands vendre leurs produits."
                 },
                 "blacksmith_shop": {
                     "name": "Forge",
-                    "description": "Un petit atelier rempli du bruit du métal martelé.",
-                    "look_around": "Vous voyez le forgeron s'affairer, fabriquant armes et armures."
+                    "description": "Un petit atelier rempli des sons du martèlement du métal.",
+                    "look_around": "Vous voyez le forgeron travailler avec diligence, fabriquant des armes et des armures."
                 },
                 "village_gate": {
-                    "name": "Porte du village",
+                    "name": "Porte du Village",
                     "description": "L'entrée principale du village, gardée par des sentinelles vigilantes.",
-                    "look_around": "Vous voyez les gardes monter la garde et des voyageurs aller et venir par la porte."
+                    "look_around": "Vous voyez les gardes surveiller et les voyageurs entrer et sortir par la porte."
                 },
                 "tavern": {
                     "name": "Taverne",
-                    "description": "Une taverne chaleureuse où les villageois se retrouvent pour se détendre et partager des histoires.",
-                    "look_around": "Vous voyez des villageois savourer leurs boissons et discuter entre eux."
+                    "description": "Une taverne confortable où les villageois se rassemblent pour se détendre et partager des histoires.",
+                    "look_around": "Vous voyez les villageois apprécier leurs boissons et discuter entre eux."
                 }
             }
         },
         "flooded_cave": {
-            "name": "Grotte inondée",
-            "description": "Une grotte sombre en partie submergée, où le bruit des gouttes résonne dans les salles.",
+            "name": "Grotte Inondée",
+            "description": "Une grotte sombre partiellement submergée par l'eau, avec le son des gouttes résonnant à travers les chambres.",
             "rooms": {
                 "entrance": {
-                    "name": "Entrée de la grotte",
-                    "description": "L'entrée de la grotte, là où l'eau commence à s'accumuler.",
+                    "name": "Entrée de la Grotte",
+                    "description": "L'entrée de la grotte, où l'eau commence à s'accumuler.",
                     "look_around": "Vous voyez l'eau monter lentement et l'intérieur sombre de la grotte vous inviter à entrer."
                 },
                 "water_pool": {
-                    "name": "Bassin",
-                    "description": "Un bassin profond dans la grotte, qui reflète la faible lumière venue d'en haut.",
-                    "look_around": "Vous voyez l'eau scintiller et entendez au loin le bruit des gouttes résonner dans la grotte."
+                    "name": "Bassin d'Eau",
+                    "description": "Un bassin profond d'eau à l'intérieur de la grotte, reflétant la lumière tamisée d'en haut.",
+                    "look_around": "Vous voyez l'eau scintiller et entendez le goutte-à-goutte lointain résonner à travers la grotte."
                 },
                 "narrow_passage": {
-                    "name": "Passage étroit",
-                    "description": "Un passage étroit et sinueux dans la grotte, à peine assez large pour s'y faufiler.",
-                    "look_around": "Vous voyez les parois du passage se resserrer et la faible lumière du bassin derrière vous."
+                    "name": "Passage Étroit",
+                    "description": "Un passage étroit et sinueux à l'intérieur de la grotte, à peine assez large pour se faufiler.",
+                    "look_around": "Vous voyez les parois du passage se refermer et la faible lumière du bassin d'eau derrière vous."
                 }
             }
         }
     },
     "items": {
         "wooden_sword": {
-            "name": "Épée en bois",
-            "description": "Une simple épée en bois, idéale pour les débutants."
+            "name": "Épée en Bois",
+            "description": "Une épée en bois basique, adaptée aux débutants."
         }
     }
 }
