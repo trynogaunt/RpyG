@@ -61,7 +61,7 @@ def presence_for(response, t) -> PresenceInfo | None:
                 details=t("ui.presence.exploring", room=room),
                 state=t("ui.presence.level", level=v.player_summary.level),
                 large_image=ZONE_IMAGES.get(v.zone_id),
-                large_text=t(f"zones.{v.zone_id}.rooms.{v.room_id}.name"),
+                large_text=t(f"zones.{v.zone_id}.name"),
                 small_image=SMALL_IMAGE,
                 small_text=SMALL_TEXT,
             )
