@@ -49,12 +49,11 @@ class PresenceInfo:
 
 
 def presence_for(response, t) -> PresenceInfo | None:
-    large_image = ZONE_IMAGES.get(response.view.zone_id)
     match response.screen:
         case Screens.MAIN_MENU | Screens.SLOTS | Screens.OPTIONS:
-            return PresenceInfo(t("ui.presence.main_menu"), large_image=large_image)
+            return PresenceInfo(t("ui.presence.main_menu"), large_image=SCREEN_IMAGES.get(response.screen))
         case Screens.CREATION:
-            return PresenceInfo(t("ui.presence.creation"), large_image=large_image)
+            return PresenceInfo(t("ui.presence.creation"), large_image=SCREEN_IMAGES.get(response.screen)   )
         case Screens.EXPLORATION:
             v = response.view
             room = t(f"zones.{v.zone_id}.rooms.{v.room_id}.name")
