@@ -19,10 +19,11 @@ log = logging.getLogger(__name__)
 
 DISCORD_APP_ID = "1439725986290860132"
 
-LARGE_IMAGE = "logo"
+LARGE_IMAGE_DEFAULT = "logo"
+SMALL_IMAGE = "logo"
+SMALL_TEXT = "RPyG"
 LARGE_TEXT = "RPyG"
-SMALL_IMAGES: dict[Screens, str] = {
-    # Décommente quand les images existent sur le portail :
+LARGE_IMAGES: dict[Screens, str] = {
     # Screens.MAIN_MENU: "icon_menu",
     # Screens.CREATION: "icon_creation",
     # Screens.EXPLORATION: "icon_explore",
@@ -38,24 +39,25 @@ class PresenceInfo:
     details: str
     state: str | None = None
     large_text: str | None = None
+    large_image: str | None = None
     small_image: str | None = None
     small_text: str | None = None
 
 
 def presence_for(response, t) -> PresenceInfo | None:
-    small_image = SMALL_IMAGES.get(response.screen)
+    large_image = LARGE_IMAGES.get(response.screen)
     match response.screen:
         case Screens.MAIN_MENU | Screens.SLOTS | Screens.OPTIONS:
-            return PresenceInfo(t("ui.presence.main_menu"), small_image=small_image)
+            return PresenceInfo(t("ui.presence.main_menu"), large_image=large_image)
         case Screens.CREATION:
-            return PresenceInfo(t("ui.presence.creation"), small_image=small_image)
+            return PresenceInfo(t("ui.presence.creation"), large_image=large_image)
         case Screens.EXPLORATION:
             v = response.view
             room = t(f"zones.{v.zone_id}.rooms.{v.room_id}.name")
             return PresenceInfo(
                 details=t("ui.presence.exploring", room=room),
                 state=t("ui.presence.level", level=v.player_summary.level),
-                small_image=small_image,
+                large_image=large_image,
             )
         case _:
             return None
@@ -68,13 +70,17 @@ class DiscordIntegration:
         self,
         app_id: str = DISCORD_APP_ID,
         *,
-        large_image: str | None = LARGE_IMAGE,
+        large_image: str | None = LARGE_IMAGE_DEFAULT,
         large_text: str | None = LARGE_TEXT,
+        small_image: str | None = SMALL_IMAGE,
+        small_text: str | None = None,
         buttons: tuple[dict, ...] = DEFAULT_BUTTONS,
     ):
         self._app_id = app_id
         self._large_image = large_image
         self._large_text = large_text
+        self._small_image = small_image
+        self._small_text = small_text
         self._buttons = list(buttons)[:2]
 
         self._rpc: Presence | None = None
@@ -124,10 +130,10 @@ class DiscordIntegration:
             "details": info.details,
             "state": info.state,
             "start": self._start,
-            "large_image": self._large_image,
+            "large_image": info.large_image or self._large_image,
             "large_text": info.large_text or self._large_text,
-            "small_image": info.small_image,
-            "small_text": info.small_text,
+            "small_image": info.small_image or self._small_image,
+            "small_text": info.small_text or self._small_text,
             "buttons": self._buttons or None,
         }
         if StatusDisplayType is not None:
