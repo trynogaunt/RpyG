@@ -11,5 +11,6 @@
         "console",
         "textual"
     ],
-    "controls": "keyboard"
+    "controls": "keyboard",
+    "discord_integration": true
 }

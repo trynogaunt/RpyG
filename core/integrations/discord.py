@@ -14,27 +14,27 @@ class DiscordIntegration:
         self._last = float("-inf")
 
     def connect(self) -> None:
-        print("PRESENCE connect appelé")
+        log.info("PRESENCE connect appelé")
         try:
             self._rpc = Presence(self._app_id)
             self._rpc.connect()
-            print("PRESENCE connecté")
+            log.info("PRESENCE connecté")
         except Exception as e:
-            print("PRESENCE connect échoué :", repr(e))
+            log.error("PRESENCE connect échoué :", repr(e))
             self._rpc = None
 
     def update(self, details, state=None) -> None:
-        print("PRESENCE update :", details, state, "rpc =", self._rpc)
+        log.info("PRESENCE update : %s %s rpc = %s", details, state, self._rpc)
         if self._rpc is None:
-            print("PRESENCE -> abandon : pas connecté")
+            log.info("PRESENCE -> abandon : pas connecté")
             return
         if time.monotonic() - self._last < self.MIN_INTERVAL:
-            print("PRESENCE -> abandon : limite de fréquence")
+            log.info("PRESENCE -> abandon : limite de fréquence")
             return
         try:
             self._rpc.update(details=details, state=state, start=self._start)
             self._last = time.monotonic()
-            print("PRESENCE -> envoyé")
+            log.info("PRESENCE -> envoyé")
         except Exception as e:
-            print("PRESENCE update échoué :", repr(e))
+            log.error("PRESENCE update échoué :", repr(e))
             self._rpc = None

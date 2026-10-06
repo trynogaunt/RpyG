@@ -64,6 +64,7 @@ def main():
     game = Game(world=load_world(data_dir=data_dir), store=SaveStore(), settings=settings)
 
     # Resolve and initialize the selected frontend - Fallback to console without external libraries if necessary
+    log.info("main: discord_integration=%s presence=%r", settings.discord_integration, presence)
     frontend = resolve_frontend(args.ui, settings)
     frontend.run(game, translation=translation, settings=settings, presence=presence)
     

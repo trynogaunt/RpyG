@@ -9,7 +9,7 @@ import logging
 log = logging.getLogger(__name__)
 
 class ConsoleApp:
-    def __init__(self, game, translation: Translation, settings, presence):
+    def __init__(self, game, translation: Translation, settings, presence=None):
         self.game = game
         self.translation = translation
         self.settings = settings
