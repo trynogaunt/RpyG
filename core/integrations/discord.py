@@ -19,9 +19,12 @@ class DiscordIntegration:
             self._rpc = Presence(self.app_id)
             self._rpc.connect()
             log.info("Discord RPC connecté")
-        except Exception:
+        except Exception as e:
             log.exception("Échec de connexion à Discord RPC")
+            print("PRESENCE FAILED: ", e)
             self._rpc = None
+        
+        print("PRESENCE CONNECTED")
 
     def update(self, details: str, state: str = None) -> None:
         if self._rpc is None:

@@ -80,6 +80,8 @@ class ConsoleApp:
         log.info("presence_for -> %r", info)
         if self.presence and info:
             self.presence.update(*info)
+        
+        print("Current presence info:", info)
     
     def resolve_message(self, message) -> str:
         text = self.translation.t(message.key, **message.params)
