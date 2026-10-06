@@ -23,10 +23,14 @@ LARGE_IMAGE_DEFAULT = "logo"
 SMALL_IMAGE = "logo"
 SMALL_TEXT = "RPyG"
 LARGE_TEXT = "RPyG"
-LARGE_IMAGES: dict[Screens, str] = {
-    # Screens.MAIN_MENU: "icon_menu",
-    # Screens.CREATION: "icon_creation",
-    # Screens.EXPLORATION: "icon_explore",
+SCREEN_IMAGES: dict[Screens, str] = {
+    # Screens.CREATION: "creation",
+}
+
+ZONE_IMAGES: dict[str, str] = {
+    # zone_id -> nom de l'asset dans le portail
+    "entry_village": "zone_entry_village",
+    "flooded_cave": "zone_flooded_cave",
 }
 
 DEFAULT_BUTTONS = (
@@ -45,7 +49,7 @@ class PresenceInfo:
 
 
 def presence_for(response, t) -> PresenceInfo | None:
-    large_image = LARGE_IMAGES.get(response.screen)
+    large_image = ZONE_IMAGES.get(response.view.zone_id)
     match response.screen:
         case Screens.MAIN_MENU | Screens.SLOTS | Screens.OPTIONS:
             return PresenceInfo(t("ui.presence.main_menu"), large_image=large_image)
@@ -57,7 +61,10 @@ def presence_for(response, t) -> PresenceInfo | None:
             return PresenceInfo(
                 details=t("ui.presence.exploring", room=room),
                 state=t("ui.presence.level", level=v.player_summary.level),
-                large_image=large_image,
+                large_image=ZONE_IMAGES.get(v.zone_id),
+                large_text=t(f"zones.{v.zone_id}.rooms.{v.room_id}.name"),
+                small_text=SMALL_TEXT,
+                small_image=SMALL_IMAGE,
             )
         case _:
             return None
