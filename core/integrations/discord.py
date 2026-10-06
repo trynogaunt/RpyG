@@ -5,7 +5,7 @@ from pypresence import Presence
 log = logging.getLogger(__name__)
 
 class DiscordIntegration:
-    MIN_INTERVAL = 15  # minimum interval in seconds between updates
+    MIN_INTERVAL = 15
 
     def __init__(self, app_id):
         self.app_id = app_id
