@@ -63,7 +63,6 @@ def presence_for(response, t) -> PresenceInfo | None:
                 large_image=ZONE_IMAGES.get(v.zone_id),
                 large_text=t(f"zones.{v.zone_id}.rooms.{v.room_id}.name"),
                 small_text=SMALL_TEXT,
-                small_image=SMALL_IMAGE,
             )
         case _:
             return None
