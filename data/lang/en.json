@@ -16,6 +16,17 @@
                 "de": "Deutsch"
             }
         },
+        "update": {
+            "available": "Update Available",
+            "apply": "Apply Update",
+            "success": "Update applied successfully.",
+            "restart": "Please restart the game to apply the update.",
+            "deps_changed": "Dependencies have changed. Please update accordingly.",
+            "error": {
+                "dirty": "The working directory has uncommitted changes.",
+                "git_failed": "Failed to execute git command."
+            }
+        },
         "presence": {
             "main_menu": "In the main menu",
             "creation": "Creating a character",

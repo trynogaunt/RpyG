@@ -79,3 +79,12 @@ class UseItem(Action):
     """Action representing the intention to use an item from the player's inventory."""
     item_id: int
 
+@dataclass(frozen=True)
+class CheckUpdate(Action):
+    """Action representing the intention to check for game updates."""
+    status: str
+
+@dataclass(frozen=True)
+class ApplyUpdate(Action):
+    """Action representing the intention to apply a game update."""
+    version: str

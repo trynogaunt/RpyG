@@ -8,6 +8,8 @@ import importlib
 import logging
 from core.save.store import SaveStore
 from core.integrations.discord import DiscordIntegration
+from core.updater import check, apply
+import threading
 
 log = logging.getLogger(__name__)
 logging.basicConfig(filename="rpyg.log", level=logging.INFO)
@@ -57,11 +59,11 @@ def main():
     if settings.locale not in available:
         settings.locale = "en"
 
-    # Initialize the translation system with the resolved locale
     translation = Translation(locales_dir=lang_dir, locales=settings.locale)
 
     # Load the game world from the data directory
-    game = Game(world=load_world(data_dir=data_dir), store=SaveStore(), settings=settings)
+    game = Game(world=load_world(data_dir=data_dir), store=SaveStore(), settings=settings, update=None)
+    threading.Thread(target=lambda: setattr(game, "update", check()), daemon=True).start()
 
     # Resolve and initialize the selected frontend - Fallback to console without external libraries if necessary
     log.info("main: discord_integration=%s presence=%r", settings.discord_integration, presence)

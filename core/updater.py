@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from git import Repo
+
 from pathlib import Path
 
 import subprocess
 import shutil
 
-repo = Repo(Path(__file__).resolve(), search_parent_directories=True)
 REPO_ROOT = Path(__file__).parent.parent.resolve()
 DEPS_FILES = {"requirements.txt", "pyproject.toml"}
 
@@ -39,6 +38,8 @@ def _git(*args: str, timeout: float = 10) -> subprocess.CompletedProcess[str] | 
     try:
         return subprocess.run(["git", *args], cwd=REPO_ROOT, capture_output=True, text=True, timeout=timeout, check=False)
     except subprocess.SubprocessError:
+        return None
+    except (subprocess.SubprocessError, OSError):
         return None
 
 def check() -> UpdateStatus:

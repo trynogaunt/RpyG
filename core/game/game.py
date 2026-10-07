@@ -1,10 +1,11 @@
 from core.enums import Screens
 from core.game.I18n import Translation
+from core.updater import UpdateError, UpdateStatus, UpdateState, apply
 from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale
+from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -24,8 +25,14 @@ import logging
 
 log = logging.getLogger(__name__)
 
+UPDATE_ERROR_KEYS = {
+    UpdateError.DIRTY: "ui.update.error.dirty",
+    UpdateError.GIT_FAILED: "ui.update.error.git_failed",
+    UpdateError.NOT_AVAILABLE: "ui.update.error.not_available",
+}
+
 class Game:
-    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None):
+    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None, update=None):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
@@ -35,6 +42,7 @@ class Game:
         self._messages: list[Message] = []
         self.store = store
         self.settings = settings
+        self.update = update
         self.slot_mode: str = "load"
         self._previous_screen: Screens | None = None
 
@@ -183,6 +191,15 @@ class Game:
                 self.screen = Screens.OPTIONS
             case Quit():
                 self.screen = Screens.EXIT
+            case ApplyUpdate():
+                result = apply(self.update)
+                if result.success:
+                    self._messages.append(Message(key="ui.update.success"))
+                    if result.deps_changed:
+                        self._messages.append(Message(key="ui.update.deps_changed"))
+                    self.update = UpdateStatus(UpdateState.UP_TO_DATE)   # le bouton disparaît
+                else:
+                    self._messages.append(Message(key=UPDATE_ERROR_KEYS[result.error]))
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
 
