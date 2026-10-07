@@ -6,6 +6,33 @@
         "title": "R P y G - L E G A C Y", "tagline": "Deine CPU kümmert sich um alle Drachen",
         "lore": "In einer Welt, in der Drachen den Himmel durchstreifen und uralte Magie in der Luft schwebt, bist du ein mutiger Abenteurer auf der Suche nach Ruhm und Reichtum. \nWirst du dich den kommenden Herausforderungen stellen und zur Legende werden?",
         "version": "Version 0.1 - Early Access" },
+          "options": {
+            "title": "Optionen",
+            "language": "Sprache",
+            "language_name": {
+                "en": "English",
+                "fr": "Français",
+                "es": "Español",
+                "de": "Deutsch"
+            }
+        },
+        "update": {
+            "available": "Update verfügbar",
+            "apply": "Update anwenden",
+            "success": "Update erfolgreich angewendet.",
+            "restart": "Bitte starte das Spiel neu, um das Update anzuwenden.",
+            "deps_changed": "Abhängigkeiten haben sich geändert. Bitte aktualisiere entsprechend.",
+            "error": {
+                "dirty": "Das Arbeitsverzeichnis enthält ungespeicherte Änderungen.",
+                "git_failed": "Git-Befehl konnte nicht ausgeführt werden."
+            }
+        },
+        "presence": {
+            "main_menu": "Im Hauptmenü",
+            "creation": "Charakter erstellen",
+            "exploring": "Erkunde {room}",
+            "level": "Stufe {level}"
+        },
         "creation": {
             "title": "Charaktererstellung",
             "name": "Name",
