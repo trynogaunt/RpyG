@@ -24,7 +24,8 @@
             "deps_changed": "Dependencies have changed. Please update accordingly.",
             "error": {
                 "dirty": "The working directory has uncommitted changes.",
-                "git_failed": "Failed to execute git command."
+                "git_failed": "Failed to execute git command.",
+                "not_available": "Update not available."
             }
         },
         "presence": {
