@@ -87,4 +87,3 @@ class CheckUpdate(Action):
 @dataclass(frozen=True)
 class ApplyUpdate(Action):
     """Action representing the intention to apply a game update."""
-    version: str
