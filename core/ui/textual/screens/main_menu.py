@@ -1,5 +1,6 @@
 from importlib.metadata import version, PackageNotFoundError
 from core.enums import Screens
+from core.updater import UpdateState
 
 from textual import on
 from textual.app import ComposeResult
@@ -43,11 +44,19 @@ class MainMenuScreen(BaseScreen):
             lore.border_subtitle = t("ui.main_menu.version", version=app_version())
 
             menu = self.query_one("#menu", OptionList)
-            menu.add_options([
+
+            menu_options = [
                 Option(t("ui.main_menu.new_game"), id="new_game"),
                 Option(t("ui.main_menu.load_game"), id="load_game"),
-                Option(t("ui.main_menu.quit"), id="quit"),
-            ])
+                Option(t("ui.main_menu.options"), id="settings"),
+            ]
+
+            update = self.app.game.update
+            if update is not None and update.state is UpdateState.AVAILABLE:
+                menu_options.append(Option(t("ui.main_menu.update"), id="update"))
+            
+            menu_options.append(Option(t("ui.main_menu.quit"), id="quit"))
+            menu.add_options(menu_options)
             menu.focus()
 
     @on(OptionList.OptionSelected, "#menu")
@@ -57,5 +66,9 @@ class MainMenuScreen(BaseScreen):
                 self.app.dispatch(NewGame())
             case "load_game":
                 self.app.dispatch(OpenSlots(mode="load"))
+            case "settings":
+                self.app.push_screen(Screens.SETTINGS)
+            case "update":
+                self.app.push_screen(Screens.UPDATE)
             case "quit":
                 self.app.dispatch(Quit())
