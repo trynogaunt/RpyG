@@ -23,6 +23,7 @@ class TextualApp(App):
         self.settings = settings
         self.presence = presence
         self.current_screen_id: int = None
+        self.presence = presence
         self.all_screens = {
             Screens.MAIN_MENU: MainMenuScreen,
             Screens.CREATION: CreationScreen,

@@ -56,7 +56,6 @@ def main():
     
     # Ensure the locale specified in the settings is available
     available = {p.stem for p in lang_dir.glob("*.json")}
-    print(f"Available locales: {available}")
     if settings.locale not in available:
         settings.locale = "en"
 
