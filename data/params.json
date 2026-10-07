@@ -1,17 +1,6 @@
 {
     "lang": "en",
-    "available_locales": [
-        "fr",
-        "en",
-        "es",
-        "de",
-        "it"
-    ],
     "interface": "console",
-    "available_interfaces": [
-        "console",
-        "textual"
-    ],
     "controls": "keyboard",
     "discord_integration": true
 }

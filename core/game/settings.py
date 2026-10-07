@@ -14,8 +14,8 @@ def default_settings_path() -> Path:
 class Settings:
     locale: str = "en"
     interface: str = "console"
-    available_locales: list[str] = field(default_factory=lambda: ["fr", "en", "es", "de"])
-    available_interfaces: list[str] = field(default_factory=lambda: ["console", "textual"])
+    available_locales: list[str] = field(default_factory=list)
+    available_interfaces: list[str] = field(default_factory=list)
     controls: str = "keyboard"
     discord_integration: bool = False
 
@@ -23,10 +23,19 @@ class Settings:
 
     @classmethod
     def _persisted_fields(cls) -> set[str]:
-        return {f.name for f in fields(cls) if f.init}
+        return {f.name for f in fields(cls) if f.init and f.name not in {"available_locales", "available_interfaces"}}
 
     @classmethod
     def load(cls, path: Path) -> "Settings":
+        available_locales = []
+        available_interfaces = []
+
+        for p in Path(__file__).parent.parent.parent.joinpath("data/lang").glob("*.json"):
+            print(f"Found locale file: {p.stem}")
+            available_locales.append(p.stem)
+        for p in Path(__file__).parent.parent.joinpath("ui").glob("*"):
+            print(f"Found interface: {p.stem}")
+            available_interfaces.append(p.stem)
         raw = {}
         try:
             with open(path, encoding="utf-8") as f:
@@ -40,7 +49,11 @@ class Settings:
             raw = {}
 
         known = cls._persisted_fields()
-        settings = cls(**{k: v for k, v in raw.items() if k in known})
+        settings = cls(
+            **{k: v for k, v in raw.items() if k in known},
+            available_locales=available_locales,
+            available_interfaces=available_interfaces,
+        )
         settings.path = path
         return settings
 
