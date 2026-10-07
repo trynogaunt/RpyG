@@ -10,7 +10,7 @@ from textual.widgets.option_list import Option
 from rich.text import Text
 from core.ui import splash
 
-from core.game.actions import NewGame, Quit, OpenSlots
+from core.game.actions import NewGame, Quit, OpenSlots, Options, ApplyUpdate
 from core.ui.textual.logo import LETTERS  # dict {"R": "...", "P": "...", ...}
 from core.ui.textual.screens.base_screen import BaseScreen
 from textual.widgets import Static
@@ -67,8 +67,8 @@ class MainMenuScreen(BaseScreen):
             case "load_game":
                 self.app.dispatch(OpenSlots(mode="load"))
             case "settings":
-                self.app.push_screen(Screens.SETTINGS)
+                self.app.dispatch(Options())
             case "update":
-                self.app.push_screen(Screens.UPDATE)
+                self.app.dispatch(ApplyUpdate())
             case "quit":
                 self.app.dispatch(Quit())

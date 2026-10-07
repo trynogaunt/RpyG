@@ -3,11 +3,13 @@ from textual.screen import Screen
 from pathlib import Path
 
 from core.game.response import GameResponse
+from core.game.I18n import Translation
 from core.enums import Screens
 from core.ui.textual.screens.main_menu import MainMenuScreen
 from core.ui.textual.screens.creation import CreationScreen
 from core.ui.textual.screens.exploration import ExplorationScreen
 from core.ui.textual.screens.slot_screen import SlotsScreen
+from core.ui.textual.screens.options_screen import OptionsScreen
 from core.integrations.discord import presence_for
 
 import logging
@@ -29,7 +31,12 @@ class TextualApp(App):
             Screens.CREATION: CreationScreen,
             Screens.EXPLORATION: ExplorationScreen,
             Screens.SLOTS: SlotsScreen,
+            Screens.OPTIONS: OptionsScreen,
         }
+
+    def _sync_translation(self) -> None:
+        if self.translation.locale_file != self.settings.locale:
+            self.translation = Translation(locales=self.settings.locale, locales_dir=self.translation.locales_dir)
 
     def build_screen(self, screen_id: Screens, view=None) -> Screen:
         log.info("build_screen %s view=%r", screen_id, view)
@@ -49,6 +56,7 @@ class TextualApp(App):
 
     def dispatch(self, action):
         response = self.game.handle_action(action)
+        self._sync_translation()
         log.info("dispatch %r -> screen=%s view=%r", action, response.screen, response.view)
         self.show(response)
     
