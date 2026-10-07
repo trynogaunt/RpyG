@@ -1,0 +1,127 @@
+{
+    "ui": {
+        "common": { "quit": "Esci", "level": "Livello", "unavailable": "Non disponibile", "back": "Indietro", "invalid_choice": "Scelta non valida" },
+        "slots": {"empty": "--Slot Vuoto--", "title_load": "Carica Gioco", "title_save": "Salva Gioco", "unreadable": "--Slot Illeggibile--"},
+        "main_menu": { "new_game": "Nuovo Gioco", "quit": "Esci", "options": "Opzioni", "load_game": "Carica Gioco", "update": "Aggiorna",
+        "title": "R P y G - L E G A C Y", "tagline": "La tua CPU gestirà tutti i draghi", 
+        "lore":"In un mondo dove i draghi dominano i cieli e l'antica magia fluttua nell'aria, sei un coraggioso avventuriero in cerca di gloria e fortuna. \nRiuscirai a superare le sfide che ti attendono e diventare una leggenda?",
+        "version": "Versione 0.1 - Accesso Anticipato" },
+        "options": {
+            "title": "Opzioni",
+            "language": "Lingua",
+            "language_name": {
+                "en": "English",
+                "fr": "Français",
+                "es": "Español",
+                "de": "Deutsch",
+                "it": "Italiano"
+            }
+        },
+        "update": {
+            "available": "Aggiornamento Disponibile",
+            "apply": "Applica Aggiornamento",
+            "success": "Aggiornamento applicato con successo.",
+            "restart": "Per favore riavvia il gioco per applicare l'aggiornamento.",
+            "deps_changed": "Le dipendenze sono cambiate. Aggiorna di conseguenza.",
+            "error": {
+                "dirty": "La directory di lavoro ha modifiche non confermate.",
+                "git_failed": "Impossibile eseguire il comando git.",
+                "not_available": "Aggiornamento non disponibile."
+            }
+        },
+        "presence": {
+            "main_menu": "Nel menu principale",
+            "creation": "Creazione di un personaggio",
+            "exploring": "Esplorando {room}",
+            "level": "Livello {level}"
+        },
+        "creation": {
+            "title": "Creazione del Personaggio",
+            "name": "Nome",
+            "points_left": "Punti Rimasti",
+            "set_name": "Imposta Nome",
+            "name_prompt": "Inserisci il nome del tuo personaggio:",
+            "confirm": "Conferma"
+        },
+
+        "stats": {
+            "health": "Salute", "strength": "Forza", "speed": "Velocità", "luck": "Fortuna",
+            "abrev": { "health": "HP", "strength": "STR", "speed": "SPD", "luck": "LCK" }
+        },
+        "directions": {
+            "north": "Nord",
+            "south": "Sud",
+            "east": "Est",
+            "west": "Ovest"
+        },
+        "exploration": {
+            "look_around": "Guarda Intorno",
+            "back_to_menu": "Torna al Menu",
+            "navigation": "Navigazione",
+            "save_game": "Salva Gioco"
+        },
+        "messages": {
+            "already_explored": "Hai già esplorato questo luogo.",
+            "nothing_special": "Niente di speciale qui.",
+            "game_saved": "Gioco salvato con successo.",
+            "game_loaded": "Gioco caricato con successo.",
+            "save_failed": "Impossibile salvare il gioco.", 
+            "invalid_save":"Salvataggio non valido"
+        }
+    },
+    "zones": {
+        "entry_village": {
+            "name": "Villaggio d'Ingresso",
+            "description": "Un piccolo villaggio che serve come punto di partenza per gli avventurieri.",
+            "rooms": {
+                "village_square": {
+                    "name": "Piazza del Villaggio",
+                    "description": "Il vivace centro del villaggio, pieno di abitanti e bancarelle di mercato.",
+                    "look_around": "Vedi gli abitanti che svolgono le loro routine quotidiane, i bambini che giocano e i mercanti che vendono le loro merci."
+                },
+                "blacksmith_shop": {
+                    "name": "Officina del Fabbro",
+                    "description": "Una piccola officina piena dei suoni del martellare del metallo.",
+                    "look_around": "Vedi il fabbro lavorare diligentemente, creando armi e armature."
+                },
+                "village_gate": {
+                    "name": "Porta del Villaggio",
+                    "description": "L'ingresso principale del villaggio, sorvegliato da sentinelle vigili.",
+                    "look_around": "Vedi le guardie che sorvegliano e i viaggiatori che entrano e escono attraverso la porta."
+                },
+                "tavern": {
+                    "name": "Taverna",
+                    "description": "Una taverna accogliente dove gli abitanti del villaggio si riuniscono per rilassarsi e condividere storie.",
+                    "look_around": "Vedi gli abitanti del villaggio che si godono le loro bevande e chiacchierano tra loro."
+                }
+            }
+        },
+        "flooded_cave": {
+            "name": "Grotta Allagata",
+            "description": "Una grotta buia parzialmente sommersa dall'acqua, con il suono delle gocce che echeggia attraverso le camere.",
+            "rooms": {
+                "entrance": {
+                    "name": "Ingresso della Grotta",
+                    "description": "L'ingresso della grotta, dove l'acqua inizia a raccogliersi.",
+                    "look_around": "Vedi l'acqua che sale lentamente e l'oscuro interno della grotta che ti invita a entrare."
+                },
+                "water_pool": {
+                    "name": "Pozza d'Acqua",
+                    "description": "Una profonda pozza d'acqua all'interno della grotta, che riflette la luce fioca dall'alto.",
+                    "look_around": "Vedi l'acqua scintillare e senti il lontano gocciolio dell'acqua echeggiare attraverso la grotta."
+                },
+                "narrow_passage": {
+                    "name": "Passaggio Stretto",
+                    "description": "Un passaggio stretto e tortuoso all'interno della grotta, appena abbastanza largo da poterci passare.",
+                    "look_around": "Vedi le pareti del passaggio che si stringono e la debole luce proveniente dalla pozza d'acqua dietro di te."
+                }
+            }
+        }
+    },
+    "items": {
+        "wooden_sword": {
+            "name": "Spada di Legno",
+            "description": "Una semplice spada di legno, adatta ai principianti."
+        }
+    }
+}

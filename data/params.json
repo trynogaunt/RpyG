@@ -4,7 +4,8 @@
         "fr",
         "en",
         "es",
-        "de"
+        "de",
+        "it"
     ],
     "interface": "console",
     "available_interfaces": [

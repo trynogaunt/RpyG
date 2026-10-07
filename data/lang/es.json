@@ -1,23 +1,52 @@
 {
     "ui": {
-        "common": { "quit": "Salir", "level": "Nivel", "unavailable": "No disponible", "back": "Volver", "invalid_choice": "Opción no válida" },
-        "slots": {"empty": "--Ranura vacía--", "title_load": "Cargar partida", "title_save": "Guardar partida", "unreadable": "--Ranura ilegible--"},
-        "main_menu": { "new_game": "Nueva partida", "quit": "Salir", "options": "Opciones", "load_game": "Cargar partida",
-        "title": "R P y G - L E G A C Y", "tagline": "Tu CPU se encargará de todos los dragones",
-        "lore": "En un mundo donde los dragones surcan los cielos y la antigua magia flota en el aire, eres un valiente aventurero en busca de gloria y fortuna. \n¿Estarás a la altura de los desafíos que se avecinan y te convertirás en una leyenda?",
+        "common": { "quit": "Salir", "level": "Nivel", "unavailable": "No disponible", "back": "Atrás", "invalid_choice": "Elección inválida" },
+        "slots": {"empty": "--Espacio Vacío--", "title_load": "Cargar Juego", "title_save": "Guardar Juego", "unreadable": "--Espacio Ilegible--"},
+        "main_menu": { "new_game": "Nuevo Juego", "quit": "Salir", "options": "Opciones", "load_game": "Cargar Juego", "update": "Actualizar",
+        "title": "R P y G - L E G A C Y", "tagline": "Tu CPU se encargará de todos los dragones", 
+        "lore":"En un mundo donde los dragones surcan los cielos y la magia antigua flota en el aire, eres un valiente aventurero en busca de gloria y fortuna. \n¿Enfrentarás los desafíos que se avecinan y te convertirás en una leyenda?",
         "version": "Version 0.1 - Early Access" },
+        "options": {
+            "title": "Opciones",
+            "language": "Idioma",
+            "language_name": {
+                "en": "English",
+                "fr": "Français",
+                "es": "Español",
+                "de": "Deutsch",
+                "it": "Italiano"
+            }
+        },
+        "update": {
+            "available": "Actualización Disponible",
+            "apply": "Aplicar Actualización",
+            "success": "Actualización aplicada con éxito.",
+            "restart": "Por favor, reinicia el juego para aplicar la actualización.",
+            "deps_changed": "Las dependencias han cambiado. Por favor, actualiza en consecuencia.",
+            "error": {
+                "dirty": "El directorio de trabajo tiene cambios no confirmados.",
+                "git_failed": "No se pudo ejecutar el comando git.",
+                "not_available": "Actualización no disponible."
+            }
+        },
+        "presence": {
+            "main_menu": "En el menú principal",
+            "creation": "Creando un personaje",
+            "exploring": "Explorando {room}",
+            "level": "Nivel {level}"
+        },
         "creation": {
-            "title": "Creación de personaje",
+            "title": "Creación de Personaje",
             "name": "Nombre",
-            "points_left": "Puntos restantes",
-            "set_name": "Elegir nombre",
-            "name_prompt": "Introduce el nombre de tu personaje:",
+            "points_left": "Puntos Restantes",
+            "set_name": "Establecer Nombre",
+            "name_prompt": "Ingresa el nombre de tu personaje:",
             "confirm": "Confirmar"
         },
 
         "stats": {
             "health": "Salud", "strength": "Fuerza", "speed": "Velocidad", "luck": "Suerte",
-            "abrev": { "health": "PV", "strength": "FUE", "speed": "VEL", "luck": "SUE" }
+            "abrev": { "health": "SAL", "strength": "FUE", "speed": "VEL", "luck": "SUE" }
         },
         "directions": {
             "north": "Norte",
@@ -26,73 +55,73 @@
             "west": "Oeste"
         },
         "exploration": {
-            "look_around": "Mirar alrededor",
-            "back_to_menu": "Volver al menú",
+            "look_around": "Examinar Alrededor",
+            "back_to_menu": "Volver al Menú",
             "navigation": "Navegación",
-            "save_game": "Guardar partida"
+            "save_game": "Guardar Juego"
         },
         "messages": {
-            "already_explored": "Ya has registrado este lugar.",
-            "nothing_special": "No hay nada especial aquí.",
-            "game_saved": "Partida guardada correctamente.",
-            "game_loaded": "Partida cargada correctamente.",
-            "save_failed": "No se pudo guardar la partida.",
-            "invalid_save": "Partida no válida"
+            "already_explored": "Ya has explorado este lugar.",
+            "nothing_special": "Nada especial aquí.",
+            "game_saved": "Juego guardado con éxito.",
+            "game_loaded": "Juego cargado con éxito.",
+            "save_failed": "No se pudo guardar el juego.", 
+            "invalid_save":"Guardado Inválido"
         }
     },
     "zones": {
         "entry_village": {
-            "name": "Aldea de entrada",
-            "description": "Una pequeña aldea que sirve de punto de partida para los aventureros.",
+            "name": "Entrada del Pueblo",
+            "description": "Un pequeño pueblo que sirve como punto de partida para los aventureros.",
             "rooms": {
                 "village_square": {
-                    "name": "Plaza del pueblo",
-                    "description": "El bullicioso centro de la aldea, lleno de aldeanos y puestos de mercado.",
-                    "look_around": "Ves a los aldeanos ocupados en sus rutinas diarias, a los niños jugando y a los comerciantes vendiendo sus mercancías."
+                    "name": "Plaza del Pueblo",
+                    "description": "El bullicioso centro del pueblo, lleno de aldeanos y puestos de mercado.",
+                    "look_around": "Ves a los aldeanos realizando sus actividades diarias, niños jugando y comerciantes vendiendo sus productos."
                 },
                 "blacksmith_shop": {
-                    "name": "Herrería",
-                    "description": "Un pequeño taller lleno del sonido del metal martilleado.",
-                    "look_around": "Ves al herrero trabajando con esmero, forjando armas y armaduras."
+                    "name": "Taller del Herrero",
+                    "description": "Un pequeño taller lleno de los sonidos del metal golpeado.",
+                    "look_around": "Ves al herrero trabajando diligentemente, fabricando armas y armaduras."
                 },
                 "village_gate": {
-                    "name": "Puerta de la aldea",
-                    "description": "La entrada principal de la aldea, vigilada por centinelas atentos.",
+                    "name": "Puerta del Pueblo",
+                    "description": "La entrada principal del pueblo, vigilada por centinelas atentos.",
                     "look_around": "Ves a los guardias vigilando y a los viajeros entrando y saliendo por la puerta."
                 },
                 "tavern": {
                     "name": "Taberna",
-                    "description": "Una acogedora taberna donde los aldeanos se reúnen para relajarse y compartir historias.",
-                    "look_around": "Ves a los aldeanos disfrutando de sus bebidas y charlando entre ellos."
+                    "description": "Una taberna acogedora donde los aldeanos se reúnen para relajarse y compartir historias.",
+                    "look_around": "Ves a los aldeanos disfrutando de sus bebidas y conversando entre ellos."
                 }
             }
         },
         "flooded_cave": {
-            "name": "Cueva inundada",
-            "description": "Una cueva oscura parcialmente sumergida en agua, con el sonido de las gotas resonando por las cámaras.",
+            "name": "Cueva Inundada",
+            "description": "Una cueva oscura parcialmente sumergida en agua, con el sonido de gotas resonando en las cámaras.",
             "rooms": {
                 "entrance": {
-                    "name": "Entrada de la cueva",
+                    "name": "Entrada de la Cueva",
                     "description": "La entrada de la cueva, donde el agua comienza a acumularse.",
-                    "look_around": "Ves el agua subir lentamente y el oscuro interior de la cueva invitándote a entrar."
+                    "look_around": "Ves cómo el agua sube lentamente y el oscuro interior de la cueva te invita a entrar."
                 },
                 "water_pool": {
-                    "name": "Charca",
-                    "description": "Una profunda charca dentro de la cueva, que refleja la tenue luz de arriba.",
-                    "look_around": "Ves el agua brillar y oyes el goteo lejano resonando por la cueva."
+                    "name": "Charco de Agua",
+                    "description": "Un profundo charco de agua dentro de la cueva, reflejando la tenue luz desde arriba.",
+                    "look_around": "Ves el agua brillando y escuchas el distante goteo de agua resonando en la cueva."
                 },
                 "narrow_passage": {
-                    "name": "Pasaje estrecho",
-                    "description": "Un pasaje angosto y sinuoso dentro de la cueva, apenas lo bastante ancho para pasar.",
-                    "look_around": "Ves las paredes del pasaje cerrarse y la tenue luz de la charca a tus espaldas."
+                    "name": "Pasaje Estrecho",
+                    "description": "Un pasaje estrecho y sinuoso dentro de la cueva, apenas lo suficientemente ancho para pasar.",
+                    "look_around": "Ves cómo las paredes del pasaje se cierran y la tenue luz del charco de agua detrás de ti."
                 }
             }
         }
     },
     "items": {
         "wooden_sword": {
-            "name": "Espada de madera",
-            "description": "Una espada de madera sencilla, adecuada para principiantes."
+            "name": "Espada de Madera",
+            "description": "Una espada de madera básica, adecuada para principiantes."
         }
     }
 }
