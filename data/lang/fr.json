@@ -16,6 +16,18 @@
                 "de": "Deutsch"
             }
         },
+        "update": {
+            "available": "Mise à jour disponible",
+            "apply": "Appliquer la mise à jour",
+            "success": "Mise à jour appliquée avec succès.",
+            "restart": "Redémarrer le jeu pour appliquer la mise à jour.",
+            "deps_changed": "Les dépendances ont changé, une mise à jour est nécessaire.",
+            "error": {
+                "dirty": "Impossible de mettre à jour : modifications locales non enregistrées.",
+                "git_failed": "Échec de la mise à jour via Git.",
+                "not_available": "Mise à jour non disponible."
+            }
+        },
         "presence": {
             "main_menu": "Dans le menu principal",
             "creation": "Création d'un personnage",
