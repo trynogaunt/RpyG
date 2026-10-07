@@ -24,7 +24,8 @@
             "deps_changed": "Abhängigkeiten haben sich geändert. Bitte aktualisiere entsprechend.",
             "error": {
                 "dirty": "Das Arbeitsverzeichnis enthält ungespeicherte Änderungen.",
-                "git_failed": "Git-Befehl konnte nicht ausgeführt werden."
+                "git_failed": "Git-Befehl konnte nicht ausgeführt werden.",
+                "not_available": "Update nicht verfügbar."
             }
         },
         "presence": {
