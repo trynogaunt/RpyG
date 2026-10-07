@@ -7,7 +7,8 @@ license = "MIT"
 requires-python = ">=3.10"
 dependencies = [
     "textual>=1.0",
-    "platformdirs>=4.12.1"
+    "platformdirs>=4.12.1",
+    "gitpython>=3.2.0"
 ]
 
 [project.optional-dependencies]
