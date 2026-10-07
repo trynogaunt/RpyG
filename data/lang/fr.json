@@ -2,7 +2,7 @@
     "ui": {
         "common": { "quit": "Quitter", "level": "Niveau", "unavailable": "Indisponible", "back": "Retour", "invalid_choice": "Choix invalide" },
         "slots": {"empty": "--Emplacement Vide--", "title_load": "Charger la Partie", "title_save": "Sauvegarder la Partie", "unreadable": "--Emplacement Illisible--"},
-        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger la Partie", 
+        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger la Partie", "update": "Mettre à Jour",
         "title": "R P y G - L E G A C Y", "tagline": "Votre CPU s'occupera de tous les dragons", 
         "lore":"Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un courageux aventurier en quête de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
         "version": "Version 0.1 - Early Access" },
