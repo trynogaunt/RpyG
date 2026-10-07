@@ -63,7 +63,9 @@ def main():
 
     # Load the game world from the data directory
     game = Game(world=load_world(data_dir=data_dir), store=SaveStore(), settings=settings, update=None)
-    threading.Thread(target=lambda: setattr(game, "update", check()), daemon=True).start()
+    checker = threading.Thread(target=lambda: setattr(game, "update", check()), daemon=True)
+    checker.start()
+    checker.join(timeout=3)
 
     # Resolve and initialize the selected frontend - Fallback to console without external libraries if necessary
     log.info("main: discord_integration=%s presence=%r", settings.discord_integration, presence)
