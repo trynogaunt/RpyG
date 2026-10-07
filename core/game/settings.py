@@ -31,10 +31,8 @@ class Settings:
         available_interfaces = []
 
         for p in Path(__file__).parent.parent.parent.joinpath("data/lang").glob("*.json"):
-            print(f"Found locale file: {p.stem}")
             available_locales.append(p.stem)
         for p in Path(__file__).parent.parent.joinpath("ui").glob("*"):
-            print(f"Found interface: {p.stem}")
             available_interfaces.append(p.stem)
         raw = {}
         try:
@@ -43,7 +41,7 @@ class Settings:
         except FileNotFoundError:
             pass
         except (json.JSONDecodeError, OSError):
-            pass  # fichier illisible → valeurs par défaut
+            pass 
 
         if not isinstance(raw, dict):
             raw = {}
@@ -51,7 +49,7 @@ class Settings:
         known = cls._persisted_fields()
         settings = cls(
             **{k: v for k, v in raw.items() if k in known},
-            available_locales=available_locales,
+            available_locales=sorted(available_locales),
             available_interfaces=available_interfaces,
         )
         settings.path = path
