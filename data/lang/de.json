@@ -2,7 +2,7 @@
     "ui": {
         "common": { "quit": "Beenden", "level": "Stufe", "unavailable": "Nicht verfügbar", "back": "Zurück", "invalid_choice": "Ungültige Auswahl" },
         "slots": {"empty": "--Leerer Speicherplatz--", "title_load": "Spiel laden", "title_save": "Spiel speichern", "unreadable": "--Unlesbarer Speicherplatz--"},
-        "main_menu": { "new_game": "Neues Spiel", "quit": "Beenden", "options": "Optionen", "load_game": "Spiel laden",
+        "main_menu": { "new_game": "Neues Spiel", "quit": "Beenden", "options": "Optionen", "load_game": "Spiel laden", "update": "Spiel aktualisieren",
         "title": "R P y G - L E G A C Y", "tagline": "Deine CPU kümmert sich um alle Drachen",
         "lore": "In einer Welt, in der Drachen den Himmel durchstreifen und uralte Magie in der Luft schwebt, bist du ein mutiger Abenteurer auf der Suche nach Ruhm und Reichtum. \nWirst du dich den kommenden Herausforderungen stellen und zur Legende werden?",
         "version": "Version 0.1 - Early Access" },
