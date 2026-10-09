@@ -1,1 +1,0 @@
-from core.items.effects.heal import heal # noqa: F401

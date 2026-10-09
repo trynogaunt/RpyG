@@ -1,8 +1,0 @@
-{
-    "wooden_sword": {
-        "id": "wooden_sword",
-        "type": "weapon",
-        "max_stack": 1,
-        "params": {"damage": 1}
-    }
-}

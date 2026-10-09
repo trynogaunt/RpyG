@@ -32,7 +32,7 @@ UPDATE_ERROR_KEYS = {
 }
 
 class Game:
-    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None, update=None):
+    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None, update=None, items=None):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
@@ -43,6 +43,7 @@ class Game:
         self.store = store
         self.settings = settings
         self.update = update
+        self.items = items
         self.slot_mode: str = "load"
         self._previous_screen: Screens | None = None
 
@@ -51,6 +52,24 @@ class Game:
         self.screen = Screens.MAIN_MENU
 
         return GameResponse(screen=self.screen)
+    
+    def _get_categories(self) -> list[str]:
+        if not self.items:
+            return []
+        return list(self.items.keys())
+    
+    def _get_items_in_category(self, category: str) -> list:
+        if not self.items or category not in self.items:
+            return []
+        return self.items[category]
+    
+    def get_item(self, category: str, item_id: str):
+        if not self.items or category not in self.items:
+            return None
+        for item in self.items[category]:
+            if item.id == item_id:
+                return item
+        return None
     
     def _move_player(self, direction: Direction) -> None:
         next_room = self.world.exit_from(self.player.location, direction)

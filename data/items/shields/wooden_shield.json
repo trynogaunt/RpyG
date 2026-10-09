@@ -1,0 +1,11 @@
+{
+    "id": "wooden_shield",
+    "category": "shields",
+    "max_stack": 1,
+    "slots": [["right_hand"], ["left_hand"]], 
+    "defense": {
+        "armor_multiplier": 1.0,
+        "magic_resistance": 1.0,
+        "block_chance": 0.1
+    }
+}

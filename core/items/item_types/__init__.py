@@ -1,1 +1,0 @@
-from core.items.item_types import weapon  # noqa: F401

@@ -9,6 +9,7 @@ import logging
 from core.save.store import SaveStore
 from core.integrations.discord import DiscordIntegration
 from core.updater import check, apply
+from core.items.item_loader import load_items
 import threading
 
 log = logging.getLogger(__name__)
@@ -61,8 +62,10 @@ def main():
 
     translation = Translation(locales_dir=lang_dir, locales=settings.locale)
 
+    items = load_items()
+
     # Load the game world from the data directory
-    game = Game(world=load_world(data_dir=data_dir), store=SaveStore(), settings=settings, update=None)
+    game = Game(world=load_world(data_dir=data_dir), store=SaveStore(), settings=settings, items=items, update=None)
     checker = threading.Thread(target=lambda: setattr(game, "update", check()), daemon=True)
     checker.start()
     checker.join(timeout=3)

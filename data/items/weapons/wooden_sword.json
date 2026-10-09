@@ -1,0 +1,10 @@
+{
+    "id": "wooden_sword",
+    "max_stack": 1,
+    "slots": [["right_hand"], ["left_hand"]], 
+    "attack": {
+        "damage_multiplier": 1.1,
+        "crit_multiplier": 1.2,
+        "hits": 1
+    }
+}
