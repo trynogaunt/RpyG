@@ -22,19 +22,46 @@ class Inventory:
     def is_full(self) -> bool:
         return all(not case.is_empty for case in self.cases)
     
-    def add(self, item: Item, quantity: int = 1, case: InventoryCase | None = None) -> bool:
-        while quantity > 0 and not self.is_full:
-            for icase in self.cases:
-                if icase.is_empty:
-                    icase.item_id = item.id
-                    if quantity > item.max_stack:
-                        icase.quantity = item.max_stack
-                        quantity -= item.max_stack
-                    else:
-                        icase.quantity = quantity
-                        quantity = 0
-            if quantity > 0 and self.is_full:
-                return False
-        return True
+    def add(self, item: Item, quantity: int = 1) -> int:
+        if quantity <= 0:
+            raise ValueError("quantity doit être > 0")
+        
+        for c in [case for case in self.cases if case.item_id == item.id and case.quantity < item.max_stack]:
+            available_space = item.max_stack - c.quantity
+            if quantity <= available_space:
+                c.quantity += quantity
+                return 0
+            else:
+                c.quantity += available_space
+                quantity -= available_space
+
+        for c in [case for case in self.cases if case.is_empty]:
+            if quantity <= item.max_stack:
+                c.item_id = item.id
+                c.quantity = quantity
+                return 0
+            else:
+                c.item_id = item.id
+                c.quantity = item.max_stack
+                quantity -= item.max_stack
+
+        return quantity
+
+    def remove(self, item: Item, quantity: int = 1) -> int:
+        if quantity <= 0:
+            raise ValueError("quantity doit être > 0")
+
+        for c in [case for case in self.cases[::-1] if case.item_id == item.id]:
+            if quantity <= c.quantity:
+                c.quantity -= quantity
+                if c.quantity == 0:
+                    c.item_id = None
+                return 0
+            else:
+                quantity -= c.quantity
+                c.quantity = 0
+                c.item_id = None
+
+        return quantity
 
 

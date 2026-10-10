@@ -3,7 +3,7 @@ from textual.screen import Screen
 from pathlib import Path
 
 from core.game.response import GameResponse
-from core.game.I18nsource import Translation
+from core.game.I18n import Translation
 from core.enums import Screens
 from core.ui.textual.screens.main_menu import MainMenuScreen
 from core.ui.textual.screens.creation import CreationScreen
