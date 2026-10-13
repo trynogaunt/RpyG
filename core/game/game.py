@@ -5,7 +5,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -20,6 +20,7 @@ from core.game.text_keys import room_key
 from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot
 from core.views.slot_view import SlotsView, SlotView
+from core.views.inventory_view import InventoryView, InventorySlotView
 
 import logging
 
@@ -86,6 +87,8 @@ class Game:
                 return self._slots_to_view(mode=self.slot_mode)
             case Screens.OPTIONS:
                 return self._options_to_view()
+            case Screens.INVENTORY:
+                return self._inventory_to_view()
             case _:
                 return None
        
@@ -111,6 +114,14 @@ class Game:
 
     def _slots_to_view(self, mode: str) -> SlotsView:
         return SlotsView(slots=self.store.list_slots_info() if self.store else [], mode=mode)
+
+    def _inventory_to_view(self) -> InventoryView:
+        return InventoryView(
+            cases=tuple(
+                InventorySlotView(item_id=c.item_id, quantity=c.quantity)
+                for c in self.player.inventory.cases
+            )
+        )
 
     def _explore_current_room(self) -> None:
         current_room = self.world.get_room(self.player.location)
@@ -273,6 +284,9 @@ class Game:
                 self._previous_screen = self.screen
                 self.screen = Screens.SLOTS
                 self.slot_mode = mode
+            case OpenInventory():
+                self._previous_screen = self.screen
+                self.screen = Screens.INVENTORY
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:

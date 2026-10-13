@@ -1,6 +1,6 @@
 from core.ui.console.screens.base_screen import BaseConsoleScreen
 from core.ui.console import colors
-from core.game.actions import Move, Explore, Quit, SaveGame, OpenSlots
+from core.game.actions import Move, Explore, Quit, SaveGame, OpenSlots, OpenInventory
 
 
 class ExplorationScreen(BaseConsoleScreen):
@@ -33,6 +33,7 @@ class ExplorationScreen(BaseConsoleScreen):
                 label = self.t(f"ui.directions.{direction.name.lower()}")
                 options.append((label, Move(direction=direction)))
         options.append((self.t("ui.exploration.look_around"), Explore()))
+        options.append((self.t("ui.exploration.open_inventory"), OpenInventory()))
         options.append((self.t("ui.exploration.save_game"), OpenSlots(mode="save")))
         options.append((self.t("ui.exploration.back_to_menu"), Quit()))
         return self.choose(options)

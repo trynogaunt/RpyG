@@ -87,3 +87,8 @@ class CheckUpdate(Action):
 @dataclass(frozen=True)
 class ApplyUpdate(Action):
     """Action representing the intention to apply a game update."""
+
+@dataclass(frozen=True)
+class SelectItem(Action):
+    """Action representing the intention to select an item from the player's inventory."""
+    slot: int

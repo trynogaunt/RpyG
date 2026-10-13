@@ -4,6 +4,7 @@ from core.ui.console.screens.creation import CreationScreen
 from core.ui.console.screens.exploration import ExplorationScreen
 from core.ui.console.screens.slot_screen import SlotScreen
 from core.ui.console.screens.options import OptionsScreen
+from core.ui.console.screens.inventory_screen import InventoryScreen   
 from core.game.I18n import Translation
 from core.integrations.discord import presence_for
 import logging
@@ -24,6 +25,7 @@ class ConsoleApp:
             Screens.EXPLORATION: ExplorationScreen,
             Screens.SLOTS: SlotScreen,
             Screens.OPTIONS: OptionsScreen,
+            Screens.INVENTORY: InventoryScreen,
         }
 
     def _sync_translation(self) -> None:
