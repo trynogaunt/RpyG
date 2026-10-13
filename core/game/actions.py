@@ -92,3 +92,7 @@ class ApplyUpdate(Action):
 class SelectItem(Action):
     """Action representing the intention to select an item from the player's inventory."""
     slot: int
+
+@dataclass(frozen=True)
+class CloseInventory(Action):
+    """Action representing the intention to close the player's inventory."""

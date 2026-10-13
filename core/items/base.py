@@ -8,6 +8,9 @@ class Slot(Enum):
     CHEST = "chest"
     LEGS = "legs"
     FEET = "feet"
+    RING = "ring"
+    AMULET = "amulet"
+    BACK = "back"
 
 @dataclass(frozen=True)
 class Attack:

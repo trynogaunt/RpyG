@@ -10,5 +10,12 @@ class InventorySlotView:
     quantity: int
 
 @dataclass(frozen=True)
+class EquipmentSlotView:
+    slot: str
+    item_id: str | None = None
+    
+
+@dataclass(frozen=True)
 class InventoryView(BaseView):
     cases: tuple[InventorySlotView, ...]
+    equipment: tuple[EquipmentSlotView, ...]

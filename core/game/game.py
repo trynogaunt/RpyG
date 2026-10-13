@@ -5,7 +5,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import SelectItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -20,7 +20,7 @@ from core.game.text_keys import room_key
 from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot
 from core.views.slot_view import SlotsView, SlotView
-from core.views.inventory_view import InventoryView, InventorySlotView
+from core.views.inventory_view import InventoryView, InventorySlotView, EquipmentSlotView
 
 import logging
 
@@ -120,7 +120,11 @@ class Game:
             cases=tuple(
                 InventorySlotView(item_id=c.item_id, quantity=c.quantity)
                 for c in self.player.inventory.cases
-            )
+            ),
+            equipment=tuple(
+                EquipmentSlotView(slot=e.slot.name, item_id=e.item_id)
+                for e in self.player.inventory.equipment
+            ),
         )
 
     def _explore_current_room(self) -> None:
@@ -308,3 +312,12 @@ class Game:
                     self.screen = self._previous_screen
                 case _:
                     raise ValueError(f"Action inconnue : {action}")
+    
+    def _handle_inventory(self, action: Action) -> None:
+        match action:
+            case SelectItem(slot=slot):
+                self._select_item(slot)
+            case Back():
+                self.screen = self._previous_screen
+            case _:
+                raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")

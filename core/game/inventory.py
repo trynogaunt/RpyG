@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from core.items.base import Item
+from core.items.base import Item, Slot
+from enum import Enum
+
 
 @dataclass
 class InventoryCase:
@@ -10,9 +12,19 @@ class InventoryCase:
     def is_empty(self) -> bool:
         return self.item_id is None
 
+@dataclass
+class SlotCase:
+    slot: Slot
+    item_id: str | None = None
+
+    @property
+    def is_empty(self) -> bool:
+        return self.item_id is None
+
 class Inventory:
     def __init__(self, size: int = 20):
         self.cases: list[InventoryCase] = [InventoryCase() for _ in range(size)]
+        self.equipment: list[SlotCase] = [SlotCase(slot=s) for s in Slot]
 
     @property
     def size(self) -> int:
