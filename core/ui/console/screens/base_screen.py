@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import re
 import shutil
 import textwrap
-from core.game.actions import Quit, NewGame, SetName
+from core.game.actions import Back, Quit, NewGame, SetName
 from core.ui.console import colors
 
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
@@ -54,19 +54,33 @@ class BaseConsoleScreen(ABC):
         for message in messages:
             print(f"> {self.app.resolve_message(message)}")
     
+    BACK_KEY = "0"
+
     def choose(self, options: list[tuple[str, object | None]]):
-        """options : liste de (libellé, action). Une action à None = option désactivée."""
-        for i, (label, action) in enumerate(options, start=1):
+        """options : liste de (libellé, action). Une action à None = option désactivée.
+
+        L'option de sortie (`Back()`, sinon `Quit()`) est toujours affichée en dernier sur la touche 0 ;
+        les autres sont numérotées à partir de 1.
+        """
+        back = next((option for option in options if isinstance(option[1], Back)), None) \
+            or next((option for option in options if isinstance(option[1], Quit)), None)
+        numbered = [option for option in options if option is not back]
+
+        for i, (label, action) in enumerate(numbered, start=1):
             suffix = "" if action is not None else f" ({self.t('ui.common.unavailable')})"
             print(f"  {i}. {label}{suffix}")
+        if back:
+            print(f"  {self.BACK_KEY}. {back[0]}")
 
         while True:
             try:
                 raw = input("> ").strip()
             except (EOFError, KeyboardInterrupt):
                 return Quit()
-            if raw.isdigit() and 1 <= int(raw) <= len(options):
-                action = options[int(raw) - 1][1]
+            if back and raw == self.BACK_KEY:
+                return back[1]
+            if raw.isdigit() and 1 <= int(raw) <= len(numbered):
+                action = numbered[int(raw) - 1][1]
                 if action is not None:
                     return action() if callable(action) else action
             print(self.t("ui.common.invalid_choice"))
