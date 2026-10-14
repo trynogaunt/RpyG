@@ -5,7 +5,7 @@
         "main_menu": { "new_game": "Nuovo Gioco", "quit": "Esci", "options": "Opzioni", "load_game": "Carica Gioco", "update": "Aggiorna",
         "title": "R P y G - L E G A C Y", "tagline": "La tua CPU gestirà tutti i draghi", 
         "lore":"In un mondo dove i draghi dominano i cieli e l'antica magia fluttua nell'aria, sei un coraggioso avventuriero in cerca di gloria e fortuna. \nRiuscirai a superare le sfide che ti attendono e diventare una leggenda?",
-        "version": "Versione 0.1 - Accesso Anticipato" },
+        "version": "Versione {version} - Accesso Anticipato" },
         "options": {
             "title": "Opzioni",
             "language": "Lingua",
@@ -70,6 +70,29 @@
             "empty": "--Vuoto--",
             "equip": "Equipaggia {item}",
             "unequip": "Rimuovi {item}",
+            "empty_bag": "La tua borsa è vuota.",
+            "free": "{count} spazi liberi",
+            "hint": "Numero: oggetto · Lettera: equipaggiamento · 0: indietro",
+            "categories": {
+                "weapons": "Arma",
+                "shields": "Scudo"
+            },
+            "details": {
+                "category": "Categoria",
+                "slots": "Slot",
+                "equipped_on": "Equipaggiato su",
+                "or": "o",
+                "quantity": "Quantità",
+                "wear": "Durabilità",
+                "attack": "Attacco",
+                "damage": "Danno",
+                "crit": "Critico",
+                "hits": "Colpi",
+                "defense": "Difesa",
+                "armor": "Armatura",
+                "magic_resistance": "Res. magica",
+                "block_chance": "Parata"
+            },
             "messages": {
                 "full": "La tua borsa è piena.",
                 "cannot_equip": "Questo oggetto non può essere equipaggiato."

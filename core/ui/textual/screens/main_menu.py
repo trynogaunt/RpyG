@@ -1,4 +1,3 @@
-from importlib.metadata import version, PackageNotFoundError
 from core.enums import Screens
 from core.updater import UpdateState
 
@@ -9,6 +8,7 @@ from textual.widgets import Static, OptionList
 from textual.widgets.option_list import Option
 from rich.text import Text
 from core.ui import splash
+from core.version import __version__
 
 from core.game.actions import NewGame, Quit, OpenSlots, Options, ApplyUpdate
 from core.ui.textual.logo import LETTERS  # dict {"R": "...", "P": "...", ...}
@@ -17,12 +17,6 @@ from textual.widgets import Static
 from core.ui.textual.widgets.splash import build_splash
 
 LETTER_STYLES = ["#c5cdd9", "#ffb000", "#ffb000", "#c5cdd9"] 
-
-def app_version()-> str:
-    try:
-        return version("rpyg")
-    except PackageNotFoundError:
-        return "unknown"
 
 class MainMenuScreen(BaseScreen):
 
@@ -41,7 +35,7 @@ class MainMenuScreen(BaseScreen):
             self.query_one("#tagline", Static).update(t("ui.main_menu.tagline"))
             lore = self.query_one("#lore", Static)
             lore.update(t("ui.main_menu.lore"))
-            lore.border_subtitle = t("ui.main_menu.version", version=app_version())
+            lore.border_subtitle = t("ui.main_menu.version", version=__version__)
 
             menu = self.query_one("#menu", OptionList)
 

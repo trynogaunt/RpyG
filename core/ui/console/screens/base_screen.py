@@ -1,8 +1,21 @@
 from abc import ABC, abstractmethod
+import re
 import shutil
 import textwrap
 from core.game.actions import Quit, NewGame, SetName
 from core.ui.console import colors
+
+ANSI = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def visible_len(s: str) -> int:
+    """Longueur affichée, sans les codes couleur."""
+    return len(ANSI.sub("", s))
+
+
+def pad(s: str, width: int) -> str:
+    return s + " " * max(0, width - visible_len(s))
+
 
 class BaseConsoleScreen(ABC):
     def __init__(self, app, view=None):
@@ -92,8 +105,10 @@ class BaseConsoleScreen(ABC):
 
 
         for line in lines:
-            for part in textwrap.wrap(line, inner) or [""]:
-                cell = part.ljust(inner)
+            # Une ligne courte (éventuellement colorée) est gardée telle quelle, indentation comprise
+            fits = "\n" not in line and visible_len(line) <= inner and line.strip()
+            for part in [line] if fits else textwrap.wrap(line, inner) or [""]:
+                cell = pad(part, inner)
                 print(f"| {self.color(cell, code) if code else cell} |")
 
         if footer:

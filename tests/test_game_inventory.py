@@ -4,10 +4,10 @@ import pytest
 
 from core.enums import Screens
 from core.errors import InvalidSave
-from core.game.actions import Back, ConfirmCreation, EquipItem, NewGame, OpenInventory, SetName, UnequipItem
+from core.game.actions import Back, ConfirmCreation, EquipItem, InspectEquipped, InspectItem, NewGame, OpenInventory, SetName, UnequipItem
 from core.game.game import Game
 from core.game.snapshot import BagEntry, EquippedEntry
-from core.items.base import Item, ItemInstance, Slot
+from core.items.base import Attack, Item, ItemInstance, Slot
 from core.items.catalog import ItemCatalog
 from core.save import codec
 
@@ -16,7 +16,8 @@ from core.save import codec
 def catalog() -> ItemCatalog:
     return ItemCatalog({
         "potion": Item(id="potion", max_stack=10),
-        "sword": Item(id="sword", slots=((Slot.RIGHT_HAND,), (Slot.LEFT_HAND,))),
+        "sword": Item(id="sword", category="weapons", attack=Attack(damage_multiplier=1.5),
+                      slots=((Slot.RIGHT_HAND,), (Slot.LEFT_HAND,))),
     })
 
 
@@ -71,6 +72,67 @@ def test_equip_non_equippable_gives_message(game):
 
 def test_back_returns_to_exploration(game):
     assert game.handle_action(Back()).screen is Screens.EXPLORATION
+
+
+# ---------- fiche d'objet ----------
+
+def test_inventory_opens_on_overview(game):
+    assert game.handle_action(Back()).screen is Screens.EXPLORATION
+    assert game.handle_action(OpenInventory()).view.selected is None
+
+
+def test_inspect_bag_item_shows_its_definition(game):
+    d = game.handle_action(InspectItem(0)).view.selected
+    assert d.item_id == "sword"
+    assert d.category == "weapons"
+    assert d.attack.damage_multiplier == 1.5
+    assert d.wear == 0.5
+    assert d.index == 0 and d.equipped_on is None
+    assert d.can_equip and not d.can_unequip
+
+
+def test_inspect_stack_shows_quantity(game):
+    d = game.handle_action(InspectItem(1)).view.selected
+    assert d.quantity == 3
+    assert not d.can_equip
+
+
+@pytest.mark.parametrize("index", [5, -1, 999])
+def test_inspect_empty_or_invalid_case_is_ignored(game, index):
+    assert game.handle_action(InspectItem(index)).view.selected is None
+
+
+def test_inspect_equipped_item(game):
+    game.handle_action(EquipItem(0))
+    d = game.handle_action(InspectEquipped(Slot.RIGHT_HAND)).view.selected
+    assert d.item_id == "sword"
+    assert d.equipped_on == (Slot.RIGHT_HAND,)
+    assert d.can_unequip and not d.can_equip
+
+
+def test_inspect_empty_slot_is_ignored(game):
+    assert game.handle_action(InspectEquipped(Slot.HEAD)).view.selected is None
+
+
+def test_equip_from_detail_returns_to_overview(game):
+    game.handle_action(InspectItem(0))
+    view = game.handle_action(EquipItem(0)).view
+    assert view.selected is None
+    assert view.equipment[0].item_id == "sword"
+
+
+def test_back_closes_detail_before_leaving(game):
+    game.handle_action(InspectItem(0))
+    response = game.handle_action(Back())
+    assert response.screen is Screens.INVENTORY and response.view.selected is None
+    assert game.handle_action(Back()).screen is Screens.EXPLORATION
+
+
+def test_reopening_inventory_resets_selection(game):
+    game.handle_action(InspectItem(0))
+    game.inventory_selection = 0          # sélection laissée ouverte...
+    game.screen = Screens.EXPLORATION     # ...puis sortie par un autre chemin
+    assert game.handle_action(OpenInventory()).view.selected is None
 
 
 # ---------- sauvegarde ----------

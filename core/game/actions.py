@@ -110,6 +110,16 @@ class ApplyUpdate(Action):
     """Action representing the intention to apply a game update."""
 
 @dataclass(frozen=True)
+class InspectItem(Action):
+    """Action representing the intention to look at the item stored in a bag case."""
+    index: int
+
+@dataclass(frozen=True)
+class InspectEquipped(Action):
+    """Action representing the intention to look at the item worn on a slot."""
+    slot: Slot
+
+@dataclass(frozen=True)
 class EquipItem(Action):
     """Action representing the intention to equip the item stored in a bag case."""
     index: int

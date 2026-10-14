@@ -5,7 +5,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import ChooseStarter, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import ChooseStarter, InspectItem, InspectEquipped, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS, STARTER_WEAPONS
@@ -21,8 +21,9 @@ from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot, BagEntry, EquippedEntry
 from core.game.inventory import Inventory, Equipped, InventoryError, InventoryFull, NotEquippable
 from core.items.catalog import ItemCatalog, UnknownItem
+from core.items.base import Slot
 from core.views.slot_view import SlotsView, SlotView
-from core.views.inventory_view import InventoryView, InventorySlotView, EquipmentSlotView
+from core.views.inventory_view import InventoryView, InventorySlotView, EquipmentSlotView, ItemDetailView
 
 import logging
 
@@ -50,6 +51,7 @@ class Game:
         self.slot_mode: str = "load"
         self.selected_slot: int | None = None
         self.confirm_delete: bool = False
+        self.inventory_selection: int | Slot | None = None
         self._previous_screen: Screens | None = None
 
     def start(self) -> GameResponse:
@@ -121,6 +123,35 @@ class Game:
                 EquipmentSlotView(slot=e.slot, item_id=e.item_id, wear=e.instance.wear if e.instance else None)
                 for e in self.player.inventory.equipment
             ),
+            selected=self._item_detail(),
+        )
+
+    def _item_detail(self) -> ItemDetailView | None:
+        inventory = self.player.inventory
+        selection = self.inventory_selection
+        if isinstance(selection, Slot):
+            equipped = inventory.occupant(selection)
+            if equipped is None:
+                return None
+            instance, quantity, extra = equipped.instance, 1, {"equipped_on": equipped.slots}
+        elif selection is not None:
+            case = inventory.cases[selection]
+            if case.is_empty:
+                return None
+            instance, quantity, extra = case.instance, case.quantity, {"index": selection}
+        else:
+            return None
+
+        item = self.catalog.get(instance.item_id) if instance.item_id in self.catalog else None
+        return ItemDetailView(
+            item_id=instance.item_id,
+            quantity=quantity,
+            wear=instance.wear,
+            category=item.category if item else None,
+            attack=item.attack if item else None,
+            defense=item.defense if item else None,
+            slots=tuple(item.slots or ()) if item else (),
+            **extra,
         )
 
     def _explore_current_room(self) -> None:
@@ -323,6 +354,7 @@ class Game:
             case OpenInventory():
                 self._previous_screen = self.screen
                 self.screen = Screens.INVENTORY
+                self.inventory_selection = None
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:
@@ -379,12 +411,24 @@ class Game:
     
     def _handle_inventory(self, action: Action) -> None:
         match action:
+            case InspectItem(index=index):
+                cases = self.player.inventory.cases
+                if 0 <= index < len(cases) and not cases[index].is_empty:
+                    self.inventory_selection = index
+            case InspectEquipped(slot=slot):
+                if self.player.inventory.occupant(slot) is not None:
+                    self.inventory_selection = slot
             case EquipItem(index=index):
                 self._equip(index)
+                self.inventory_selection = None
             case UnequipItem(slot=slot):
                 self._unequip(slot)
+                self.inventory_selection = None
             case Back():
-                self.screen = self._previous_screen
+                if self.inventory_selection is not None:
+                    self.inventory_selection = None
+                else:
+                    self.screen = self._previous_screen
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
 

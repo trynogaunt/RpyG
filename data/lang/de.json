@@ -5,7 +5,7 @@
         "main_menu": { "new_game": "Neues Spiel", "quit": "Beenden", "options": "Optionen", "load_game": "Spiel laden", "update": "Spiel aktualisieren",
         "title": "R P y G - L E G A C Y", "tagline": "Deine CPU kümmert sich um alle Drachen",
         "lore": "In einer Welt, in der Drachen den Himmel durchstreifen und uralte Magie in der Luft schwebt, bist du ein mutiger Abenteurer auf der Suche nach Ruhm und Reichtum. \nWirst du dich den kommenden Herausforderungen stellen und zur Legende werden?",
-        "version": "Version 0.1 - Early Access" },
+        "version": "Version {version} - Early Access" },
           "options": {
             "title": "Optionen",
             "language": "Sprache",
@@ -70,6 +70,29 @@
             "empty": "--Leer--",
             "equip": "{item} ausrüsten",
             "unequip": "{item} ablegen",
+            "empty_bag": "Deine Tasche ist leer.",
+            "free": "{count} freie Plätze",
+            "hint": "Zahl: Gegenstand · Buchstabe: Ausrüstung · 0: zurück",
+            "categories": {
+                "weapons": "Waffe",
+                "shields": "Schild"
+            },
+            "details": {
+                "category": "Kategorie",
+                "slots": "Platz",
+                "equipped_on": "Ausgerüstet an",
+                "or": "oder",
+                "quantity": "Anzahl",
+                "wear": "Haltbarkeit",
+                "attack": "Angriff",
+                "damage": "Schaden",
+                "crit": "Kritisch",
+                "hits": "Treffer",
+                "defense": "Verteidigung",
+                "armor": "Rüstung",
+                "magic_resistance": "Magieres.",
+                "block_chance": "Block"
+            },
             "messages": {
                 "full": "Deine Tasche ist voll.",
                 "cannot_equip": "Dieser Gegenstand kann nicht ausgerüstet werden."

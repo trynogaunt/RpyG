@@ -5,7 +5,7 @@
         "main_menu": { "new_game": "Nuevo Juego", "quit": "Salir", "options": "Opciones", "load_game": "Cargar Juego", "update": "Actualizar",
         "title": "R P y G - L E G A C Y", "tagline": "Tu CPU se encargará de todos los dragones", 
         "lore":"En un mundo donde los dragones surcan los cielos y la magia antigua flota en el aire, eres un valiente aventurero en busca de gloria y fortuna. \n¿Enfrentarás los desafíos que se avecinan y te convertirás en una leyenda?",
-        "version": "Version 0.1 - Early Access" },
+        "version": "Version {version} - Early Access" },
         "options": {
             "title": "Opciones",
             "language": "Idioma",
@@ -70,6 +70,29 @@
             "empty": "--Vacío--",
             "equip": "Equipar {item}",
             "unequip": "Quitar {item}",
+            "empty_bag": "Tu bolsa está vacía.",
+            "free": "{count} espacios libres",
+            "hint": "Número: objeto · Letra: equipo · 0: volver",
+            "categories": {
+                "weapons": "Arma",
+                "shields": "Escudo"
+            },
+            "details": {
+                "category": "Categoría",
+                "slots": "Ranura",
+                "equipped_on": "Equipado en",
+                "or": "o",
+                "quantity": "Cantidad",
+                "wear": "Durabilidad",
+                "attack": "Ataque",
+                "damage": "Daño",
+                "crit": "Crítico",
+                "hits": "Golpes",
+                "defense": "Defensa",
+                "armor": "Armadura",
+                "magic_resistance": "Res. mágica",
+                "block_chance": "Bloqueo"
+            },
             "messages": {
                 "full": "Tu bolsa está llena.",
                 "cannot_equip": "Este objeto no se puede equipar."

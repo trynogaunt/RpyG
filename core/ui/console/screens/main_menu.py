@@ -2,6 +2,7 @@ from core.ui.console.screens.base_screen import BaseConsoleScreen
 from core.game.actions import Quit, NewGame, LoadGame, OpenSlots, Options, ApplyUpdate
 from core.ui.console import colors
 from core.updater import UpdateState
+from core.version import __version__
 
 class MainMenuScreen(BaseConsoleScreen):
     def draw(self):
@@ -13,7 +14,7 @@ class MainMenuScreen(BaseConsoleScreen):
         self.centered(self.t("ui.main_menu.tagline"), colors.LIGHT_GRAY)
         self.box(
             [self.t("ui.main_menu.lore"), "", ""],
-            footer=self.t("ui.main_menu.version"),
+            footer=self.t("ui.main_menu.version", version=__version__),
             footer_code=colors.LIGHT_GRAY,
         )
         print()

@@ -1,6 +1,6 @@
 [project]
 name = "rpyg"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Retro Python RPG in the terminal"
 readme = "README.md"
 license = "MIT"
@@ -20,6 +20,9 @@ rpyg = "main:main"
 
 [tool.setuptools]
 py-modules = ["main"]
+
+[tool.setuptools.dynamic]
+version = { attr = "core.version.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["core*"]
