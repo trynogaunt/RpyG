@@ -70,6 +70,8 @@
             "empty": "--Vuoto--",
             "equip": "Equipaggia {item}",
             "unequip": "Rimuovi {item}",
+            "equip_on": "Equipaggia su {slot}",
+            "replaces": "sostituisce {item}",
             "empty_bag": "La tua borsa è vuota.",
             "free": "{count} spazi liberi",
             "hint": "Numero: oggetto · Lettera: equipaggiamento · 0: indietro",

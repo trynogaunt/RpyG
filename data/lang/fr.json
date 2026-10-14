@@ -70,6 +70,8 @@
             "empty": "--Vide--",
             "equip": "Équiper {item}",
             "unequip": "Retirer {item}",
+            "equip_on": "Équiper sur {slot}",
+            "replaces": "remplace {item}",
             "empty_bag": "Ton sac est vide.",
             "free": "{count} emplacements libres",
             "hint": "Numéro : objet du sac · Lettre : équipement · 0 : retour",

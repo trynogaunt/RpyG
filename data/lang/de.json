@@ -70,6 +70,8 @@
             "empty": "--Leer--",
             "equip": "{item} ausrüsten",
             "unequip": "{item} ablegen",
+            "equip_on": "Ausrüsten: {slot}",
+            "replaces": "ersetzt {item}",
             "empty_bag": "Deine Tasche ist leer.",
             "free": "{count} freie Plätze",
             "hint": "Zahl: Gegenstand · Buchstabe: Ausrüstung · 0: zurück",

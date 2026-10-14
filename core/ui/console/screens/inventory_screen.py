@@ -123,6 +123,12 @@ class InventoryScreen(BaseConsoleScreen):
         self.box(lines, header=self.t("ui.inventory.title"), title=self._item_name(d.item_id))
         print()
 
+    def _replaces(self, combo) -> str:
+        """« (remplace X) » si des objets sont déjà portés sur ces slots."""
+        worn = {e.slot: e.item_id for e in self.view.equipment if e.item_id is not None}
+        names = list(dict.fromkeys(self._item_name(worn[s]) for s in combo if s in worn))
+        return f" ({self.t('ui.inventory.replaces', item=', '.join(names))})" if names else ""
+
     def _slot_names(self, slots, sep: str) -> str:
         return sep.join(self.t(f"ui.inventory.slots.{s.value}") for s in slots)
 
@@ -160,7 +166,13 @@ class InventoryScreen(BaseConsoleScreen):
     def _ask_detail(self, d):
         options = []
         if d.can_equip:
-            options.append((self.t("ui.inventory.equip", item=self._item_name(d.item_id)), EquipItem(d.index)))
+            if len(d.slots) == 1:
+                label = self.t("ui.inventory.equip", item=self._item_name(d.item_id))
+                options.append((label + self._replaces(d.slots[0]), EquipItem(d.index, d.slots[0])))
+            else:
+                for combo in d.slots:
+                    label = self.t("ui.inventory.equip_on", slot=self._slot_names(combo, " + "))
+                    options.append((label + self._replaces(combo), EquipItem(d.index, combo)))
         if d.can_unequip:
             options.append((self.t("ui.inventory.unequip", item=self._item_name(d.item_id)), UnequipItem(d.equipped_on[0])))
         options.append((self.t("ui.common.back"), Back()))

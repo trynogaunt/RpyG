@@ -74,6 +74,25 @@ def test_back_returns_to_exploration(game):
     assert game.handle_action(Back()).screen is Screens.EXPLORATION
 
 
+def worn(view) -> dict:
+    return {e.slot: e.item_id for e in view.equipment if e.item_id}
+
+
+def test_equip_on_chosen_slot(game):
+    view = game.handle_action(EquipItem(0, slots=(Slot.LEFT_HAND,))).view
+    assert worn(view) == {Slot.LEFT_HAND: "sword"}
+
+
+def test_equip_without_slots_takes_first_free_combo(game):
+    assert worn(game.handle_action(EquipItem(0)).view) == {Slot.RIGHT_HAND: "sword"}
+
+
+def test_equip_on_forbidden_slot_gives_message(game):
+    response = game.handle_action(EquipItem(0, slots=(Slot.HEAD,)))
+    assert [m.key for m in response.messages] == ["ui.inventory.messages.cannot_equip"]
+    assert worn(response.view) == {}
+
+
 # ---------- fiche d'objet ----------
 
 def test_inventory_opens_on_overview(game):

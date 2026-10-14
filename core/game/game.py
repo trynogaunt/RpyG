@@ -418,8 +418,8 @@ class Game:
             case InspectEquipped(slot=slot):
                 if self.player.inventory.occupant(slot) is not None:
                     self.inventory_selection = slot
-            case EquipItem(index=index):
-                self._equip(index)
+            case EquipItem(index=index, slots=slots):
+                self._equip(index, slots)
                 self.inventory_selection = None
             case UnequipItem(slot=slot):
                 self._unequip(slot)
@@ -432,11 +432,11 @@ class Game:
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
 
-    def _equip(self, index: int) -> None:
+    def _equip(self, index: int, slots: tuple[Slot, ...] | None = None) -> None:
         inventory = self.player.inventory
         try:
             item_id = inventory.cases[index].item_id
-            inventory.equip(index, self.catalog.get(item_id))
+            inventory.equip(index, self.catalog.get(item_id), slots)
         except InventoryFull:
             self._messages.append(Message(key="ui.inventory.messages.full"))
         except (NotEquippable, UnknownItem):

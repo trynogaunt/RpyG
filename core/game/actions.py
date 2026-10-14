@@ -121,8 +121,12 @@ class InspectEquipped(Action):
 
 @dataclass(frozen=True)
 class EquipItem(Action):
-    """Action representing the intention to equip the item stored in a bag case."""
+    """Action representing the intention to equip the item stored in a bag case.
+
+    `slots` picks one of the item's slot combinations; None lets the inventory choose the first free one.
+    """
     index: int
+    slots: tuple[Slot, ...] | None = None
 
 @dataclass(frozen=True)
 class UnequipItem(Action):
