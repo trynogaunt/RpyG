@@ -1,7 +1,7 @@
 {
     "ui": {
         "common": { "quit": "Beenden", "level": "Stufe", "unavailable": "Nicht verfügbar", "back": "Zurück", "invalid_choice": "Ungültige Auswahl" },
-        "slots": {"empty": "--Leerer Speicherplatz--", "title_load": "Spiel laden", "title_save": "Spiel speichern", "unreadable": "--Unlesbarer Speicherplatz--"},
+        "slots": {"empty": "--Leerer Speicherplatz--", "title_load": "Spiel laden", "title_save": "Spiel speichern", "unreadable": "--Unlesbarer Speicherplatz--", "load": "Laden", "delete": "Löschen", "saved_at": "Gespeichert am {date}", "confirm_delete": "Spielstand von {name} endgültig löschen?", "yes": "Ja", "no": "Nein"},
         "main_menu": { "new_game": "Neues Spiel", "quit": "Beenden", "options": "Optionen", "load_game": "Spiel laden", "update": "Spiel aktualisieren",
         "title": "R P y G - L E G A C Y", "tagline": "Deine CPU kümmert sich um alle Drachen",
         "lore": "In einer Welt, in der Drachen den Himmel durchstreifen und uralte Magie in der Luft schwebt, bist du ein mutiger Abenteurer auf der Suche nach Ruhm und Reichtum. \nWirst du dich den kommenden Herausforderungen stellen und zur Legende werden?",
@@ -60,7 +60,8 @@
             "look_around": "Umgebung untersuchen",
             "back_to_menu": "Zurück zum Menü",
             "navigation": "Navigation",
-            "save_game": "Spiel speichern"
+            "save_game": "Spiel speichern",
+            "open_inventory": "Inventar öffnen"
         },
         "inventory": {
             "title": "Inventar",
@@ -86,6 +87,8 @@
             }
         },
         "messages": {
+            "save_deleted": "Spielstand gelöscht.",
+            "delete_failed": "Spielstand konnte nicht gelöscht werden.",
             "already_explored": "Du hast diesen Ort bereits durchsucht.",
             "nothing_special": "Hier gibt es nichts Besonderes.",
             "game_saved": "Spiel erfolgreich gespeichert.",

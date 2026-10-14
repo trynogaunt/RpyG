@@ -69,6 +69,20 @@ class LoadGame(Action):
     slot: int
 
 @dataclass(frozen=True)
+class SelectSlot(Action):
+    """Action representing the intention to open the details of a save slot."""
+    slot: int
+
+@dataclass(frozen=True)
+class DeleteSave(Action):
+    """Action representing the intention to delete a save (asks for confirmation first)."""
+    slot: int
+
+@dataclass(frozen=True)
+class ConfirmDelete(Action):
+    """Action representing the confirmation of a pending save deletion."""
+
+@dataclass(frozen=True)
 class Back(Action):
     """Action representing the intention to go back to the previous screen."""
 

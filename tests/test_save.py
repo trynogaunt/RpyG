@@ -9,6 +9,7 @@ from core.game.actions import SetName, AllocatePoints, ConfirmCreation, Explore,
 from core.enums import Stat, Direction
 from core.save import codec, storage
 from core.save.store import SaveStore
+from core.views.slot_view import SlotView
 
 
 # ---------- Fixtures ----------
@@ -65,6 +66,16 @@ class MemoryStore:
             return self.slots[slot]
         except KeyError:
             raise InvalidSave(f"slot {slot} vide")
+
+    def delete(self, slot):
+        self.slots.pop(slot, None)
+
+    def list_slots_info(self):
+        return tuple(
+            SlotView(slot=n, name=snap.player.name, level=snap.player.level,
+                     location=snap.location.room_id, saved_at=None)
+            for n, snap in sorted(self.slots.items())
+        )
 
 
 # ---------- snapshot / restore ----------
@@ -205,3 +216,92 @@ def test_load_game_empty_slot_adds_message_and_keeps_state(game_with_store):
     game.load_game(7)
     assert game.snapshot() == before
     assert any(m.key == "ui.messages.invalid_save" for m in game._messages)  # ADAPTE : accès aux messages
+
+# ---------- gestion des sauvegardes (écran de chargement) ----------
+
+from core.enums import Screens
+from core.game.actions import Back, ConfirmDelete, DeleteSave, LoadGame, OpenSlots, SelectSlot
+
+
+@pytest.fixture
+def load_menu(game_with_store, make_game):
+    """Un jeu neuf sur l'écran de chargement, avec une sauvegarde dans le slot 1."""
+    game, store = game_with_store
+    game.save_game(1)
+    g = make_game(store=store)
+    g.handle_action(OpenSlots(mode="load"))
+    return g, store
+
+
+def test_select_slot_shows_details(load_menu):
+    g, _ = load_menu
+    view = g.handle_action(SelectSlot(1)).view
+    assert view.selected.slot == 1
+    assert view.selected.name == "Éléonore"
+    assert not view.confirm_delete
+
+
+def test_load_from_details(load_menu):
+    g, _ = load_menu
+    g.handle_action(SelectSlot(1))
+    assert g.handle_action(LoadGame(1)).screen is Screens.EXPLORATION
+
+
+def test_delete_asks_for_confirmation_first(load_menu):
+    g, store = load_menu
+    g.handle_action(SelectSlot(1))
+    view = g.handle_action(DeleteSave(1)).view
+    assert view.confirm_delete
+    assert 1 in store.slots
+
+
+def test_confirm_delete_removes_the_save(load_menu):
+    g, store = load_menu
+    g.handle_action(SelectSlot(1))
+    g.handle_action(DeleteSave(1))
+    response = g.handle_action(ConfirmDelete())
+    assert 1 not in store.slots
+    assert [m.key for m in response.messages] == ["ui.messages.save_deleted"]
+    assert response.view.selected is None
+    assert response.screen is Screens.SLOTS
+
+
+def test_confirm_without_pending_delete_does_nothing(load_menu):
+    g, store = load_menu
+    g.handle_action(SelectSlot(1))
+    g.handle_action(ConfirmDelete())
+    assert 1 in store.slots
+
+
+def test_back_steps_out_one_level_at_a_time(load_menu):
+    g, store = load_menu
+    g.handle_action(SelectSlot(1))
+    g.handle_action(DeleteSave(1))
+
+    view = g.handle_action(Back()).view            # annule la confirmation
+    assert view.selected.slot == 1 and not view.confirm_delete
+    assert 1 in store.slots
+
+    view = g.handle_action(Back()).view            # ferme le détail
+    assert view.selected is None
+
+    assert g.handle_action(Back()).screen is Screens.MAIN_MENU
+
+
+def test_reopening_slots_resets_selection(load_menu):
+    g, _ = load_menu
+    g.handle_action(SelectSlot(1))
+    g.handle_action(Back())
+    g.handle_action(Back())
+    view = g.handle_action(OpenSlots(mode="load")).view
+    assert view.selected is None
+
+
+def test_delete_failure_gives_message(load_menu, monkeypatch):
+    g, store = load_menu
+    def boom(slot):
+        raise OSError("disque en lecture seule")
+    monkeypatch.setattr(store, "delete", boom)
+    g.handle_action(DeleteSave(1))
+    response = g.handle_action(ConfirmDelete())
+    assert [m.key for m in response.messages] == ["ui.messages.delete_failed"]

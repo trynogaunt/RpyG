@@ -1,7 +1,7 @@
 {
     "ui": {
         "common": { "quit": "Quitter", "level": "Niveau", "unavailable": "Indisponible", "back": "Retour", "invalid_choice": "Choix invalide" },
-        "slots": {"empty": "--Emplacement Vide--", "title_load": "Charger la Partie", "title_save": "Sauvegarder la Partie", "unreadable": "--Emplacement Illisible--"},
+        "slots": {"empty": "--Emplacement Vide--", "title_load": "Charger la Partie", "title_save": "Sauvegarder la Partie", "unreadable": "--Emplacement Illisible--", "load": "Charger", "delete": "Supprimer", "saved_at": "Sauvegardé le {date}", "confirm_delete": "Supprimer définitivement la sauvegarde de {name} ?", "yes": "Oui", "no": "Non"},
         "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger la Partie", "update": "Mettre à Jour",
         "title": "R P y G - L E G A C Y", "tagline": "Votre CPU s'occupera de tous les dragons", 
         "lore":"Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un courageux aventurier en quête de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
@@ -60,7 +60,8 @@
             "look_around": "Regarder autour",
             "back_to_menu": "Retour au Menu",
             "navigation": "Navigation",
-            "save_game": "Sauvegarder la Partie"
+            "save_game": "Sauvegarder la Partie",
+            "open_inventory": "Ouvrir l'Inventaire"
         },
         "inventory": {
             "title": "Inventaire",
@@ -86,6 +87,8 @@
             }
         },
         "messages": {
+            "save_deleted": "Sauvegarde supprimée.",
+            "delete_failed": "Impossible de supprimer la sauvegarde.",
             "already_explored": "Vous avez déjà exploré cet endroit.",
             "nothing_special": "Rien de spécial ici.",
             "game_saved": "Partie sauvegardée avec succès.",

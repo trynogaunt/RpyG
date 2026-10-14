@@ -1,7 +1,7 @@
 {
     "ui": {
         "common": { "quit": "Esci", "level": "Livello", "unavailable": "Non disponibile", "back": "Indietro", "invalid_choice": "Scelta non valida" },
-        "slots": {"empty": "--Slot Vuoto--", "title_load": "Carica Gioco", "title_save": "Salva Gioco", "unreadable": "--Slot Illeggibile--"},
+        "slots": {"empty": "--Slot Vuoto--", "title_load": "Carica Gioco", "title_save": "Salva Gioco", "unreadable": "--Slot Illeggibile--", "load": "Carica", "delete": "Elimina", "saved_at": "Salvato il {date}", "confirm_delete": "Eliminare definitivamente il salvataggio di {name}?", "yes": "Sì", "no": "No"},
         "main_menu": { "new_game": "Nuovo Gioco", "quit": "Esci", "options": "Opzioni", "load_game": "Carica Gioco", "update": "Aggiorna",
         "title": "R P y G - L E G A C Y", "tagline": "La tua CPU gestirà tutti i draghi", 
         "lore":"In un mondo dove i draghi dominano i cieli e l'antica magia fluttua nell'aria, sei un coraggioso avventuriero in cerca di gloria e fortuna. \nRiuscirai a superare le sfide che ti attendono e diventare una leggenda?",
@@ -60,7 +60,8 @@
             "look_around": "Guarda Intorno",
             "back_to_menu": "Torna al Menu",
             "navigation": "Navigazione",
-            "save_game": "Salva Gioco"
+            "save_game": "Salva Gioco",
+            "open_inventory": "Apri Inventario"
         },
         "inventory": {
             "title": "Inventario",
@@ -86,6 +87,8 @@
             }
         },
         "messages": {
+            "save_deleted": "Salvataggio eliminato.",
+            "delete_failed": "Impossibile eliminare il salvataggio.",
             "already_explored": "Hai già esplorato questo luogo.",
             "nothing_special": "Niente di speciale qui.",
             "game_saved": "Gioco salvato con successo.",

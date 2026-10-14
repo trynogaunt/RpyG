@@ -12,5 +12,7 @@ class SlotView(BaseView):
 
 @dataclass(frozen=True)
 class SlotsView(BaseView):
-    slots: list[SlotView, ...]
+    slots: tuple[SlotView, ...]
     mode: str
+    selected: SlotView | None = None
+    confirm_delete: bool = False

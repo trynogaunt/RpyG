@@ -5,7 +5,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import ChooseStarter, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import ChooseStarter, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS, STARTER_WEAPONS
@@ -48,6 +48,8 @@ class Game:
         self.update = update
         self.catalog: ItemCatalog = catalog or ItemCatalog()
         self.slot_mode: str = "load"
+        self.selected_slot: int | None = None
+        self.confirm_delete: bool = False
         self._previous_screen: Screens | None = None
 
     def start(self) -> GameResponse:
@@ -100,7 +102,9 @@ class Game:
         )
 
     def _slots_to_view(self, mode: str) -> SlotsView:
-        return SlotsView(slots=self.store.list_slots_info() if self.store else [], mode=mode)
+        slots = self.store.list_slots_info() if self.store else ()
+        selected = next((s for s in slots if s.slot == self.selected_slot), None)
+        return SlotsView(slots=slots, mode=mode, selected=selected, confirm_delete=self.confirm_delete)
 
     def _inventory_to_view(self) -> InventoryView:
         return InventoryView(
@@ -244,9 +248,7 @@ class Game:
                 self.screen = Screens.CREATION
                 self.creation = CreationState(starter_choices=self._starter_choices())
             case OpenSlots(mode=mode):
-                self._previous_screen = self.screen
-                self.screen = Screens.SLOTS
-                self.slot_mode = mode
+                self._open_slots(mode)
             case Options():
                 self._previous_screen = self.screen
                 self.screen = Screens.OPTIONS
@@ -317,9 +319,7 @@ class Game:
                         fallback_key="ui.messages.nothing_special",
                     ))
             case OpenSlots(mode=mode):
-                self._previous_screen = self.screen
-                self.screen = Screens.SLOTS
-                self.slot_mode = mode
+                self._open_slots(mode)
             case OpenInventory():
                 self._previous_screen = self.screen
                 self.screen = Screens.INVENTORY
@@ -333,15 +333,47 @@ class Game:
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
 
-    def _handle_slots(self, action: str) -> None:
+    def _open_slots(self, mode: str) -> None:
+        self._previous_screen = self.screen
+        self.screen = Screens.SLOTS
+        self.slot_mode = mode
+        self.selected_slot = None
+        self.confirm_delete = False
+
+    def delete_save(self, slot: int) -> None:
+        try:
+            self.store.delete(slot)
+        except OSError:
+            log.exception("Échec de la suppression (slot %s)", slot)
+            self._messages.append(Message(key="ui.messages.delete_failed"))
+            return
+        self._messages.append(Message(key="ui.messages.save_deleted"))
+
+    def _handle_slots(self, action: Action) -> None:
             match action:
+                case SelectSlot(slot=slot):
+                    self.selected_slot = slot
+                    self.confirm_delete = False
                 case LoadGame(slot=slot):
                     self.load_game(slot)
                 case SaveGame(slot=slot):
                     self.save_game(slot)
                     self.screen = self._previous_screen
+                case DeleteSave(slot=slot):
+                    self.selected_slot = slot
+                    self.confirm_delete = True
+                case ConfirmDelete():
+                    if self.confirm_delete and self.selected_slot is not None:
+                        self.delete_save(self.selected_slot)
+                    self.selected_slot = None
+                    self.confirm_delete = False
                 case Back():
-                    self.screen = self._previous_screen
+                    if self.confirm_delete:
+                        self.confirm_delete = False
+                    elif self.selected_slot is not None:
+                        self.selected_slot = None
+                    else:
+                        self.screen = self._previous_screen
                 case _:
                     raise ValueError(f"Action inconnue : {action}")
     

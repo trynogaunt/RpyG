@@ -65,11 +65,14 @@ class TextualApp(App):
             self.exit()
             return
         if response.screen is self.current_screen_id:
-            self.screen.update_view(response.view)       
+            self.screen.update_view(response.view)
+            self.screen.show_messages(response.messages)
         else:
             self.current_screen_id = response.screen
-            self.switch_screen(self.build_screen(response.screen, response.view))
-        self.screen.show_messages(response.messages)
+            screen = self.build_screen(response.screen, response.view)
+            self.switch_screen(screen)
+            # Le nouvel écran n'est pas encore composé : on attend son premier rafraîchissement
+            screen.call_after_refresh(screen.show_messages, response.messages)
     
         if self.presence:
             self.presence.update(presence_for(response, self.t))
