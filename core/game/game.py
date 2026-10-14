@@ -476,6 +476,7 @@ class Game:
                 EFFECTS[u.type](u.value, self.player)
 
         except KeyError:
+            self._messages.append(Message(key="ui.inventory.messages.no_effect"))
             log.warning("Effet inconnu pour l'objet %s", item_id)
         except (IndexError, UnknownItem):
             self._messages.append(Message(key="ui.inventory.messages.cannot_use"))
