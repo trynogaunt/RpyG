@@ -50,6 +50,7 @@ class Boot:
         self.presence = None
         self.update: UpdateStatus | None = None
         self.game: Game | None = None
+        self.mode: str | None = None
 
     def steps(self) -> list[BootStep]:
         steps = [

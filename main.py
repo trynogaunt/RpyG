@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument("--ui", choices=FRONTENDS.keys())
     parser.add_argument("--loading-delay", type=float, default=0.0, metavar="SECONDES",
                         help="pause après chaque étape de l'écran de chargement (pour les captures d'écran)")
+    parser.add_argument("--dev", type=str, help="Opening in dev mode")
     return parser.parse_args()
 
 def resolve_frontend(cli_choice, settings):

@@ -136,3 +136,21 @@ class EquipItem(Action):
 class UnequipItem(Action):
     """Action representing the intention to put an equipped item back in the bag."""
     slot: Slot
+
+@dataclass(frozen=True)
+class OpenCatalog(Action):
+    """Action representing the intention to open the item catalog."""
+
+@dataclass(frozen=True)
+class CloseCatalog(Action):
+    """Action representing the intention to close the item catalog."""
+
+@dataclass(frozen=True)
+class InspectCatalogItem(Action):
+    """Action representing the intention to look at an item in the catalog."""
+    index: int
+
+@dataclass(frozen=True)
+class GiveCatalogItem(Action):
+    """Action representing the intention to give an item from the catalog to the player."""
+    index: int
