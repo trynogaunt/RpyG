@@ -71,6 +71,7 @@
             "empty": "--Vacío--",
             "equip": "Equipar {item}",
             "unequip": "Quitar {item}",
+            "use": "Usar {item}",
             "equip_on": "Equipar en {slot}",
             "replaces": "reemplaza {item}",
             "empty_bag": "Tu bolsa está vacía.",
@@ -80,7 +81,8 @@
             "switch_panel": "Cambiar panel",
             "categories": {
                 "weapons": "Arma",
-                "shields": "Escudo"
+                "shields": "Escudo",
+                "consumables": "Consumible"
             },
             "details": {
                 "category": "Categoría",
@@ -100,7 +102,9 @@
             },
             "messages": {
                 "full": "Tu bolsa está llena.",
-                "cannot_equip": "Este objeto no se puede equipar."
+                "cannot_equip": "Este objeto no se puede equipar.",
+                "cannot_use": "Este objeto no se puede usar.",
+                "item_used": "Objeto usado."
             },
             "slots": {
                 "right_hand": "Mano derecha",
@@ -202,6 +206,10 @@
         "wooden_shield": {
             "name": "Escudo de Madera",
             "description": "Un simple escudo de madera. Mejor que nada."
+        },
+        "heal_potion": {
+            "name": "Poción de Curación",
+            "description": "Una pequeña poción que restaura algunos puntos de vida."
         }
     }
 }

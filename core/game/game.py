@@ -152,6 +152,7 @@ class Game:
             attack=item.attack if item else None,
             defense=item.defense if item else None,
             slots=tuple(item.slots or ()) if item else (),
+            usable=item.usable if item else False,
             **extra,
         )
 

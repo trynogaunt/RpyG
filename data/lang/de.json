@@ -71,6 +71,7 @@
             "empty": "--Leer--",
             "equip": "{item} ausrüsten",
             "unequip": "{item} ablegen",
+            "use": "{item} benutzen",
             "equip_on": "Ausrüsten: {slot}",
             "replaces": "ersetzt {item}",
             "empty_bag": "Deine Tasche ist leer.",
@@ -80,7 +81,8 @@
             "switch_panel": "Bereich wechseln",
             "categories": {
                 "weapons": "Waffe",
-                "shields": "Schild"
+                "shields": "Schild",
+                "consumables": "Verbrauchsgut"
             },
             "details": {
                 "category": "Kategorie",
@@ -100,7 +102,9 @@
             },
             "messages": {
                 "full": "Deine Tasche ist voll.",
-                "cannot_equip": "Dieser Gegenstand kann nicht ausgerüstet werden."
+                "cannot_equip": "Dieser Gegenstand kann nicht ausgerüstet werden.",
+                "cannot_use": "Dieser Gegenstand kann nicht benutzt werden.",
+                "item_used": "Gegenstand benutzt."
             },
             "slots": {
                 "right_hand": "Rechte Hand",
@@ -202,6 +206,10 @@
         "wooden_shield": {
             "name": "Holzschild",
             "description": "Ein einfacher Holzschild. Besser als nichts."
+        },
+        "heal_potion": {
+            "name": "Heiltrank",
+            "description": "Ein kleiner Trank, der ein paar Lebenspunkte wiederherstellt."
         }
     }
 }

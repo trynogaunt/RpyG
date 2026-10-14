@@ -4,7 +4,7 @@ from itertools import zip_longest
 
 from core.ui.console.screens.base_screen import BaseConsoleScreen, pad
 from core.ui.console import colors
-from core.game.actions import Back, EquipItem, InspectEquipped, InspectItem, UnequipItem
+from core.game.actions import Back, EquipItem, InspectEquipped, InspectItem, UnequipItem, UseItem
 from core.items.base import Slot
 
 # Lettre stable pour chaque slot d'équipement : a = main droite, b = main gauche...
@@ -141,8 +141,6 @@ class InventoryScreen(BaseConsoleScreen):
     def _item_name(self, item_id: str) -> str:
         return self.t(f"items.{item_id}.name")
 
-    # ----- saisie -----
-
     def ask(self):
         if self.view.selected is not None:
             return self._ask_detail(self.view.selected)
@@ -165,6 +163,9 @@ class InventoryScreen(BaseConsoleScreen):
 
     def _ask_detail(self, d):
         options = []
+
+        if d.can_use:
+            options.append((self.t("ui.inventory.use", item=self._item_name(d.item_id)), UseItem(d.index)))
         if d.can_equip:
             if len(d.slots) == 1:
                 label = self.t("ui.inventory.equip", item=self._item_name(d.item_id))

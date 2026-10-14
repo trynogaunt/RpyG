@@ -1,7 +1,7 @@
 import pytest
 
 from core.items.item_loader import load_items
-from core.items.base import Item, Slot, Attack, Defense
+from core.items.base import Item, Slot, Attack, Defense, Effect
 
 def test_load_items():
     items = load_items()
@@ -21,3 +21,19 @@ def test_loader_sets_category_from_folder():
     items = load_items()
     assert items["wooden_sword"].category == "weapons"
     assert items["wooden_shield"].category == "shields"
+
+def test_heal_potion_has_on_use_effect():
+    potion = load_items()["heal_potion"]
+    assert potion.category == "consumables"
+    assert potion.usable
+    assert potion.on_use == (Effect(type="heal", value=5),)
+    assert not potion.equippable
+
+
+def test_item_without_effects_is_not_usable():
+    assert not load_items()["wooden_sword"].usable
+
+
+def test_effect_rejects_non_positive_value():
+    with pytest.raises(ValueError):
+        Effect(type="heal", value=0)

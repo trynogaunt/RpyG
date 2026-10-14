@@ -4,10 +4,10 @@ import pytest
 
 from core.enums import Screens
 from core.errors import InvalidSave
-from core.game.actions import Back, CloseInventory, ConfirmCreation, EquipItem, InspectEquipped, InspectItem, NewGame, OpenInventory, SetName, UnequipItem
+from core.game.actions import Back, CloseInventory, ConfirmCreation, EquipItem, InspectEquipped, InspectItem, NewGame, OpenInventory, SetName, UnequipItem, UseItem
 from core.game.game import Game
 from core.game.snapshot import BagEntry, EquippedEntry
-from core.items.base import Attack, Item, ItemInstance, Slot
+from core.items.base import Attack, Effect, Item, ItemInstance, Slot
 from core.items.catalog import ItemCatalog
 from core.save import codec
 
@@ -15,7 +15,7 @@ from core.save import codec
 @pytest.fixture
 def catalog() -> ItemCatalog:
     return ItemCatalog({
-        "potion": Item(id="potion", max_stack=10),
+        "potion": Item(id="potion", max_stack=10, on_use=(Effect(type="heal", value=5),)),
         "sword": Item(id="sword", category="weapons", attack=Attack(damage_multiplier=1.5),
                       slots=((Slot.RIGHT_HAND,), (Slot.LEFT_HAND,))),
     })
@@ -229,3 +229,59 @@ def test_restore_invalid_bag_raises(game, bag):
 def test_restore_invalid_equipment_raises(game, equipped):
     with pytest.raises(InvalidSave):
         game.restore(_with_player(game.snapshot(), equipped=equipped))
+
+
+# ---------- utilisation d'objets ----------
+
+def test_use_heals_and_consumes_one(game):
+    game.player.health = 1
+    response = game.handle_action(UseItem(index=1))
+    assert game.player.health == 6
+    assert response.view.cases[1].quantity == 2
+    assert [m.key for m in response.messages] == ["ui.inventory.messages.item_used"]
+
+
+def test_use_does_not_exceed_max_health(game):
+    game.player.health = game.player.max_health - 1
+    game.handle_action(UseItem(index=1))
+    assert game.player.health == game.player.max_health
+
+
+def test_use_last_one_empties_the_case(game):
+    game.player.inventory.take(1, 2)
+    view = game.handle_action(UseItem(index=1)).view
+    assert view.cases[1].item_id is None
+
+
+def test_use_non_usable_item_keeps_it(game):
+    game.player.health = 1
+    view = game.handle_action(UseItem(index=0)).view
+    assert view.cases[0].item_id == "sword"
+    assert game.player.health == 1
+
+
+def test_use_out_of_range_gives_message(game):
+    response = game.handle_action(UseItem(index=999))
+    assert [m.key for m in response.messages] == ["ui.inventory.messages.cannot_use"]
+
+
+def test_use_empty_case_gives_message(game):
+    response = game.handle_action(UseItem(index=5))
+    assert [m.key for m in response.messages] == ["ui.inventory.messages.cannot_use"]
+
+
+def test_use_unknown_effect_keeps_item(make_game):
+    catalog = ItemCatalog({"weird": Item(id="weird", on_use=(Effect(type="nope", value=1),))})
+    g = Game(world=make_game().world, catalog=catalog)
+    g.start()
+    for action in (NewGame(), SetName("Bob"), ConfirmCreation()):
+        g.handle_action(action)
+    g.player.inventory.add(catalog.get("weird"))
+    g.handle_action(OpenInventory())
+    view = g.handle_action(UseItem(index=0)).view
+    assert view.cases[0].item_id == "weird"
+
+
+def test_detail_can_use_only_usable_bag_items(game):
+    assert game.handle_action(InspectItem(1)).view.selected.can_use
+    assert not game.handle_action(InspectItem(0)).view.selected.can_use

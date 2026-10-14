@@ -71,6 +71,7 @@
             "empty": "--Empty--",
             "equip": "Equip {item}",
             "unequip": "Unequip {item}",
+            "use": "Use {item}",
             "equip_on": "Equip on {slot}",
             "replaces": "replaces {item}",
             "empty_bag": "Your bag is empty.",
@@ -80,7 +81,8 @@
             "switch_panel": "Switch panel",
             "categories": {
                 "weapons": "Weapon",
-                "shields": "Shield"
+                "shields": "Shield",
+                "consumables": "Consumable"
             },
             "details": {
                 "category": "Category",
@@ -100,7 +102,9 @@
             },
             "messages": {
                 "full": "Your bag is full.",
-                "cannot_equip": "This item cannot be equipped."
+                "cannot_equip": "This item cannot be equipped.",
+                "cannot_use": "This item cannot be used.",
+                "item_used": "Item used."
             },
             "slots": {
                 "right_hand": "Right Hand",
@@ -202,6 +206,10 @@
         "wooden_shield": {
             "name": "Wooden Shield",
             "description": "A simple wooden shield. Better than nothing."
+        },
+        "heal_potion": {
+            "name": "Healing Potion",
+            "description": "A small potion that restores a few health points."
         }
     }
 }

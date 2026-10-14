@@ -27,6 +27,7 @@ class ItemDetailView:
     slots: tuple[tuple[Slot, ...], ...] = ()
     index: int | None = None
     equipped_on: tuple[Slot, ...] | None = None
+    usable: bool = False
 
     @property
     def can_equip(self) -> bool:
@@ -35,6 +36,10 @@ class ItemDetailView:
     @property
     def can_unequip(self) -> bool:
         return self.equipped_on is not None
+
+    @property
+    def can_use(self) -> bool:
+        return self.index is not None and self.usable
 
 
 @dataclass(frozen=True)
