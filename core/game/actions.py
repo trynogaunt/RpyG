@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from core.enums import Stat, Direction
+from core.items.base import Slot
 
 @dataclass(frozen=True)
 class Action:
@@ -89,10 +90,11 @@ class ApplyUpdate(Action):
     """Action representing the intention to apply a game update."""
 
 @dataclass(frozen=True)
-class SelectItem(Action):
-    """Action representing the intention to select an item from the player's inventory."""
-    slot: int
+class EquipItem(Action):
+    """Action representing the intention to equip the item stored in a bag case."""
+    index: int
 
 @dataclass(frozen=True)
-class CloseInventory(Action):
-    """Action representing the intention to close the player's inventory."""
+class UnequipItem(Action):
+    """Action representing the intention to put an equipped item back in the bag."""
+    slot: Slot

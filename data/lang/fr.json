@@ -60,6 +60,29 @@
             "navigation": "Navigation",
             "save_game": "Sauvegarder la Partie"
         },
+        "inventory": {
+            "title": "Inventaire",
+            "equipment": "Équipement",
+            "bag": "Sac",
+            "empty": "--Vide--",
+            "equip": "Équiper {item}",
+            "unequip": "Retirer {item}",
+            "messages": {
+                "full": "Ton sac est plein.",
+                "cannot_equip": "Cet objet ne peut pas être équipé."
+            },
+            "slots": {
+                "right_hand": "Main droite",
+                "left_hand": "Main gauche",
+                "head": "Tête",
+                "chest": "Torse",
+                "legs": "Jambes",
+                "feet": "Pieds",
+                "ring": "Anneau",
+                "amulet": "Amulette",
+                "back": "Dos"
+            }
+        },
         "messages": {
             "already_explored": "Vous avez déjà exploré cet endroit.",
             "nothing_special": "Rien de spécial ici.",
@@ -122,6 +145,10 @@
         "wooden_sword": {
             "name": "Épée en Bois",
             "description": "Une épée en bois basique, adaptée aux débutants."
+        },
+        "wooden_shield": {
+            "name": "Bouclier en Bois",
+            "description": "Un simple bouclier en bois. Mieux que rien."
         }
     }
 }

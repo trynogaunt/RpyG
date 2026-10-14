@@ -1,19 +1,20 @@
 from dataclasses import dataclass
 from .base_view import BaseView
-from core.game.response import Message
-from core.enums import Direction
-from core.views.player_summary import PlayerSummary
+from core.items.base import Slot
 
 @dataclass(frozen=True)
 class InventorySlotView:
     item_id: str | None
     quantity: int
+    wear: float | None = None
+    equippable: bool = False
 
 @dataclass(frozen=True)
 class EquipmentSlotView:
-    slot: str
+    slot: Slot
     item_id: str | None = None
-    
+    wear: float | None = None
+
 
 @dataclass(frozen=True)
 class InventoryView(BaseView):

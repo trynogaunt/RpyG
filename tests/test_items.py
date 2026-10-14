@@ -16,3 +16,8 @@ def test_wooden_sword_types():
     assert isinstance(sword.attack, Attack)
     assert sword.attack.hits == 1
     assert sword.slots == ((Slot.RIGHT_HAND,), (Slot.LEFT_HAND,))
+
+def test_loader_sets_category_from_folder():
+    items = load_items()
+    assert items["wooden_sword"].category == "weapons"
+    assert items["wooden_shield"].category == "shields"

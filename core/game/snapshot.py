@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from core.enums import Stat
 from core.world.models import RoomRef, WorldState
-from core.game.response import Message
+from core.items.base import ItemInstance, Slot
 
 @dataclass(frozen=True)
 class PlayerSnapshot:
@@ -9,6 +9,19 @@ class PlayerSnapshot:
     health: int
     level: int
     allocated_points: tuple[tuple[Stat, int], ...]
+    bag: tuple["BagEntry", ...] = ()
+    equipped: tuple["EquippedEntry", ...] = ()
+
+@dataclass(frozen=True)
+class BagEntry:
+    index: int
+    instance: ItemInstance
+    quantity: int
+
+@dataclass(frozen=True)
+class EquippedEntry:
+    slots: tuple[Slot, ...]
+    instance: ItemInstance
 
 @dataclass(frozen=True)
 class GameSnapshot:

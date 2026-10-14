@@ -3,7 +3,7 @@ import shutil
 from itertools import zip_longest
 
 from core.ui.console.screens.base_screen import BaseConsoleScreen
-from core.game.actions import SelectItem, CloseInventory
+from core.game.actions import EquipItem, UnequipItem, Back
 
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
 
@@ -46,19 +46,25 @@ class InventoryScreen(BaseConsoleScreen):
 
     def ask(self):
         options = []
-        for i, slot in enumerate(self.view.cases):
-            if slot.item_id is not None:
-                label = f"{i + 1}. {self._item_label(slot)}"
-                options.append((label, SelectItem(slot=i)))
-        options.append((self.t("ui.common.back"), CloseInventory()))
+        for i, case in enumerate(self.view.cases):
+            if case.equippable:
+                label = self.t("ui.inventory.equip", item=self._item_label(case))
+                options.append((label, EquipItem(index=i)))
+        for entry in self.view.equipment:
+            if entry.item_id is not None:
+                label = self.t("ui.inventory.unequip", item=self._item_name(entry.item_id))
+                options.append((label, UnequipItem(slot=entry.slot)))
+        options.append((self.t("ui.common.back"), Back()))
         return self.choose(options)
 
     def _item_name(self, item_id: str) -> str:
-        return self.t(f"items.{item_id}")
+        return self.t(f"items.{item_id}.name")
 
-    def _item_label(self, slot) -> str:
-        name = self._item_name(slot.item_id)
-        return f"{name} x{slot.quantity}" if slot.quantity > 1 else name
+    def _item_label(self, case) -> str:
+        name = self._item_name(case.item_id)
+        if case.wear is not None:
+            name = f"{name} ({round(case.wear * 100)}%)"
+        return f"{name} x{case.quantity}" if case.quantity > 1 else name
 
     def _bag_lines(self) -> list[str]:
         lines = []
@@ -73,7 +79,7 @@ class InventoryScreen(BaseConsoleScreen):
     def _equipment_lines(self) -> list[str]:
         lines = []
         for entry in self.view.equipment:
-            label = self.t(f"ui.slots.{entry.slot.lower()}")
+            label = self.t(f"ui.inventory.slots.{entry.slot.value}")
             value = (
                 self.t("ui.inventory.empty")
                 if entry.item_id is None

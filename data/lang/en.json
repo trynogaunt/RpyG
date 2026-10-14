@@ -60,6 +60,29 @@
             "navigation": "Navigation",
             "save_game": "Save Game"
         },
+        "inventory": {
+            "title": "Inventory",
+            "equipment": "Equipment",
+            "bag": "Bag",
+            "empty": "--Empty--",
+            "equip": "Equip {item}",
+            "unequip": "Unequip {item}",
+            "messages": {
+                "full": "Your bag is full.",
+                "cannot_equip": "This item cannot be equipped."
+            },
+            "slots": {
+                "right_hand": "Right Hand",
+                "left_hand": "Left Hand",
+                "head": "Head",
+                "chest": "Chest",
+                "legs": "Legs",
+                "feet": "Feet",
+                "ring": "Ring",
+                "amulet": "Amulet",
+                "back": "Back"
+            }
+        },
         "messages": {
             "already_explored": "You have already searched this place.",
             "nothing_special": "Nothing special here.",
@@ -122,6 +145,10 @@
         "wooden_sword": {
             "name": "Wooden Sword",
             "description": "A basic wooden sword, suitable for beginners."
+        },
+        "wooden_shield": {
+            "name": "Wooden Shield",
+            "description": "A simple wooden shield. Better than nothing."
         }
     }
 }

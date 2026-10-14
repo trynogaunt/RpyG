@@ -60,6 +60,29 @@
             "navigation": "Navigation",
             "save_game": "Spiel speichern"
         },
+        "inventory": {
+            "title": "Inventar",
+            "equipment": "Ausrüstung",
+            "bag": "Tasche",
+            "empty": "--Leer--",
+            "equip": "{item} ausrüsten",
+            "unequip": "{item} ablegen",
+            "messages": {
+                "full": "Deine Tasche ist voll.",
+                "cannot_equip": "Dieser Gegenstand kann nicht ausgerüstet werden."
+            },
+            "slots": {
+                "right_hand": "Rechte Hand",
+                "left_hand": "Linke Hand",
+                "head": "Kopf",
+                "chest": "Brust",
+                "legs": "Beine",
+                "feet": "Füße",
+                "ring": "Ring",
+                "amulet": "Amulett",
+                "back": "Rücken"
+            }
+        },
         "messages": {
             "already_explored": "Du hast diesen Ort bereits durchsucht.",
             "nothing_special": "Hier gibt es nichts Besonderes.",
@@ -122,6 +145,10 @@
         "wooden_sword": {
             "name": "Holzschwert",
             "description": "Ein einfaches Holzschwert, geeignet für Anfänger."
+        },
+        "wooden_shield": {
+            "name": "Holzschild",
+            "description": "Ein einfacher Holzschild. Besser als nichts."
         }
     }
 }

@@ -131,3 +131,147 @@ def test_remove_invalid_quantity_raises(bag, potion, quantity):
     with pytest.raises(ValueError):
         bag.remove(potion, quantity)
     assert contents(bag) == [("potion", 5), (None, 0)]
+
+# ---------- instances ----------
+
+from core.items.base import ItemInstance, Slot
+from core.game.inventory import InventoryError, InventoryFull, NotEquippable
+
+
+@pytest.fixture
+def blade() -> Item:
+    return Item(id="blade", slots=((Slot.RIGHT_HAND,), (Slot.LEFT_HAND,)))
+
+
+@pytest.fixture
+def greatsword() -> Item:
+    return Item(id="greatsword", slots=((Slot.RIGHT_HAND, Slot.LEFT_HAND),))
+
+
+def test_add_keeps_the_given_instance(bag, blade):
+    worn = ItemInstance("blade", wear=0.5)
+    bag.add(blade, instance=worn)
+    assert bag.cases[0].instance is worn
+
+
+def test_add_rejects_mismatched_instance(bag, blade):
+    with pytest.raises(ValueError):
+        bag.add(blade, instance=ItemInstance("other"))
+
+
+def test_add_rejects_stacking_items_with_state(bag, potion):
+    with pytest.raises(ValueError):
+        bag.add(potion, instance=ItemInstance("potion", wear=0.5))
+
+
+def test_remove_ignores_instance_state(bag, blade):
+    bag.add(blade, instance=ItemInstance("blade", wear=0.3))
+    assert bag.remove(blade) == 0
+    assert contents(bag) == [(None, 0), (None, 0)]
+
+
+def test_take_returns_instance_and_decrements(bag, potion):
+    bag.add(potion, 3)
+    assert bag.take(0, 2) == ItemInstance("potion")
+    assert contents(bag) == [("potion", 1), (None, 0)]
+
+
+def test_take_from_empty_case_raises(bag):
+    with pytest.raises(InventoryError):
+        bag.take(0)
+
+
+# ---------- équipement ----------
+
+def equipped(inv: Inventory) -> dict[Slot, str]:
+    return {e.slot: e.item_id for e in inv.equipment if not e.is_empty}
+
+
+def test_equip_moves_instance_out_of_the_bag(bag, blade):
+    worn = ItemInstance("blade", wear=0.5)
+    bag.add(blade, instance=worn)
+    bag.equip(0, blade)
+    assert contents(bag) == [(None, 0), (None, 0)]
+    assert equipped(bag) == {Slot.RIGHT_HAND: "blade"}
+    assert bag.occupant(Slot.RIGHT_HAND).instance is worn
+
+
+def test_equip_picks_the_first_free_combo(bag3, blade):
+    bag3.add(blade, 2)
+    bag3.equip(0, blade)
+    bag3.equip(1, blade)
+    assert equipped(bag3) == {Slot.RIGHT_HAND: "blade", Slot.LEFT_HAND: "blade"}
+
+
+def test_equip_on_explicit_slots(bag, blade):
+    bag.add(blade)
+    bag.equip(0, blade, slots=(Slot.LEFT_HAND,))
+    assert equipped(bag) == {Slot.LEFT_HAND: "blade"}
+
+
+def test_equip_on_forbidden_slots_raises(bag, blade):
+    bag.add(blade)
+    with pytest.raises(NotEquippable):
+        bag.equip(0, blade, slots=(Slot.HEAD,))
+
+
+def test_equip_non_equippable_raises(bag, potion):
+    bag.add(potion)
+    with pytest.raises(NotEquippable):
+        bag.equip(0, potion)
+
+
+def test_equip_swaps_with_current_item(bag, blade):
+    old = ItemInstance("blade", wear=0.2)
+    new = ItemInstance("blade", wear=0.9)
+    bag.add(blade, instance=old)
+    bag.equip(0, blade, slots=(Slot.RIGHT_HAND,))
+    bag.add(blade, instance=new)
+    bag.equip(0, blade, slots=(Slot.RIGHT_HAND,))
+    assert bag.occupant(Slot.RIGHT_HAND).instance is new
+    assert bag.cases[0].instance is old
+
+
+def test_two_handed_occupies_both_slots_and_unequips_once(bag, greatsword):
+    bag.add(greatsword)
+    bag.equip(0, greatsword)
+    assert equipped(bag) == {Slot.RIGHT_HAND: "greatsword", Slot.LEFT_HAND: "greatsword"}
+    bag.unequip(Slot.LEFT_HAND)
+    assert equipped(bag) == {}
+    assert contents(bag) == [("greatsword", 1), (None, 0)]
+
+
+def test_two_handed_displaces_both_hands(bag3, blade, greatsword):
+    bag3.add(blade, 2)
+    bag3.equip(0, blade)
+    bag3.equip(1, blade)
+    bag3.add(greatsword)
+    bag3.equip(0, greatsword)
+    assert equipped(bag3) == {Slot.RIGHT_HAND: "greatsword", Slot.LEFT_HAND: "greatsword"}
+    assert sorted(c.item_id or "" for c in bag3.cases) == ["", "blade", "blade"]
+
+
+def test_equip_fails_when_bag_cannot_hold_displaced_items(bag, blade, greatsword, potion):
+    bag.add(blade, 2)
+    bag.equip(0, blade)
+    bag.equip(1, blade)
+    bag.add(greatsword)
+    bag.add(potion)
+    with pytest.raises(InventoryFull):
+        bag.equip(0, greatsword)
+    assert equipped(bag) == {Slot.RIGHT_HAND: "blade", Slot.LEFT_HAND: "blade"}
+    assert contents(bag) == [("greatsword", 1), ("potion", 1)]
+
+
+def test_unequip_into_full_bag_raises(bag, blade, potion):
+    bag.add(blade)
+    bag.equip(0, blade)
+    bag.add(potion, 20)
+    with pytest.raises(InventoryFull):
+        bag.unequip(Slot.RIGHT_HAND)
+    assert equipped(bag) == {Slot.RIGHT_HAND: "blade"}
+
+
+def test_unequip_empty_slot_raises(bag):
+    with pytest.raises(InventoryError):
+        bag.unequip(Slot.HEAD)

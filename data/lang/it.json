@@ -60,6 +60,29 @@
             "navigation": "Navigazione",
             "save_game": "Salva Gioco"
         },
+        "inventory": {
+            "title": "Inventario",
+            "equipment": "Equipaggiamento",
+            "bag": "Borsa",
+            "empty": "--Vuoto--",
+            "equip": "Equipaggia {item}",
+            "unequip": "Rimuovi {item}",
+            "messages": {
+                "full": "La tua borsa è piena.",
+                "cannot_equip": "Questo oggetto non può essere equipaggiato."
+            },
+            "slots": {
+                "right_hand": "Mano destra",
+                "left_hand": "Mano sinistra",
+                "head": "Testa",
+                "chest": "Torso",
+                "legs": "Gambe",
+                "feet": "Piedi",
+                "ring": "Anello",
+                "amulet": "Amuleto",
+                "back": "Schiena"
+            }
+        },
         "messages": {
             "already_explored": "Hai già esplorato questo luogo.",
             "nothing_special": "Niente di speciale qui.",
@@ -122,6 +145,10 @@
         "wooden_sword": {
             "name": "Spada di Legno",
             "description": "Una semplice spada di legno, adatta ai principianti."
+        },
+        "wooden_shield": {
+            "name": "Scudo di Legno",
+            "description": "Un semplice scudo di legno. Meglio di niente."
         }
     }
 }

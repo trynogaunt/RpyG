@@ -41,14 +41,25 @@ class Item:
     attack: Attack | None = None
     defense: Defense | None = None
     # Slots format [["slot"]], for multiple slot needed [["slot", "slot²"]] and unique but mutiple choice [["slot"], ["slot"]]
-    slots: list[list[Slot]] | None = None
+    slots: tuple[tuple[Slot, ...], ...] | None = None
 
     @property
     def equippable(self) -> bool:
         return bool(self.slots)
 
+    @property
+    def has_state(self) -> bool:
+        """Un exemplaire porte un état propre (usure...) : il n'est jamais empilé."""
+        return self.equippable and self.max_stack == 1
+
     def check_slots(self) -> bool:
         if self.slots is None:
             return True
         return all(isinstance(subslot, Slot) for sublist in self.slots for subslot in sublist)
+
+@dataclass(frozen=True)
+class ItemInstance:
+    """Un exemplaire concret d'un item. Deux instances égales peuvent s'empiler."""
+    item_id: str
+    wear: float | None = None
 

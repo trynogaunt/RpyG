@@ -2,11 +2,12 @@
 from datetime import datetime
 
 from core.errors import InvalidSave
-from core.game.snapshot import GameSnapshot, PlayerSnapshot
+from core.game.snapshot import GameSnapshot, PlayerSnapshot, BagEntry, EquippedEntry
 from core.enums import Stat
+from core.items.base import ItemInstance, Slot
 from core.world.models import RoomRef
 
-SAVE_VERSION = "1.0"
+SAVE_VERSION = "1.1"
 
 
 def parse_version(raw) -> tuple[int, int]:
@@ -29,6 +30,51 @@ def _ref_from_dict(data) -> RoomRef:
         raise InvalidSave(f"Référence de salle invalide : {data!r}") from e
 
 
+def _instance_to_dict(instance: ItemInstance) -> dict:
+    data = {"id": instance.item_id}
+    if instance.wear is not None:
+        data["wear"] = instance.wear
+    return data
+
+
+def _instance_from_dict(data) -> ItemInstance:
+    item_id, wear = data["id"], data.get("wear")
+    if not isinstance(item_id, str):
+        raise InvalidSave(f"Id d'item invalide : {item_id!r}")
+    if wear is not None and (not isinstance(wear, (int, float)) or isinstance(wear, bool)):
+        raise InvalidSave(f"Usure invalide : {wear!r}")
+    return ItemInstance(item_id=item_id, wear=None if wear is None else float(wear))
+
+
+def _int(value, what: str) -> int:
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise InvalidSave(f"{what} invalide : {value!r}")
+    return value
+
+
+def _slot(value) -> Slot:
+    try:
+        return Slot(value)
+    except ValueError as e:
+        raise InvalidSave(f"Slot inconnu : {value!r}") from e
+
+
+def _inventory_from_dict(data) -> tuple[tuple[BagEntry, ...], tuple[EquippedEntry, ...]]:
+    bag = tuple(
+        BagEntry(
+            index=_int(e["index"], "Index"),
+            instance=_instance_from_dict(e),
+            quantity=_int(e["quantity"], "Quantité"),
+        )
+        for e in data.get("bag", [])
+    )
+    equipped = tuple(
+        EquippedEntry(slots=tuple(_slot(s) for s in e["slots"]), instance=_instance_from_dict(e))
+        for e in data.get("equipped", [])
+    )
+    return bag, equipped
+
+
 def encode(snap: GameSnapshot) -> dict:
     p = snap.player
     return {
@@ -44,6 +90,16 @@ def encode(snap: GameSnapshot) -> dict:
             "level": p.level,
             "health": p.health,
             "allocated_points": {stat.name: value for stat, value in p.allocated_points},
+            "inventory": {
+                "bag": [
+                    {"index": e.index, **_instance_to_dict(e.instance), "quantity": e.quantity}
+                    for e in p.bag
+                ],
+                "equipped": [
+                    {"slots": [s.value for s in e.slots], **_instance_to_dict(e.instance)}
+                    for e in p.equipped
+                ],
+            },
         },
         "location": _ref_to_dict(snap.location),
         "explored": [
@@ -74,12 +130,17 @@ def decode(data: dict) -> GameSnapshot:
                 raise InvalidSave(f"Valeur invalide pour {stat_name}")
             allocated_points.append((Stat[stat_name], value))
 
+        # Absent des sauvegardes 1.0 : inventaire vide
+        bag, equipped = _inventory_from_dict(player.get("inventory", {}))
+
         return GameSnapshot(
             player=PlayerSnapshot(
                 name=player["name"],
                 level=player["level"],
                 health=player["health"],
                 allocated_points=tuple(sorted(allocated_points, key=lambda kv: kv[0].name)),
+                bag=bag,
+                equipped=equipped,
             ),
             location=_ref_from_dict(data["location"]),
             explored=tuple(_ref_from_dict(r) for r in data["explored"]),

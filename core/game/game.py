@@ -5,7 +5,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import SelectItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS
@@ -18,7 +18,9 @@ from core.views.option_view import OptionView
 from core.views.slot_view import SlotsView, SlotView
 from core.game.text_keys import room_key
 from core.errors import InvalidSave
-from core.game.snapshot import GameSnapshot, PlayerSnapshot
+from core.game.snapshot import GameSnapshot, PlayerSnapshot, BagEntry, EquippedEntry
+from core.game.inventory import Inventory, Equipped, InventoryError, InventoryFull, NotEquippable
+from core.items.catalog import ItemCatalog, UnknownItem
 from core.views.slot_view import SlotsView, SlotView
 from core.views.inventory_view import InventoryView, InventorySlotView, EquipmentSlotView
 
@@ -33,7 +35,7 @@ UPDATE_ERROR_KEYS = {
 }
 
 class Game:
-    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None, update=None, items=None):
+    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None, update=None, catalog: ItemCatalog | None = None):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
@@ -44,7 +46,7 @@ class Game:
         self.store = store
         self.settings = settings
         self.update = update
-        self.items = items
+        self.catalog: ItemCatalog = catalog or ItemCatalog()
         self.slot_mode: str = "load"
         self._previous_screen: Screens | None = None
 
@@ -53,24 +55,6 @@ class Game:
         self.screen = Screens.MAIN_MENU
 
         return GameResponse(screen=self.screen)
-    
-    def _get_categories(self) -> list[str]:
-        if not self.items:
-            return []
-        return list(self.items.keys())
-    
-    def _get_items_in_category(self, category: str) -> list:
-        if not self.items or category not in self.items:
-            return []
-        return self.items[category]
-    
-    def get_item(self, category: str, item_id: str):
-        if not self.items or category not in self.items:
-            return None
-        for item in self.items[category]:
-            if item.id == item_id:
-                return item
-        return None
     
     def _move_player(self, direction: Direction) -> None:
         next_room = self.world.exit_from(self.player.location, direction)
@@ -118,11 +102,16 @@ class Game:
     def _inventory_to_view(self) -> InventoryView:
         return InventoryView(
             cases=tuple(
-                InventorySlotView(item_id=c.item_id, quantity=c.quantity)
+                InventorySlotView(
+                    item_id=c.item_id,
+                    quantity=c.quantity,
+                    wear=c.instance.wear if c.instance else None,
+                    equippable=c.item_id in self.catalog and self.catalog.get(c.item_id).equippable,
+                )
                 for c in self.player.inventory.cases
             ),
             equipment=tuple(
-                EquipmentSlotView(slot=e.slot.name, item_id=e.item_id)
+                EquipmentSlotView(slot=e.slot, item_id=e.item_id, wear=e.instance.wear if e.instance else None)
                 for e in self.player.inventory.equipment
             ),
         )
@@ -165,6 +154,13 @@ class Game:
                 health=p.health,
                 level=p.level,
                 allocated_points=tuple(sorted(p.allocated_points.items(), key=lambda kv: kv[0].name)),
+                bag=tuple(
+                    BagEntry(index=i, instance=c.instance, quantity=c.quantity)
+                    for i, c in enumerate(p.inventory.cases) if not c.is_empty
+                ),
+                equipped=tuple(
+                    EquippedEntry(slots=e.slots, instance=e.instance) for e in p.inventory.equipped
+                ),
             ),
             location=p.location,
             explored=tuple(sorted(self.world_state.explored, key=lambda r: (r.zone_id, r.room_id))),
@@ -176,6 +172,31 @@ class Game:
         except ValueError as e:
             raise InvalidSave(f"Salle inconnue : {ref}") from e
         
+    def _check_item(self, item_id: str):
+        try:
+            return self.catalog.get(item_id)
+        except UnknownItem as e:
+            raise InvalidSave(f"Item inconnu : {item_id}") from e
+
+    def _restore_inventory(self, snap: PlayerSnapshot) -> Inventory:
+        inventory = Inventory()
+        for entry in snap.bag:
+            item = self._check_item(entry.instance.item_id)
+            if not 0 <= entry.index < inventory.size or not inventory.cases[entry.index].is_empty:
+                raise InvalidSave(f"Case d'inventaire invalide : {entry.index}")
+            if not 1 <= entry.quantity <= item.max_stack:
+                raise InvalidSave(f"Quantité invalide pour {item.id} : {entry.quantity}")
+            case = inventory.cases[entry.index]
+            case.instance, case.quantity = entry.instance, entry.quantity
+        for entry in snap.equipped:
+            item = self._check_item(entry.instance.item_id)
+            if not item.equippable or entry.slots not in item.slots:
+                raise InvalidSave(f"{item.id} ne peut pas être équipé sur {entry.slots}")
+            if any(inventory.occupant(s) for s in entry.slots):
+                raise InvalidSave(f"Slots déjà occupés : {entry.slots}")
+            inventory.equipped.append(Equipped(slots=entry.slots, instance=entry.instance))
+        return inventory
+
     def restore(self, snap: GameSnapshot) -> None:
         self._check_room(snap.location)
         for ref in snap.explored:
@@ -188,6 +209,7 @@ class Game:
             raise InvalidSave("Points alloués incohérents")
         player.health = min(snap.player.health, player.max_health)
         player.location = snap.location
+        player.inventory = self._restore_inventory(snap.player)
 
         self.player = player
         self.world_state.explored = set(snap.explored)
@@ -206,6 +228,8 @@ class Game:
                 self._handle_slots(action)
             case Screens.OPTIONS:
                 self._handle_options(action)
+            case Screens.INVENTORY:
+                self._handle_inventory(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
         view = self._build_to_view()
@@ -315,9 +339,31 @@ class Game:
     
     def _handle_inventory(self, action: Action) -> None:
         match action:
-            case SelectItem(slot=slot):
-                self._select_item(slot)
+            case EquipItem(index=index):
+                self._equip(index)
+            case UnequipItem(slot=slot):
+                self._unequip(slot)
             case Back():
                 self.screen = self._previous_screen
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+
+    def _equip(self, index: int) -> None:
+        inventory = self.player.inventory
+        try:
+            item_id = inventory.cases[index].item_id
+            inventory.equip(index, self.catalog.get(item_id))
+        except InventoryFull:
+            self._messages.append(Message(key="ui.inventory.messages.full"))
+        except (NotEquippable, UnknownItem):
+            self._messages.append(Message(key="ui.inventory.messages.cannot_equip"))
+        except (InventoryError, IndexError):
+            log.warning("Équipement impossible : case %s", index)
+
+    def _unequip(self, slot) -> None:
+        try:
+            self.player.inventory.unequip(slot)
+        except InventoryFull:
+            self._messages.append(Message(key="ui.inventory.messages.full"))
+        except InventoryError:
+            log.warning("Rien à retirer sur %s", slot)
