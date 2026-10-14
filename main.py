@@ -5,6 +5,8 @@ from core.boot import Boot
 import argparse
 import importlib
 import logging
+import subprocess
+import sys
 
 log = logging.getLogger(__name__)
 logging.basicConfig(filename="rpyg.log", level=logging.INFO)
@@ -48,7 +50,22 @@ def main():
     translation = Translation(locales_dir=lang_dir, locales=settings.locale)
     
     frontend = resolve_frontend(args.ui, settings)
-    frontend.run(Boot(settings=settings, data_dir=data_dir, step_delay=args.loading_delay), translation=translation, settings=settings)
+    boot = Boot(settings=settings, data_dir=data_dir, step_delay=args.loading_delay)
+    frontend.run(boot, translation=translation, settings=settings)
+
+    if boot.game is not None and boot.game.restart_requested:
+        print(translation.t("ui.update.restarting"), flush=True)
+        restart()
+
+
+def restart() -> None:
+    """Relance le jeu avec les mêmes options, pour charger le code tout juste mis à jour.
+
+    Un nouveau processus plutôt que os.execv : sous Windows, execv rend la main au terminal
+    pendant que le jeu tourne encore, et les saisies se mélangent.
+    """
+    log.info("Redémarrage après mise à jour")
+    sys.exit(subprocess.call([sys.executable, str(Path(__file__).resolve()), *sys.argv[1:]]))
 
 
 if __name__ == "__main__":

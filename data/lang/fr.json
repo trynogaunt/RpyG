@@ -22,6 +22,7 @@
             "apply": "Appliquer la mise à jour",
             "success": "Mise à jour appliquée avec succès.",
             "restart": "Redémarrer le jeu pour appliquer la mise à jour.",
+            "restarting": "Mise à jour installée, redémarrage...",
             "deps_changed": "Les dépendances ont changé, une mise à jour est nécessaire.",
             "error": {
                 "dirty": "Impossible de mettre à jour : modifications locales non enregistrées.",

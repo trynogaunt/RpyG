@@ -22,6 +22,7 @@
             "apply": "Update anwenden",
             "success": "Update erfolgreich angewendet.",
             "restart": "Bitte starte das Spiel neu, um das Update anzuwenden.",
+            "restarting": "Update installiert, Neustart...",
             "deps_changed": "Abhängigkeiten haben sich geändert. Bitte aktualisiere entsprechend.",
             "error": {
                 "dirty": "Das Arbeitsverzeichnis enthält ungespeicherte Änderungen.",

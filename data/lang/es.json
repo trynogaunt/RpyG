@@ -22,6 +22,7 @@
             "apply": "Aplicar Actualización",
             "success": "Actualización aplicada con éxito.",
             "restart": "Por favor, reinicia el juego para aplicar la actualización.",
+            "restarting": "Actualización instalada, reiniciando...",
             "deps_changed": "Las dependencias han cambiado. Por favor, actualiza en consecuencia.",
             "error": {
                 "dirty": "El directorio de trabajo tiene cambios no confirmados.",

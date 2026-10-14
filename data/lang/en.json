@@ -22,6 +22,7 @@
             "apply": "Apply Update",
             "success": "Update applied successfully.",
             "restart": "Please restart the game to apply the update.",
+            "restarting": "Update installed, restarting...",
             "deps_changed": "Dependencies have changed. Please update accordingly.",
             "error": {
                 "dirty": "The working directory has uncommitted changes.",

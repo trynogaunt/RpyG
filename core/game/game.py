@@ -53,6 +53,7 @@ class Game:
         self.confirm_delete: bool = False
         self.inventory_selection: int | Slot | None = None
         self._previous_screen: Screens | None = None
+        self.restart_requested: bool = False     # lu par main.py après la fermeture de l'interface
 
     def start(self) -> GameResponse:
         self.screen = Screens.MAIN_MENU
@@ -286,10 +287,15 @@ class Game:
                 self.screen = Screens.EXIT
             case ApplyUpdate():
                 result = apply(self.update)
-                if result.success:
+                if result.success and not result.deps_changed:
+                    # Le code en mémoire est l'ancien : on quitte et main.py relance le jeu
+                    self.restart_requested = True
+                    self.screen = Screens.EXIT
+                elif result.success:
+                    # Nouvelles dépendances : relancer sans `pip install` risquerait de planter
                     self._messages.append(Message(key="ui.update.success"))
-                    if result.deps_changed:
-                        self._messages.append(Message(key="ui.update.deps_changed"))
+                    self._messages.append(Message(key="ui.update.deps_changed"))
+                    self._messages.append(Message(key="ui.update.restart"))
                     self.update = UpdateStatus(UpdateState.UP_TO_DATE)   # le bouton disparaît
                 else:
                     self._messages.append(Message(key=UPDATE_ERROR_KEYS[result.error]))
