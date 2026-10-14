@@ -125,6 +125,12 @@
                 "timeout": "IN BACKGROUND"
             }
         },
+        "discord": {
+            "connected": "Discord: connesso",
+            "disconnected": "Discord: disconnesso",
+            "lost": "Connessione a Discord persa. Nuovo tentativo...",
+            "restored": "Riconnesso a Discord."
+        },
         "messages": {
             "save_deleted": "Salvataggio eliminato.",
             "delete_failed": "Impossibile eliminare il salvataggio.",

@@ -125,6 +125,12 @@
                 "timeout": "BACKGROUND"
             }
         },
+        "discord": {
+            "connected": "Discord: connected",
+            "disconnected": "Discord: disconnected",
+            "lost": "Lost connection to Discord. Retrying...",
+            "restored": "Reconnected to Discord."
+        },
         "messages": {
             "save_deleted": "Save deleted.",
             "delete_failed": "Could not delete the save.",

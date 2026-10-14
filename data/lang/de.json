@@ -125,6 +125,12 @@
                 "timeout": "IM HINTERGRUND"
             }
         },
+        "discord": {
+            "connected": "Discord: verbunden",
+            "disconnected": "Discord: getrennt",
+            "lost": "Verbindung zu Discord verloren. Neuer Versuch...",
+            "restored": "Wieder mit Discord verbunden."
+        },
         "messages": {
             "save_deleted": "Spielstand gelöscht.",
             "delete_failed": "Spielstand konnte nicht gelöscht werden.",

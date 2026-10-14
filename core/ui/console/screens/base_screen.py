@@ -29,8 +29,18 @@ class BaseConsoleScreen(ABC):
     def render(self, messages=()) -> None:
         self.clear()
         self.draw()
+        self.draw_status()
         self.draw_messages(messages)
         print()
+
+    def draw_status(self) -> None:
+        """Ligne d'état en bas à droite : liaison Discord, si l'intégration est activée."""
+        presence = getattr(self.app, "presence", None)
+        if presence is None:
+            return
+        key, code = ("connected", colors.GREEN) if presence.connected else ("disconnected", colors.RED)
+        text = self.t(f"ui.discord.{key}")
+        print(" " * max(self.width - len(text) - 1, 0) + self.color(text, code))
 
   
     @abstractmethod

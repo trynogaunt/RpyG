@@ -73,6 +73,7 @@ def presence_for(response, t) -> PresenceInfo | None:
 
 class DiscordIntegration:
     MIN_INTERVAL = 15
+    HEARTBEAT = 30          
 
     def __init__(
         self,
@@ -98,6 +99,9 @@ class DiscordIntegration:
         self._pending: PresenceInfo | None = None 
         self._timer: threading.Timer | None = None
         self._lock = threading.Lock()
+        self._latest: PresenceInfo | None = None     
+        self._heartbeat: threading.Timer | None = None
+        self._closed = False
 
     @property
     def connected(self) -> bool:
@@ -115,8 +119,33 @@ class DiscordIntegration:
             log.exception("Discord unavailable")
             self._rpc = None
 
+    def start_heartbeat(self) -> None:
+        with self._lock:
+            if self._closed:
+                return
+            self._heartbeat = threading.Timer(self.HEARTBEAT, self._on_heartbeat)
+            self._heartbeat.daemon = True
+            self._heartbeat.start()
+
+    def _on_heartbeat(self) -> None:
+        try:
+            if self._rpc is None:
+                self.connect()
+                if self._rpc is not None:
+                    log.info("Discord reconnected")
+            with self._lock:
+                self._sent = None
+                self._pending = self._pending or self._latest
+            self._flush()
+        finally:
+            self.start_heartbeat()
+
     def close(self) -> None:
         with self._lock:
+            self._closed = True
+            if self._heartbeat is not None:
+                self._heartbeat.cancel()
+                self._heartbeat = None
             if self._timer is not None:
                 self._timer.cancel()
                 self._timer = None
@@ -137,6 +166,7 @@ class DiscordIntegration:
             return
         with self._lock:
             self._pending = info
+            self._latest = info
         self._flush()
 
     def _kwargs(self, info: PresenceInfo) -> dict:

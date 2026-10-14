@@ -85,12 +85,11 @@ class Boot:
 
     def _connect_discord(self) -> StepStatus:
         from core.integrations.discord import DiscordIntegration
-        presence = DiscordIntegration(app_id=DISCORD_APP_ID)
-        presence.connect()
-        if not presence.connected:
-            return StepStatus.UNAVAILABLE
-        self.presence = presence
-        return StepStatus.DONE
+        # Gardée même sans connexion : le battement retentera tant que le jeu tourne
+        self.presence = DiscordIntegration(app_id=DISCORD_APP_ID)
+        self.presence.connect()
+        self.presence.start_heartbeat()
+        return StepStatus.DONE if self.presence.connected else StepStatus.UNAVAILABLE
 
     def _check_updates(self) -> StepStatus:
         def worker():

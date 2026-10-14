@@ -85,14 +85,15 @@ def test_slow_update_check_times_out_and_reaches_the_game_later(monkeypatch):
     assert game.update == UP_TO_DATE
 
 
-def test_unreachable_discord_is_unavailable_and_game_has_no_presence(monkeypatch):
+def test_unreachable_discord_is_unavailable_but_kept_for_reconnection(monkeypatch):
     from core.integrations import discord
     monkeypatch.setattr(discord.DiscordIntegration, "connect", lambda self: None)   # _rpc reste None
+    monkeypatch.setattr(discord.DiscordIntegration, "start_heartbeat", lambda self: None)
     settings = Settings()
     settings.discord_integration = True
     boot = Boot(settings, DATA_DIR)
     assert finished(run(boot))["discord"] is StepStatus.UNAVAILABLE
-    assert boot.presence is None
+    assert boot.presence is not None and not boot.presence.connected
 
 
 def test_mandatory_step_failure_propagates(monkeypatch):
