@@ -35,7 +35,7 @@ def load_item(item_file: Path, category: str | None = None) -> Item:
                 data["defense"] = Defense(**data["defense"])
             for trigger in ["on_use", "on_hit", "equipped"]:
                 if trigger in data:
-                    data[trigger] = tuple(Effect(type=effect["type"], value=effect["value"]) for effect in data[trigger])
+                    data[trigger] = tuple(Effect(**effect) for effect in data[trigger])
             item = Item(**data)
             return item
     except Exception as e:

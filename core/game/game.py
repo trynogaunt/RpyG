@@ -5,7 +5,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import ChooseStarter, CloseInventory, InspectItem, InspectEquipped, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import UseItem, ChooseStarter, CloseInventory, InspectItem, InspectEquipped, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS, STARTER_WEAPONS
@@ -21,6 +21,7 @@ from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot, BagEntry, EquippedEntry
 from core.game.inventory import Inventory, Equipped, InventoryError, InventoryFull, NotEquippable
 from core.items.catalog import ItemCatalog, UnknownItem
+from core.game.effect import EFFECTS
 from core.items.base import Slot
 from core.views.slot_view import SlotsView, SlotView
 from core.views.inventory_view import InventoryView, InventorySlotView, EquipmentSlotView, ItemDetailView
@@ -432,6 +433,9 @@ class Game:
                     self.inventory_selection = None
                 else:
                     self.screen = self._previous_screen
+            case UseItem(index=index):
+                self._use_item(index)
+                self.inventory_selection = None
             case CloseInventory():
                 self.inventory_selection = None
                 self.screen = self._previous_screen
@@ -457,3 +461,27 @@ class Game:
             self._messages.append(Message(key="ui.inventory.messages.full"))
         except InventoryError:
             log.warning("Rien à retirer sur %s", slot)
+    
+    def _use_item(self, index) -> None:
+        inventory = self.player.inventory
+
+        try:
+            item_id = inventory.cases[index].item_id
+            used_item = self.catalog.get(item_id)
+            if not used_item.usable: 
+                return
+           
+            for u in used_item.on_use:
+                EFFECTS[u.type](u.value, self.player)
+
+        except KeyError:
+            log.warning("Effet inconnu pour l'objet %s", item_id)
+        except (IndexError, UnknownItem):
+            self._messages.append(Message(key="ui.inventory.messages.cannot_use"))
+            log.warning("Impossible d'utiliser l'objet de la case %s", index)
+        except InventoryError:
+            self._messages.append(Message(key="ui.inventory.messages.cannot_use"))
+            log.warning("Impossible d'utiliser l'objet de la case %s", index)
+        else:
+            inventory.take(index, 1)
+            self._messages.append(Message(key="ui.inventory.messages.item_used"))

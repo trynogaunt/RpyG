@@ -98,7 +98,7 @@ class OpenInventory(Action):
 @dataclass(frozen=True)
 class UseItem(Action):
     """Action representing the intention to use an item from the player's inventory."""
-    item_id: int
+    index: int
 
 @dataclass(frozen=True)
 class CheckUpdate(Action):
