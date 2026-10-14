@@ -209,7 +209,7 @@
         },
         "heal_potion": {
             "name": "Healing Potion",
-            "description": "A small potion that restores a few health points."
+            "description": "A healing potion that restores a good amount of health."
         },
         "wooden_club": {
             "name": "Wooden Club",

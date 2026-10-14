@@ -209,7 +209,7 @@
         },
         "heal_potion": {
             "name": "Heiltrank",
-            "description": "Ein kleiner Trank, der ein paar Lebenspunkte wiederherstellt."
+            "description": "Ein Heiltrank, der eine ordentliche Menge Lebenspunkte wiederherstellt."
         },
         "wooden_club": {
             "name": "Holzknüppel",

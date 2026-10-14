@@ -209,7 +209,7 @@
         },
         "heal_potion": {
             "name": "Poción de Curación",
-            "description": "Una pequeña poción que restaura algunos puntos de vida."
+            "description": "Una poción curativa que restaura una buena cantidad de puntos de vida."
         },
         "wooden_club": {
             "name": "Garrote de Madera",

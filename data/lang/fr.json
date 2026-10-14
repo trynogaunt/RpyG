@@ -209,7 +209,7 @@
         },
         "heal_potion": {
             "name": "Potion de Soin",
-            "description": "Une petite potion qui rend quelques points de vie."
+            "description": "Une potion de soin qui rend une bonne quantité de points de vie."
         },
         "wooden_club": {
             "name": "Gourdin en Bois",

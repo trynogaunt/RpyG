@@ -209,7 +209,7 @@
         },
         "heal_potion": {
             "name": "Pozione Curativa",
-            "description": "Una piccola pozione che ripristina alcuni punti vita."
+            "description": "Una pozione curativa che ripristina una buona quantità di punti vita."
         },
         "wooden_club": {
             "name": "Randello di Legno",
