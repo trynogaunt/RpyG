@@ -3,6 +3,7 @@ from pathlib import Path
 
 from core.items.base import Item, Slot, Attack, Defense, Effect
 from core.items.catalog import ItemCatalog
+from core.game.effect import EFFECTS
 
 ITEMS_FOLDER_PATH = Path(__file__).resolve().parents[2] / "data" / "items"
 
@@ -35,7 +36,11 @@ def load_item(item_file: Path, category: str | None = None) -> Item:
                 data["defense"] = Defense(**data["defense"])
             for trigger in ["on_use", "on_hit", "equipped"]:
                 if trigger in data:
+                    for effect in data[trigger]:
+                        if effect["type"] not in EFFECTS:
+                            raise ItemLoadError(f"Unknown effect type in {item_file}: {effect}")
                     data[trigger] = tuple(Effect(**effect) for effect in data[trigger])
+            
             item = Item(**data)
             return item
     except Exception as e:

@@ -210,6 +210,22 @@
         "heal_potion": {
             "name": "Heiltrank",
             "description": "Ein kleiner Trank, der ein paar Lebenspunkte wiederherstellt."
+        },
+        "wooden_club": {
+            "name": "Holzknüppel",
+            "description": "Ein schwerer Holzknüppel. Langsam, aber er schlägt hart zu."
+        },
+        "wooden_dagger": {
+            "name": "Holzdolch",
+            "description": "Ein leichter Holzdolch. Schwache Hiebe, aber schnell und präzise."
+        },
+        "wooden_stick": {
+            "name": "Holzstab",
+            "description": "Ein langer Holzstab, der mit beiden Händen geführt wird."
+        },
+        "medicinal_herb": {
+            "name": "Heilkraut",
+            "description": "Ein gewöhnliches Kraut, das kleine Wunden lindert."
         }
     }
 }

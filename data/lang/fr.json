@@ -210,6 +210,22 @@
         "heal_potion": {
             "name": "Potion de Soin",
             "description": "Une petite potion qui rend quelques points de vie."
+        },
+        "wooden_club": {
+            "name": "Gourdin en Bois",
+            "description": "Un lourd gourdin en bois. Lent, mais il frappe fort."
+        },
+        "wooden_dagger": {
+            "name": "Dague en Bois",
+            "description": "Une dague en bois légère. Coups faibles, mais rapides et précis."
+        },
+        "wooden_stick": {
+            "name": "Bâton en Bois",
+            "description": "Un long bâton en bois, qui se manie à deux mains."
+        },
+        "medicinal_herb": {
+            "name": "Herbe Médicinale",
+            "description": "Une herbe commune qui apaise les petites blessures."
         }
     }
 }

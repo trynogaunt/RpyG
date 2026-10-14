@@ -1,0 +1,10 @@
+{
+    "id": "medicinal_herb",
+    "max_stack": 15,
+    "on_use": [
+        {
+            "type": "heal", 
+            "value": 5
+        }
+    ]
+}

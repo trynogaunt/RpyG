@@ -1,11 +1,10 @@
 {
     "id": "heal_potion",
-    "category": "consumables",
     "max_stack": 10,
     "on_use": [
         {
             "type": "heal", 
-            "value": 5
+            "value": 15
         }
     ]
 }

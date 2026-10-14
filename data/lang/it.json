@@ -210,6 +210,22 @@
         "heal_potion": {
             "name": "Pozione Curativa",
             "description": "Una piccola pozione che ripristina alcuni punti vita."
+        },
+        "wooden_club": {
+            "name": "Randello di Legno",
+            "description": "Un pesante randello di legno. Lento, ma colpisce duro."
+        },
+        "wooden_dagger": {
+            "name": "Pugnale di Legno",
+            "description": "Un pugnale di legno leggero. Colpi deboli, ma rapidi e precisi."
+        },
+        "wooden_stick": {
+            "name": "Bastone di Legno",
+            "description": "Un lungo bastone di legno, da impugnare con entrambe le mani."
+        },
+        "medicinal_herb": {
+            "name": "Erba Medicinale",
+            "description": "Un'erba comune che lenisce le piccole ferite."
         }
     }
 }

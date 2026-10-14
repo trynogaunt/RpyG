@@ -1,6 +1,5 @@
 {
     "id": "wooden_shield",
-    "category": "shields",
     "max_stack": 1,
     "slots": [["right_hand"], ["left_hand"]], 
     "defense": {

@@ -210,6 +210,22 @@
         "heal_potion": {
             "name": "Healing Potion",
             "description": "A small potion that restores a few health points."
+        },
+        "wooden_club": {
+            "name": "Wooden Club",
+            "description": "A heavy wooden club. Slow, but it hits hard."
+        },
+        "wooden_dagger": {
+            "name": "Wooden Dagger",
+            "description": "A light wooden dagger. Weak blows, but quick and precise."
+        },
+        "wooden_stick": {
+            "name": "Wooden Staff",
+            "description": "A long wooden staff, held with both hands."
+        },
+        "medicinal_herb": {
+            "name": "Medicinal Herb",
+            "description": "A common herb that soothes small wounds."
         }
     }
 }

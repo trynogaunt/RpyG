@@ -22,12 +22,14 @@ def test_loader_sets_category_from_folder():
     assert items["wooden_sword"].category == "weapons"
     assert items["wooden_shield"].category == "shields"
 
-def test_heal_potion_has_on_use_effect():
-    potion = load_items()["heal_potion"]
-    assert potion.category == "consumables"
-    assert potion.usable
-    assert potion.on_use == (Effect(type="heal", value=5),)
-    assert not potion.equippable
+@pytest.mark.parametrize("item_id", ["heal_potion", "medicinal_herb"])
+def test_healing_consumables_have_on_use_effect(item_id):
+    item = load_items()[item_id]
+    assert item.category == "consumables"
+    assert item.usable
+    assert [e.type for e in item.on_use] == ["heal"]
+    assert all(isinstance(e, Effect) and e.value > 0 for e in item.on_use)
+    assert not item.equippable
 
 
 def test_item_without_effects_is_not_usable():

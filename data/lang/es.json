@@ -210,6 +210,22 @@
         "heal_potion": {
             "name": "Poción de Curación",
             "description": "Una pequeña poción que restaura algunos puntos de vida."
+        },
+        "wooden_club": {
+            "name": "Garrote de Madera",
+            "description": "Un pesado garrote de madera. Lento, pero golpea fuerte."
+        },
+        "wooden_dagger": {
+            "name": "Daga de Madera",
+            "description": "Una daga de madera ligera. Golpes débiles, pero rápidos y precisos."
+        },
+        "wooden_stick": {
+            "name": "Bastón de Madera",
+            "description": "Un largo bastón de madera que se empuña con ambas manos."
+        },
+        "medicinal_herb": {
+            "name": "Hierba Medicinal",
+            "description": "Una hierba común que alivia las heridas leves."
         }
     }
 }
