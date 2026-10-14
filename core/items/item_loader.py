@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from core.items.base import Item, Slot, Attack, Defense
+from core.items.base import Item, Slot, Attack, Defense, Effect
 from core.items.catalog import ItemCatalog
 
 ITEMS_FOLDER_PATH = Path(__file__).resolve().parents[2] / "data" / "items"
@@ -31,8 +31,11 @@ def load_item(item_file: Path, category: str | None = None) -> Item:
             data["slots"] = tuple(tuple(Slot(s) for s in combo) for combo in data.get("slots", ()))
             if "attack" in data:
                 data["attack"] = Attack(**data["attack"])
-            if "defense" in data:
+            if "defense" in data:   
                 data["defense"] = Defense(**data["defense"])
+            for trigger in ["on_use", "on_hit", "equipped"]:
+                if trigger in data:
+                    data[trigger] = tuple(Effect(type=effect["type"], value=effect["value"]) for effect in data[trigger])
             item = Item(**data)
             return item
     except Exception as e:

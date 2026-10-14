@@ -32,6 +32,15 @@ class Defense:
     magic_resistance: float = 1.0
     block_chance: float = 0.0
 
+@dataclass(frozen=True)
+class Effect:
+    type: str
+    value: int
+
+    def __post_init__(self):
+        if self.value <= 0:
+            raise ValueError("Invalid effect value")
+
 
 @dataclass(frozen=True)
 class Item:
@@ -40,12 +49,27 @@ class Item:
     category: str | None = None
     attack: Attack | None = None
     defense: Defense | None = None
+    on_use: tuple[Effect, ...] | None = None
+    on_hit: tuple[Effect, ...] | None = None
+    equipped: tuple[Effect, ...] | None = None
     # Slots format [["slot"]], for multiple slot needed [["slot", "slot²"]] and unique but mutiple choice [["slot"], ["slot"]]
     slots: tuple[tuple[Slot, ...], ...] | None = None
 
     @property
     def equippable(self) -> bool:
         return bool(self.slots)
+    
+    @property
+    def usable(self) -> bool:
+        return self.on_use is not None
+
+    @property
+    def has_on_hit_effect(self) -> bool:
+        return self.on_hit is not None
+
+    @property
+    def has_equipped_effect(self) -> bool:
+        return self.equipped is not None
 
     @property
     def has_state(self) -> bool:
