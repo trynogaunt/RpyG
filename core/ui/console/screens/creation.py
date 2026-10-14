@@ -1,5 +1,5 @@
 from core.ui.console.screens.base_screen import BaseConsoleScreen
-from core.game.actions import AllocatePoints, ConfirmCreation, SetName
+from core.game.actions import AllocatePoints, ChooseStarter, ConfirmCreation, SetName
 
 class CreationScreen(BaseConsoleScreen):
     def draw(self):
@@ -13,6 +13,12 @@ class CreationScreen(BaseConsoleScreen):
         for stat, value in v.stats_values.items():
             print(f"  {self.t(f'ui.stats.{stat.name.lower()}')} : {value}")
         print()
+        if v.starter_choices:
+            print(f"{self.t('ui.creation.starter')} : {self._item_name(v.starter) if v.starter else '-'}")
+            print()
+
+    def _item_name(self, item_id: str) -> str:
+        return self.t(f"items.{item_id}.name")
 
     def ask(self):
         v = self.view
@@ -23,6 +29,10 @@ class CreationScreen(BaseConsoleScreen):
                 options.append((f"{label} +", AllocatePoints(stat, 1)))
             if v.can_remove[stat]:
                 options.append((f"{label} -", AllocatePoints(stat, -1)))
+        for item_id in v.starter_choices:
+            if item_id != v.starter:
+                label = self.t("ui.creation.choose_starter", item=self._item_name(item_id))
+                options.append((label, ChooseStarter(item_id)))
         if v.can_confirm:
             options.append((self.t("ui.creation.confirm"), ConfirmCreation()))
         return self.choose(options)

@@ -4,7 +4,7 @@ from textual.containers import Horizontal
 from textual.widgets import Button, Input, Static
 
 from core.enums import Stat
-from core.game.actions import AllocatePoints, ConfirmCreation, SetName
+from core.game.actions import AllocatePoints, ChooseStarter, ConfirmCreation, SetName
 from core.game.rules import STAT_RULES
 from core.ui.textual.screens.base_screen import BaseScreen
 from core.views.creation_view import CreationView
@@ -27,6 +27,12 @@ class CreationScreen(BaseScreen):
                 yield Static("", id=f"value-{stat.name}", classes="stat-value")
                 yield Button("+", id=f"add-{stat.name}")
         yield Static("", id="points-left")
+        choices = self._initial_view.starter_choices if self._initial_view else ()
+        if choices:
+            yield Static("", id="starter")
+            with Horizontal(classes="stat-row"):
+                for item_id in choices:
+                    yield Button(self.app.t(f"items.{item_id}.name"), id=f"starter-{item_id}")
         yield Button("Confirmer", id="confirm", variant="primary")
 
     def update_view(self, view: CreationView) -> None:
@@ -36,6 +42,11 @@ class CreationScreen(BaseScreen):
             self.query_one(f"#remove-{stat.name}", Button).disabled = not view.can_remove[stat]
         self.query_one("#points-left", Static).update(f"Points restants : {view.points_left}")
         self.query_one("#confirm", Button).disabled = not view.can_confirm
+        if view.starter_choices:
+            name = self.app.t(f"items.{view.starter}.name") if view.starter else "-"
+            self.query_one("#starter", Static).update(f"{self.app.t('ui.creation.starter')} : {name}")
+            for item_id in view.starter_choices:
+                self.query_one(f"#starter-{item_id}", Button).variant = "primary" if item_id == view.starter else "default"
 
     @on(Input.Changed, "#name")
     def name_changed(self, event: Input.Changed) -> None:
@@ -47,5 +58,8 @@ class CreationScreen(BaseScreen):
             self.app.dispatch(ConfirmCreation())
             return
         kind, stat_name = event.button.id.split("-", 1)
+        if kind == "starter":
+            self.app.dispatch(ChooseStarter(stat_name))
+            return
         delta = +1 if kind == "add" else -1
         self.app.dispatch(AllocatePoints(Stat[stat_name], delta))

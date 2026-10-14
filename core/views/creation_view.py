@@ -9,4 +9,6 @@ class CreationView(BaseView):
     can_confirm: bool 
     can_add: dict[Stat, bool]
     can_remove: dict[Stat, bool]
-    points_left: int 
+    points_left: int
+    starter_choices: tuple[str, ...] = ()
+    starter: str | None = None

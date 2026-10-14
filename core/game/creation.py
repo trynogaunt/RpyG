@@ -8,6 +8,12 @@ from core.views.creation_view import CreationView
 class CreationState:
     name: str = ""
     allocated_points: dict[Stat, int] = field(default_factory=lambda: {stat: 0 for stat in STAT_RULES})
+    starter_choices: tuple[str, ...] = ()
+    starter: str | None = None
+
+    def __post_init__(self):
+        if self.starter is None and self.starter_choices:
+            self.starter = self.starter_choices[0]
 
     @property
     def points_left(self) -> int:
@@ -19,8 +25,11 @@ class CreationState:
     def can_remove(self, stat: Stat) -> bool:
         return self.allocated_points[stat] > 0
     
+    def can_choose(self, item_id: str) -> bool:
+        return item_id in self.starter_choices
+
     def can_confirm(self) -> bool:
-        return self.name != ""
+        return self.name != "" and (self.starter is not None or not self.starter_choices)
     
     def stat_value(self, stat: Stat) -> int:
         rule = STAT_RULES[stat]
@@ -44,5 +53,7 @@ class CreationState:
             points_left=self.points_left,
             can_confirm=self.can_confirm(),
             can_add=can_add,
-            can_remove=can_remove
+            can_remove=can_remove,
+            starter_choices=self.starter_choices,
+            starter=self.starter,
         )

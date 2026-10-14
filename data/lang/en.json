@@ -41,7 +41,9 @@
             "points_left": "Points Left",
             "set_name": "Set Name",
             "name_prompt": "Enter your character's name:",
-            "confirm": "Confirm"
+            "confirm": "Confirm",
+            "starter": "Starting Weapon",
+            "choose_starter": "Take {item}"
         },
 
         "stats": {
@@ -58,7 +60,8 @@
             "look_around": "Look Around",
             "back_to_menu": "Back to Menu",
             "navigation": "Navigation",
-            "save_game": "Save Game"
+            "save_game": "Save Game",
+            "open_inventory": "Open Inventory"
         },
         "inventory": {
             "title": "Inventory",

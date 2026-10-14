@@ -9,6 +9,9 @@ class StatRule:
 
 CREATION_POINTS: int = 10
 
+# Équipement proposé à la création, dans l'ordre d'affichage. Le premier est présélectionné.
+STARTER_WEAPONS: tuple[str, ...] = ("wooden_sword", "wooden_shield")
+
 STAT_RULES: dict[Stat, StatRule] = {
     Stat.HEALTH: StatRule(base=10, per_point=5),
     Stat.STRENGTH: StatRule(base=5, per_point=1),

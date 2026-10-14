@@ -41,7 +41,9 @@
             "points_left": "Punti Rimasti",
             "set_name": "Imposta Nome",
             "name_prompt": "Inserisci il nome del tuo personaggio:",
-            "confirm": "Conferma"
+            "confirm": "Conferma",
+            "starter": "Arma Iniziale",
+            "choose_starter": "Prendi {item}"
         },
 
         "stats": {

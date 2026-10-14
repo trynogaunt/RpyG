@@ -41,7 +41,9 @@
             "points_left": "Puntos Restantes",
             "set_name": "Establecer Nombre",
             "name_prompt": "Ingresa el nombre de tu personaje:",
-            "confirm": "Confirmar"
+            "confirm": "Confirmar",
+            "starter": "Arma Inicial",
+            "choose_starter": "Tomar {item}"
         },
 
         "stats": {

@@ -40,6 +40,12 @@ class AllocatePoints(Action):
 
 
 @dataclass(frozen=True)
+class ChooseStarter(Action):
+    """Action representing the intention to pick the starting weapon during character creation."""
+    item_id: str
+
+
+@dataclass(frozen=True)
 class ConfirmCreation(Action):
     """Action representing the intention to confirm the creation of the player's character."""
 

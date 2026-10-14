@@ -86,3 +86,35 @@ def test_player_always_in_an_existing_room(game_exploring):
     for direction in path:
         game_exploring.handle_action(Move(direction))
         game_exploring.world.get_room(game_exploring.player.location)   # ne doit pas lever
+
+# --- Fouiller la salle --------------------------------------------------------------
+
+from core.game.actions import Explore
+
+
+def message_keys(response) -> list[str]:
+    return [m.key for m in response.messages]
+
+
+def test_first_explore_describes_the_room(game_exploring):
+    response = game_exploring.handle_action(Explore())
+    assert message_keys(response) == ["zones.village.rooms.square.look_around"]
+    assert response.messages[0].fallback_key == "ui.messages.nothing_special"
+
+
+def test_first_explore_marks_room_as_explored(game_exploring):
+    game_exploring.handle_action(Explore())
+    assert RoomRef("village", "square") in game_exploring.world_state.explored
+
+
+def test_second_explore_says_already_explored(game_exploring):
+    game_exploring.handle_action(Explore())
+    response = game_exploring.handle_action(Explore())
+    assert message_keys(response) == ["ui.messages.already_explored"]
+
+
+def test_explored_is_tracked_per_room(game_exploring):
+    game_exploring.handle_action(Explore())
+    game_exploring.handle_action(Move(Direction.SOUTH))
+    response = game_exploring.handle_action(Explore())
+    assert message_keys(response) == ["zones.village.rooms.gate.look_around"]

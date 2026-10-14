@@ -5,10 +5,10 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import ChooseStarter, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
-from core.game.rules import STAT_RULES, CREATION_POINTS
+from core.game.rules import STAT_RULES, CREATION_POINTS, STARTER_WEAPONS
 from core.game.player import Player
 from core.world.loader import World, RoomRef
 from core.world.models import WorldState
@@ -56,6 +56,9 @@ class Game:
 
         return GameResponse(screen=self.screen)
     
+    def _starter_choices(self) -> tuple[str, ...]:
+        return tuple(item_id for item_id in STARTER_WEAPONS if item_id in self.catalog)
+
     def _move_player(self, direction: Direction) -> None:
         next_room = self.world.exit_from(self.player.location, direction)
         if next_room:
@@ -239,7 +242,7 @@ class Game:
         match action:
             case NewGame():
                 self.screen = Screens.CREATION
-                self.creation = CreationState()
+                self.creation = CreationState(starter_choices=self._starter_choices())
             case OpenSlots(mode=mode):
                 self._previous_screen = self.screen
                 self.screen = Screens.SLOTS
@@ -272,9 +275,15 @@ class Game:
             case AllocatePoints(stat=stat, delta=-1):
                 if self.creation.can_remove(stat):
                     self.creation.allocated_points[stat] -= 1
+            case ChooseStarter(item_id=item_id):
+                if self.creation.can_choose(item_id):
+                    self.creation.starter = item_id
             case ConfirmCreation():
                 if self.creation.can_confirm():
                     self.player = Player(name=self.creation.name, allocated_points=self.creation.allocated_points, location=self.world.start)
+                    if self.creation.starter is not None:
+                        starter = self.catalog.get(self.creation.starter)
+                        self.player.inventory.add(starter, instance=self.catalog.create(starter.id))
                     self.creation = None
                     self.screen = Screens.EXPLORATION
             case NewGame() | Quit():
@@ -299,7 +308,6 @@ class Game:
                 self._move_player(direction)
             case Explore():
                 ref = self.player.location
-                self.world_state.explored.add(ref)
                 if ref in self.world_state.explored:
                     self._messages.append(Message(key="ui.messages.already_explored"))
                 else:

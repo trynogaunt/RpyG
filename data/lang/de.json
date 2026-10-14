@@ -41,7 +41,9 @@
             "points_left": "Verbleibende Punkte",
             "set_name": "Namen festlegen",
             "name_prompt": "Gib den Namen deines Charakters ein:",
-            "confirm": "Bestätigen"
+            "confirm": "Bestätigen",
+            "starter": "Startwaffe",
+            "choose_starter": "{item} nehmen"
         },
 
         "stats": {
