@@ -11,6 +11,7 @@ from core.ui.textual.screens.exploration import ExplorationScreen
 from core.ui.textual.screens.slot_screen import SlotsScreen
 from core.ui.textual.screens.options_screen import OptionsScreen
 from core.ui.textual.screens.loading import LoadingScreen
+from core.ui.textual.screens.inventory_screen import InventoryScreen
 from core.ui.textual.widgets.discord_indicator import DiscordIndicator
 from core.integrations.discord import presence_for
 
@@ -34,6 +35,7 @@ class TextualApp(App):
             Screens.EXPLORATION: ExplorationScreen,
             Screens.SLOTS: SlotsScreen,
             Screens.OPTIONS: OptionsScreen,
+            Screens.INVENTORY: InventoryScreen,
         }
 
     def _sync_translation(self) -> None:

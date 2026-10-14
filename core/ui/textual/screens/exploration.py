@@ -7,7 +7,7 @@ from textual.containers import Grid, Horizontal, Vertical
 from textual.widgets import Button, Footer, RichLog, Static
 from textual.widgets.option_list import Option
 from textual import on
-from core.game.actions import NewGame, Quit, Move, Explore, OpenSlots
+from core.game.actions import NewGame, Quit, Move, Explore, OpenSlots, OpenInventory
 from core.game.response import Message
 from core.views.exploration_view import ExplorationView
 from core.game.text_keys import room_key, zone_key
@@ -20,6 +20,7 @@ class ExplorationScreen(BaseScreen):
         Binding("down,s",  "move('SOUTH')", "", show=False),
         Binding("left,q",  "move('WEST')",  "", show=False),
         Binding("right,d", "move('EAST')",  "", show=False),
+        Binding("i", "open_inventory", "ui.exploration.open_inventory"),
         Binding("e", "save_game", "ui.exploration.save_game"),
         Binding("escape",  "quit_game", "ui.common.quit")]
 
@@ -81,6 +82,9 @@ class ExplorationScreen(BaseScreen):
         self.query_one("#log-panel").border_title = "JOURNAL"
         super().on_mount()   
     
+    def action_open_inventory(self) -> None:
+        self.app.dispatch(OpenInventory())
+
     def action_save_game(self) -> None:
         self.app.dispatch(OpenSlots(mode="save"))
 

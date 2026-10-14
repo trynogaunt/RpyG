@@ -166,3 +166,22 @@ SlotsScreen {
     content-align: center middle;
     color: #ff6b6b;
 }
+/* ===== Écran d'inventaire ===== */
+
+#inv-main               { layout: horizontal; height: 1fr; }
+#inv-equipment-panel    { width: 1fr; }
+#inv-bag-panel          { width: 1fr; }
+#inv-detail-panel       { width: 1fr; }
+
+.inv-list {
+    height: 1fr;
+    border: none;
+    background: transparent;
+    scrollbar-size-vertical: 1;
+}
+.inv-list > .option-list--option-highlighted { background: $amber 30%; }
+.inv-list:focus > .option-list--option-highlighted { background: $amber; color: #111111; }
+
+#inv-detail  { height: auto; margin-bottom: 1; }
+#inv-actions { height: auto; }
+#inv-actions Button { width: 100%; margin-bottom: 1; }

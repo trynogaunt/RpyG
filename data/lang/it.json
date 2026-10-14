@@ -76,6 +76,8 @@
             "empty_bag": "La tua borsa è vuota.",
             "free": "{count} spazi liberi",
             "hint": "Numero: oggetto · Lettera: equipaggiamento · 0: indietro",
+            "hint_textual": "Usa le frecce per scorrere, Tab per cambiare pannello e Invio per equipaggiare o rimuovere.",
+            "switch_panel": "Cambia pannello",
             "categories": {
                 "weapons": "Arma",
                 "shields": "Scudo"

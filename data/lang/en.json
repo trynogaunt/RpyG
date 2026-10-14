@@ -76,6 +76,8 @@
             "empty_bag": "Your bag is empty.",
             "free": "{count} free slots",
             "hint": "Number: bag item · Letter: equipment · 0: back",
+            "hint_textual": "Use the arrow keys to browse, Tab to switch panel and Enter to equip or unequip.",
+            "switch_panel": "Switch panel",
             "categories": {
                 "weapons": "Weapon",
                 "shields": "Shield"

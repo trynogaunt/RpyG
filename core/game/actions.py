@@ -120,6 +120,10 @@ class InspectEquipped(Action):
     slot: Slot
 
 @dataclass(frozen=True)
+class CloseInventory(Action):
+    """Action representing the intention to leave the inventory at once, whatever is selected."""
+
+@dataclass(frozen=True)
 class EquipItem(Action):
     """Action representing the intention to equip the item stored in a bag case.
 

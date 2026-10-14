@@ -76,6 +76,8 @@
             "empty_bag": "Tu bolsa está vacía.",
             "free": "{count} espacios libres",
             "hint": "Número: objeto · Letra: equipo · 0: volver",
+            "hint_textual": "Usa las flechas para navegar, Tab para cambiar de panel y Enter para equipar o quitar.",
+            "switch_panel": "Cambiar panel",
             "categories": {
                 "weapons": "Arma",
                 "shields": "Escudo"

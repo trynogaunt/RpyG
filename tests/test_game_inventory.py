@@ -4,7 +4,7 @@ import pytest
 
 from core.enums import Screens
 from core.errors import InvalidSave
-from core.game.actions import Back, ConfirmCreation, EquipItem, InspectEquipped, InspectItem, NewGame, OpenInventory, SetName, UnequipItem
+from core.game.actions import Back, CloseInventory, ConfirmCreation, EquipItem, InspectEquipped, InspectItem, NewGame, OpenInventory, SetName, UnequipItem
 from core.game.game import Game
 from core.game.snapshot import BagEntry, EquippedEntry
 from core.items.base import Attack, Item, ItemInstance, Slot
@@ -145,6 +145,20 @@ def test_back_closes_detail_before_leaving(game):
     response = game.handle_action(Back())
     assert response.screen is Screens.INVENTORY and response.view.selected is None
     assert game.handle_action(Back()).screen is Screens.EXPLORATION
+
+
+def test_inspecting_an_empty_slot_clears_the_selection(game):
+    game.handle_action(InspectItem(0))
+    assert game.handle_action(InspectEquipped(Slot.HEAD)).view.selected is None
+    game.handle_action(InspectItem(0))
+    assert game.handle_action(InspectItem(7)).view.selected is None
+
+
+def test_close_inventory_leaves_at_once(game):
+    game.handle_action(InspectItem(0))
+    response = game.handle_action(CloseInventory())
+    assert response.screen is Screens.EXPLORATION
+    assert game.inventory_selection is None
 
 
 def test_reopening_inventory_resets_selection(game):

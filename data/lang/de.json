@@ -76,6 +76,8 @@
             "empty_bag": "Deine Tasche ist leer.",
             "free": "{count} freie Plätze",
             "hint": "Zahl: Gegenstand · Buchstabe: Ausrüstung · 0: zurück",
+            "hint_textual": "Mit den Pfeiltasten blättern, Tab wechselt den Bereich, Enter rüstet aus oder legt ab.",
+            "switch_panel": "Bereich wechseln",
             "categories": {
                 "weapons": "Waffe",
                 "shields": "Schild"

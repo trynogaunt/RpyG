@@ -5,7 +5,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import ChooseStarter, InspectItem, InspectEquipped, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import ChooseStarter, CloseInventory, InspectItem, InspectEquipped, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS, STARTER_WEAPONS
@@ -243,7 +243,7 @@ class Game:
         player = Player(name=snap.player.name)
         player.level = snap.player.level
         player.allocated_points = dict(snap.player.allocated_points)
-        if sum(player.allocated_points.values()) > CREATION_POINTS:     # nom réel de la constante ou de la fonction
+        if sum(player.allocated_points.values()) > CREATION_POINTS:   
             raise InvalidSave("Points alloués incohérents")
         player.health = min(snap.player.health, player.max_health)
         player.location = snap.location
@@ -288,15 +288,13 @@ class Game:
             case ApplyUpdate():
                 result = apply(self.update)
                 if result.success and not result.deps_changed:
-                    # Le code en mémoire est l'ancien : on quitte et main.py relance le jeu
                     self.restart_requested = True
                     self.screen = Screens.EXIT
                 elif result.success:
-                    # Nouvelles dépendances : relancer sans `pip install` risquerait de planter
                     self._messages.append(Message(key="ui.update.success"))
                     self._messages.append(Message(key="ui.update.deps_changed"))
                     self._messages.append(Message(key="ui.update.restart"))
-                    self.update = UpdateStatus(UpdateState.UP_TO_DATE)   # le bouton disparaît
+                    self.update = UpdateStatus(UpdateState.UP_TO_DATE)
                 else:
                     self._messages.append(Message(key=UPDATE_ERROR_KEYS[result.error]))
             case _:
@@ -418,11 +416,11 @@ class Game:
         match action:
             case InspectItem(index=index):
                 cases = self.player.inventory.cases
-                if 0 <= index < len(cases) and not cases[index].is_empty:
-                    self.inventory_selection = index
+                valid = 0 <= index < len(cases) and not cases[index].is_empty
+                self.inventory_selection = index if valid else None
             case InspectEquipped(slot=slot):
-                if self.player.inventory.occupant(slot) is not None:
-                    self.inventory_selection = slot
+                occupied = self.player.inventory.occupant(slot) is not None
+                self.inventory_selection = slot if occupied else None
             case EquipItem(index=index, slots=slots):
                 self._equip(index, slots)
                 self.inventory_selection = None
@@ -434,6 +432,9 @@ class Game:
                     self.inventory_selection = None
                 else:
                     self.screen = self._previous_screen
+            case CloseInventory():
+                self.inventory_selection = None
+                self.screen = self._previous_screen
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
 
