@@ -111,6 +111,20 @@
                 "back": "Rücken"
             }
         },
+        "loading": {
+            "title": "Wird geladen...",
+            "steps": {
+                "items": "Gegenstände laden",
+                "world": "Welt laden",
+                "discord": "Mit Discord verbinden",
+                "updates": "Nach Updates suchen"
+            },
+            "status": {
+                "done": "OK",
+                "unavailable": "NICHT VERFÜGBAR",
+                "timeout": "IM HINTERGRUND"
+            }
+        },
         "messages": {
             "save_deleted": "Spielstand gelöscht.",
             "delete_failed": "Spielstand konnte nicht gelöscht werden.",

@@ -111,6 +111,20 @@
                 "back": "Schiena"
             }
         },
+        "loading": {
+            "title": "Caricamento...",
+            "steps": {
+                "items": "Caricamento oggetti",
+                "world": "Caricamento del mondo",
+                "discord": "Connessione a Discord",
+                "updates": "Ricerca aggiornamenti"
+            },
+            "status": {
+                "done": "OK",
+                "unavailable": "NON DISPONIBILE",
+                "timeout": "IN BACKGROUND"
+            }
+        },
         "messages": {
             "save_deleted": "Salvataggio eliminato.",
             "delete_failed": "Impossibile eliminare il salvataggio.",

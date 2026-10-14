@@ -111,6 +111,20 @@
                 "back": "Back"
             }
         },
+        "loading": {
+            "title": "Loading...",
+            "steps": {
+                "items": "Loading items",
+                "world": "Loading world",
+                "discord": "Connecting to Discord",
+                "updates": "Checking for updates"
+            },
+            "status": {
+                "done": "OK",
+                "unavailable": "UNAVAILABLE",
+                "timeout": "BACKGROUND"
+            }
+        },
         "messages": {
             "save_deleted": "Save deleted.",
             "delete_failed": "Could not delete the save.",

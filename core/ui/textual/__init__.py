@@ -1,4 +1,4 @@
 from core.ui.textual.app import TextualApp
 
-def run(game, translation=None, settings=None, presence=None) -> None:
-    TextualApp(game, translation=translation, settings=settings, presence=presence).run()
+def run(boot, translation=None, settings=None) -> None:
+    TextualApp(boot, translation=translation, settings=settings).run()

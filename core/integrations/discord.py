@@ -6,7 +6,10 @@ import threading
 import time
 from dataclasses import dataclass
 
-from pypresence import Presence
+try:
+    from pypresence import Presence
+except ImportError:
+    Presence = None
 
 try: 
     from pypresence import StatusDisplayType
@@ -28,7 +31,6 @@ SCREEN_IMAGES: dict[Screens, str] = {
 }
 
 ZONE_IMAGES: dict[str, str] = {
-    # zone_id -> nom de l'asset dans le portail
     "entry_village": "zone_entry_village",
     "flooded_cave": "zone_flooded_cave",
 }
@@ -97,7 +99,14 @@ class DiscordIntegration:
         self._timer: threading.Timer | None = None
         self._lock = threading.Lock()
 
+    @property
+    def connected(self) -> bool:
+        return self._rpc is not None
+
     def connect(self) -> None:
+        if Presence is None:
+            log.warning("pypresence non installé : Discord désactivé")
+            return
         try:
             self._rpc = Presence(self._app_id)
             self._rpc.connect()

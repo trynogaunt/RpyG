@@ -10,6 +10,7 @@ from core.ui.textual.screens.creation import CreationScreen
 from core.ui.textual.screens.exploration import ExplorationScreen
 from core.ui.textual.screens.slot_screen import SlotsScreen
 from core.ui.textual.screens.options_screen import OptionsScreen
+from core.ui.textual.screens.loading import LoadingScreen
 from core.integrations.discord import presence_for
 
 import logging
@@ -18,14 +19,14 @@ log = logging.getLogger(__name__)
 class TextualApp(App):
 
     CSS_PATH = Path("rpyg.tcss")
-    def __init__(self, game, translation, settings, presence=None, *args, **kwargs):
+    def __init__(self, boot, translation, settings, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.game = game
+        self.boot = boot
+        self.game = None                  # construit à la fin de l'écran de chargement
         self.translation = translation
         self.settings = settings
-        self.presence = presence
-        self.current_screen_id: int = None
-        self.presence = presence
+        self.presence = None
+        self.current_screen_id: Screens | None = None
         self.all_screens = {
             Screens.MAIN_MENU: MainMenuScreen,
             Screens.CREATION: CreationScreen,
@@ -50,9 +51,13 @@ class TextualApp(App):
         return self.translation.t(key, **params)
 
     def on_mount(self):
-        response = self.game.start()
-        self.current_screen_id = response.screen
-        self.push_screen(self.build_screen(response.screen, response.view))
+        self.push_screen(LoadingScreen(self.boot))
+
+    def start_game(self) -> None:
+        """Appelé par l'écran de chargement une fois toutes les étapes terminées."""
+        self.game = self.boot.build_game()
+        self.presence = self.boot.presence
+        self.show(self.game.start())
 
     def dispatch(self, action):
         response = self.game.handle_action(action)

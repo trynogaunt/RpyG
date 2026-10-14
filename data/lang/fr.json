@@ -111,6 +111,20 @@
                 "back": "Dos"
             }
         },
+        "loading": {
+            "title": "Chargement...",
+            "steps": {
+                "items": "Chargement des objets",
+                "world": "Chargement du monde",
+                "discord": "Connexion à Discord",
+                "updates": "Recherche de mises à jour"
+            },
+            "status": {
+                "done": "OK",
+                "unavailable": "INDISPONIBLE",
+                "timeout": "EN FOND"
+            }
+        },
         "messages": {
             "save_deleted": "Sauvegarde supprimée.",
             "delete_failed": "Impossible de supprimer la sauvegarde.",

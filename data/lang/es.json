@@ -111,6 +111,20 @@
                 "back": "Espalda"
             }
         },
+        "loading": {
+            "title": "Cargando...",
+            "steps": {
+                "items": "Cargando objetos",
+                "world": "Cargando el mundo",
+                "discord": "Conectando con Discord",
+                "updates": "Buscando actualizaciones"
+            },
+            "status": {
+                "done": "OK",
+                "unavailable": "NO DISPONIBLE",
+                "timeout": "EN SEGUNDO PLANO"
+            }
+        },
         "messages": {
             "save_deleted": "Partida eliminada.",
             "delete_failed": "No se pudo eliminar la partida.",
