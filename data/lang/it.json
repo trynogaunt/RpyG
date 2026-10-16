@@ -5,7 +5,7 @@
         "main_menu": { "new_game": "Nuovo Gioco", "quit": "Esci", "options": "Opzioni", "load_game": "Carica Gioco", "update": "Aggiorna", "catalog": "Catalogo oggetti (dev)",
         "title": "R P y G - L E G A C Y", "tagline": "La tua CPU gestirà tutti i draghi", 
         "lore":"In un mondo dove i draghi dominano i cieli e l'antica magia fluttua nell'aria, sei un coraggioso avventuriero in cerca di gloria e fortuna. \nRiuscirai a superare le sfide che ti attendono e diventare una leggenda?",
-        "version": "Versione {version} - Accesso Anticipato" },
+        "version": "Versione {version} - Early Access" },
         "dev_mode": { "title": "Modalità Dev - Catalogo oggetti" },
         "catalog": { "select": "Seleziona un oggetto", "prompt": "Numero dell'oggetto (vuoto per annullare):", "close": "Chiudi", "count": "{count} oggetti" },
         "options": {

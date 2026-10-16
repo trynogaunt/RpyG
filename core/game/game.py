@@ -30,7 +30,7 @@ from core.game.actions import (
     Options,
     SetLocale,
     ApplyUpdate,
-    InspectCatalog,
+    InspectCatalogItem,
 )
 from core.enums import Direction
 from core.game.creation import CreationState
@@ -102,6 +102,7 @@ class Game:
         self.confirm_delete: bool = False
         self.inventory_selection: int | Slot | None = None
         self._previous_screen: Screens | None = None
+        self._catalog_selection: str | None = None
         self.restart_requested: bool = (
             False  # lu par main.py après la fermeture de l'interface
         )
@@ -144,7 +145,21 @@ class Game:
             item_list = sorted(self.catalog.by_category(c), key=lambda item: item.id)
             for i in item_list:
                 items.append(CatalogEntryView(i.id, c))
-        return CatalogView(entries=tuple(items))
+        return CatalogView(entries=tuple(items), selected=self._catalog_detail())
+
+    def _catalog_detail(self) -> ItemDetailView | None:
+        """Fiche de l'objet sélectionné : ni sac ni équipement, donc aucune action possible dessus."""
+        if self._catalog_selection is None:
+            return None
+        item = self.catalog.get(self._catalog_selection)
+        return ItemDetailView(
+            item_id=item.id,
+            category=item.category,
+            attack=item.attack,
+            defense=item.defense,
+            slots=tuple(item.slots or ()),
+            usable=item.usable,
+        )
     
     def _exploration_to_view(self) -> ExplorationView:
         current_room = self.world.get_room(self.player.location)
@@ -385,8 +400,9 @@ class Game:
 
     def _handle_catalog(self, action: Action) -> None:
         match action:
-            case InspectCatalog(item_id=item_id):
-                
+            case InspectCatalogItem(item_id=item_id):
+                if item_id in self.catalog:
+                    self._catalog_selection = item_id
             case CloseCatalog():
                 self.screen = Screens.MAIN_MENU
             case _:
