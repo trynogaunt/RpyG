@@ -124,6 +124,7 @@
             "title": "Wird geladen...",
             "steps": {
                 "items": "Gegenstände laden",
+                "enemies": "Gegner werden geladen",
                 "world": "Welt laden",
                 "discord": "Mit Discord verbinden",
                 "updates": "Nach Updates suchen"
@@ -228,6 +229,12 @@
         "medicinal_herb": {
             "name": "Heilkraut",
             "description": "Ein gewöhnliches Kraut, das kleine Wunden lindert."
+        }
+    },
+    "enemies": {
+        "cave_rat": {
+            "name": "Höhlenratte",
+            "description": "Eine fette, räudige Ratte, die in feuchten Tunneln lauert. Flink, aber schwach."
         }
     }
 }

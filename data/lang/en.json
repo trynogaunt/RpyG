@@ -124,6 +124,7 @@
             "title": "Loading...",
             "steps": {
                 "items": "Loading items",
+                "enemies": "Loading enemies",
                 "world": "Loading world",
                 "discord": "Connecting to Discord",
                 "updates": "Checking for updates"
@@ -228,6 +229,12 @@
         "medicinal_herb": {
             "name": "Medicinal Herb",
             "description": "A common herb that soothes small wounds."
+        }
+    },
+    "enemies": {
+        "cave_rat": {
+            "name": "Cave Rat",
+            "description": "A fat, mangy rat that lurks in damp tunnels. Quick, but frail."
         }
     }
 }

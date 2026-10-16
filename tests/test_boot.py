@@ -32,7 +32,7 @@ def finished(events) -> dict[str, StepStatus]:
 
 
 def test_steps_without_discord():
-    assert [s.key for s in Boot(Settings(), DATA_DIR).steps()] == ["items", "world", "updates"]
+    assert [s.key for s in Boot(Settings(), DATA_DIR).steps()] == ["items", "enemies", "world", "updates"]
 
 
 def test_discord_step_only_when_enabled():
@@ -45,6 +45,7 @@ def test_each_step_reports_running_then_result():
     events = run(Boot(Settings(), DATA_DIR))
     assert events == [
         ("items", StepStatus.RUNNING), ("items", StepStatus.DONE),
+        ("enemies", StepStatus.RUNNING), ("enemies", StepStatus.DONE),
         ("world", StepStatus.RUNNING), ("world", StepStatus.DONE),
         ("updates", StepStatus.RUNNING), ("updates", StepStatus.DONE),
     ]
@@ -55,6 +56,7 @@ def test_build_game_uses_loaded_data():
     run(boot)
     game = boot.build_game()
     assert "wooden_sword" in game.catalog
+    assert "cave_rat" in game.enemies
     assert game.world is boot.world
     assert game.update == UP_TO_DATE
 
@@ -108,7 +110,7 @@ def test_step_delay_pauses_after_each_step(monkeypatch):
     pauses = []
     monkeypatch.setattr(boot_module.time, "sleep", pauses.append)
     run(Boot(Settings(), DATA_DIR, step_delay=0.7))
-    assert pauses == [0.7, 0.7, 0.7]
+    assert pauses == [0.7, 0.7, 0.7, 0.7]
 
 
 def test_no_pause_by_default(monkeypatch):

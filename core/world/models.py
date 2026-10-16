@@ -17,6 +17,7 @@ class Room:
     ref: RoomRef
     look_around: str = ""
     exits: dict[Direction, RoomRef] = field(default_factory=dict)
+    enemies: tuple[str, ...] = ()        # ids d'ennemis présents dans la salle
 
 
 @dataclass(frozen=True)

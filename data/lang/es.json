@@ -124,6 +124,7 @@
             "title": "Cargando...",
             "steps": {
                 "items": "Cargando objetos",
+                "enemies": "Cargando enemigos",
                 "world": "Cargando el mundo",
                 "discord": "Conectando con Discord",
                 "updates": "Buscando actualizaciones"
@@ -228,6 +229,12 @@
         "medicinal_herb": {
             "name": "Hierba Medicinal",
             "description": "Una hierba común que alivia las heridas leves."
+        }
+    },
+    "enemies": {
+        "cave_rat": {
+            "name": "Rata de Cueva",
+            "description": "Una rata gorda y sarnosa que acecha en los túneles húmedos. Rápida, pero frágil."
         }
     }
 }

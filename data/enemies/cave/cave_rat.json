@@ -1,0 +1,6 @@
+{
+    "id": "cave_rat",
+    "level": 1,
+    "stats": { "health": 12, "strength": 3, "speed": 6, "luck": 1 },
+    "attack": { "damage_multiplier": 1.0, "crit_multiplier": 1.5, "hits": 1 }
+}

@@ -185,3 +185,8 @@ SlotsScreen {
 #inv-detail  { height: auto; margin-bottom: 1; }
 #inv-actions { height: auto; }
 #inv-actions Button { width: 100%; margin-bottom: 1; }
+
+#cat-main          { layout: horizontal; height: 1fr; }
+#cat-list-panel    { width: 1fr; }
+#cat-detail-panel  { width: 2fr; }
+#cat-detail        { height: auto; }

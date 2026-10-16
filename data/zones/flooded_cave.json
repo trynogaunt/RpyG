@@ -16,6 +16,7 @@
       "name": "Water Pool",
       "description": "A shallow pool of water fills this part of the cave. The water is clear but cold.",
       "look_around": "Something glints at the bottom of the pool, just out of reach.",
+      "enemies": ["cave_rat"],
       "exits": {
         "north": { "room": "entrance" },
         "east": { "room": "narrow_passage" }

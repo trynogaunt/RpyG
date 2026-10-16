@@ -124,6 +124,7 @@
             "title": "Chargement...",
             "steps": {
                 "items": "Chargement des objets",
+                "enemies": "Chargement des ennemis",
                 "world": "Chargement du monde",
                 "discord": "Connexion à Discord",
                 "updates": "Recherche de mises à jour"
@@ -228,6 +229,12 @@
         "medicinal_herb": {
             "name": "Herbe Médicinale",
             "description": "Une herbe commune qui apaise les petites blessures."
+        }
+    },
+    "enemies": {
+        "cave_rat": {
+            "name": "Rat des Cavernes",
+            "description": "Un gros rat galeux qui rôde dans les tunnels humides. Rapide, mais fragile."
         }
     }
 }

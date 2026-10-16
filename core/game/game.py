@@ -54,6 +54,7 @@ from core.game.inventory import (
     NotEquippable,
 )
 from core.items.catalog import ItemCatalog, UnknownItem
+from core.enemies.catalog import EnemyCatalog
 from core.game.effect import EFFECTS
 from core.items.base import Slot
 
@@ -84,6 +85,7 @@ class Game:
         store=None,
         update=None,
         catalog: ItemCatalog | None = None,
+        enemies: EnemyCatalog | None = None,
         dev: bool = False,
     ):
         self.screen: Screens | None = None
@@ -97,6 +99,7 @@ class Game:
         self.settings = settings
         self.update = update
         self.catalog: ItemCatalog = catalog or ItemCatalog()
+        self.enemies: EnemyCatalog = enemies or EnemyCatalog()
         self.slot_mode: str = "load"
         self.selected_slot: int | None = None
         self.confirm_delete: bool = False

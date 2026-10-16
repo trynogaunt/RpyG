@@ -124,6 +124,7 @@
             "title": "Caricamento...",
             "steps": {
                 "items": "Caricamento oggetti",
+                "enemies": "Caricamento dei nemici",
                 "world": "Caricamento del mondo",
                 "discord": "Connessione a Discord",
                 "updates": "Ricerca aggiornamenti"
@@ -228,6 +229,12 @@
         "medicinal_herb": {
             "name": "Erba Medicinale",
             "description": "Un'erba comune che lenisce le piccole ferite."
+        }
+    },
+    "enemies": {
+        "cave_rat": {
+            "name": "Ratto delle Caverne",
+            "description": "Un grosso ratto rognoso che si aggira nei tunnel umidi. Veloce, ma fragile."
         }
     }
 }

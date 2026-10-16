@@ -58,6 +58,7 @@ def load_rooms(zone_data: dict, entries: dict[str, RoomRef]) -> dict[str, Room]:
             ref=RoomRef(zone_id, room_id),
             look_around=room_data.get("look_around", ""),
             exits=load_exits(room_data.get("exits", {}), zone_id, room_id, entries),
+            enemies=tuple(room_data.get("enemies", ())),
         )
     return rooms
 

@@ -10,7 +10,7 @@ from rich.text import Text
 from core.ui import splash
 from core.version import __version__
 
-from core.game.actions import NewGame, Quit, OpenSlots, Options, ApplyUpdate
+from core.game.actions import NewGame, Quit, OpenSlots, Options, ApplyUpdate, OpenCatalog
 from core.ui.textual.logo import LETTERS  # dict {"R": "...", "P": "...", ...}
 from core.ui.textual.screens.base_screen import BaseScreen
 from textual.widgets import Static
@@ -45,6 +45,9 @@ class MainMenuScreen(BaseScreen):
                 Option(t("ui.main_menu.options"), id="settings"),
             ]
 
+            if self.app.game.dev:
+                menu_options.append(Option(t("ui.main_menu.catalog"), id="catalog"))
+
             update = self.app.game.update
             if update is not None and update.state is UpdateState.AVAILABLE:
                 menu_options.append(Option(t("ui.main_menu.update"), id="update"))
@@ -62,6 +65,8 @@ class MainMenuScreen(BaseScreen):
                 self.app.dispatch(OpenSlots(mode="load"))
             case "settings":
                 self.app.dispatch(Options())
+            case "catalog":
+                self.app.dispatch(OpenCatalog())
             case "update":
                 self.app.dispatch(ApplyUpdate())
             case "quit":

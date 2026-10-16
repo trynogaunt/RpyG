@@ -1,16 +1,10 @@
-import unicodedata
 from itertools import groupby
 
 from core.ui.console.screens.base_screen import BaseConsoleScreen
 from core.ui.console.screens.item_detail import ItemDetailMixin
 from core.game.actions import CloseCatalog, InspectCatalogItem
 from core.ui.console import colors
-
-
-def sort_key(text: str) -> str:
-    """Clé de tri alphabétique sans casse ni accents (« Épée » rangée avec les « e »)."""
-    decomposed = unicodedata.normalize("NFD", text.casefold())
-    return "".join(c for c in decomposed if not unicodedata.combining(c))
+from core.ui.text_sort import sort_key
 
 
 class CatalogScreen(ItemDetailMixin, BaseConsoleScreen):

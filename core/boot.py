@@ -11,6 +11,8 @@ from enum import Enum, auto
 from pathlib import Path
 from collections.abc import Callable
 
+from core.enemies.catalog import EnemyCatalog
+from core.enemies.loader import check_world_enemies, load_enemy_catalog
 from core.game.game import Game
 from core.items.catalog import ItemCatalog
 from core.items.item_loader import load_catalog
@@ -46,6 +48,7 @@ class Boot:
         self.data_dir = data_dir
         self.step_delay = step_delay      # pause après chaque étape (captures d'écran, démos)
         self.catalog: ItemCatalog | None = None
+        self.enemies: EnemyCatalog | None = None
         self.world = None
         self.presence = None
         self.update: UpdateStatus | None = None
@@ -55,6 +58,7 @@ class Boot:
     def steps(self) -> list[BootStep]:
         steps = [
             BootStep("items", self._load_items),
+            BootStep("enemies", self._load_enemies),
             BootStep("world", self._load_world),
         ]
         if self.settings.discord_integration:
@@ -73,15 +77,20 @@ class Boot:
 
     def build_game(self) -> Game:
         self.game = Game(world=self.world, store=SaveStore(), settings=self.settings,
-                         catalog=self.catalog, update=self.update, dev=self.dev)
+                         catalog=self.catalog, enemies=self.enemies, update=self.update, dev=self.dev)
         return self.game
 
     def _load_items(self) -> StepStatus:
         self.catalog = load_catalog()
         return StepStatus.DONE
 
+    def _load_enemies(self) -> StepStatus:
+        self.enemies = load_enemy_catalog(self.data_dir / "enemies")
+        return StepStatus.DONE
+
     def _load_world(self) -> StepStatus:
         self.world = load_world(data_dir=self.data_dir)
+        check_world_enemies(self.world, self.enemies)
         return StepStatus.DONE
 
     def _connect_discord(self) -> StepStatus:
