@@ -16,6 +16,7 @@ $amber: #ffb000;
 
 #room-name        { text-style: bold; color: $amber; margin-bottom: 1; }
 #room-description { color: $text-muted; }
+#room-enemies     { color: $error; text-style: bold; margin-top: 1; }
 
 #directions {
     layout: grid;
@@ -190,3 +191,19 @@ SlotsScreen {
 #cat-list-panel    { width: 1fr; }
 #cat-detail-panel  { width: 2fr; }
 #cat-detail        { height: auto; }
+
+#combat-fighters      { layout: horizontal; height: auto; }
+#combat-fighters .panel { width: 1fr; height: auto; }
+.fighter-hp           { height: 1; }
+.fighter-hp ProgressBar { width: 1fr; }
+.fighter-hp ProgressBar Bar { width: 1fr; }
+.fighter-hp-text      { width: auto; margin-left: 1; }
+#combat-enemy         { border: round $error; border-title-color: $error; }
+#combat-enemy Bar > .bar--bar { color: $error; }
+#combat-log           { height: 1fr; background: $background; }
+#combat-actions       { height: auto; align-horizontal: center; }
+#combat-actions Button { margin: 0 2; }
+
+#game-over            { align: center middle; height: 1fr; }
+#game-over-title      { width: 100%; text-align: center; text-style: bold; color: $error; margin-bottom: 1; }
+#game-over-message    { width: 100%; text-align: center; color: $text-muted; margin-bottom: 2; }

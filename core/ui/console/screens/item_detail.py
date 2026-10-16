@@ -23,6 +23,7 @@ class ItemDetailMixin:
             rows.append((self.t("ui.inventory.details.attack"), ", ".join([
                 f"{self.t('ui.inventory.details.damage')} x{d.attack.damage_multiplier:g}",
                 f"{self.t('ui.inventory.details.crit')} x{d.attack.crit_multiplier:g}",
+                f"{self.t('ui.inventory.details.crit_chance')} {d.attack.crit_chance:.0%}",
                 f"{self.t('ui.inventory.details.hits')} {d.attack.hits}",
             ])))
         if d.defense:

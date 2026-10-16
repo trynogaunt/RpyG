@@ -11,6 +11,7 @@ class Screens(Enum):
     GAME_OVER = auto()
     EXIT = auto()
     CATALOG = auto()
+    COMBAT = auto()
 
 class Stat(Enum):
     HEALTH = auto()

@@ -67,6 +67,14 @@ def presence_for(response, t) -> PresenceInfo | None:
                 small_image=SMALL_IMAGE,
                 small_text=SMALL_TEXT,
             )
+        case Screens.COMBAT:
+            v = response.view
+            return PresenceInfo(
+                details=t("ui.presence.fighting", enemy=t(f"enemies.{v.enemy_id}.name")),
+                state=t("ui.presence.level", level=v.player_summary.level),
+                small_image=SMALL_IMAGE,
+                small_text=SMALL_TEXT,
+            )
         case _:
             return None
 

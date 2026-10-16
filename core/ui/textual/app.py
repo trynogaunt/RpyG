@@ -13,6 +13,7 @@ from core.ui.textual.screens.options_screen import OptionsScreen
 from core.ui.textual.screens.loading import LoadingScreen
 from core.ui.textual.screens.inventory_screen import InventoryScreen
 from core.ui.textual.screens.catalog_screen import CatalogScreen
+from core.ui.textual.screens.combat_screen import CombatScreen, GameOverScreen
 from core.ui.textual.widgets.discord_indicator import DiscordIndicator
 from core.integrations.discord import presence_for
 
@@ -38,6 +39,8 @@ class TextualApp(App):
             Screens.OPTIONS: OptionsScreen,
             Screens.INVENTORY: InventoryScreen,
             Screens.CATALOG: CatalogScreen,
+            Screens.COMBAT: CombatScreen,
+            Screens.GAME_OVER: GameOverScreen,
         }
 
     def _sync_translation(self) -> None:

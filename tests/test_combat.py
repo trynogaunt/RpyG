@@ -1,0 +1,183 @@
+from random import Random
+
+import pytest
+
+from core.enemies.base import Enemy
+from core.enemies.catalog import EnemyCatalog
+from core.enums import Screens, Stat
+from core.game.actions import AttackEnemy, Flee, Quit, StartCombat
+from core.game.combat import CRIT_CAP, CombatLogEntry, crit_chance, finalize, resolve_attack
+from core.game.game import Game
+from core.game.inventory import Equipped
+from core.game.player import Player
+from core.items.base import Attack, Item, ItemInstance, Slot
+from core.items.catalog import ItemCatalog
+from core.world.models import Room, RoomRef, World, Zone
+
+DEN = RoomRef("cave", "den")
+HALL = RoomRef("cave", "hall")
+
+
+class FixedRolls(Random):
+    """Jets imposés : random() renvoie les valeurs données, puis 0.99 (aucun crit)."""
+
+    def __init__(self, *rolls: float):
+        super().__init__()
+        self.rolls = list(rolls)
+
+    def random(self) -> float:
+        return self.rolls.pop(0) if self.rolls else 0.99
+
+
+def enemy(enemy_id: str, health: int, strength: int, attack: Attack = Attack(), speed: int = 1) -> Enemy:
+    return Enemy(id=enemy_id, stats={Stat.HEALTH: health, Stat.STRENGTH: strength, Stat.SPEED: speed, Stat.LUCK: 1},
+                 attack=attack)
+
+
+@pytest.fixture
+def game() -> Game:
+    """Joueur (PV 10, force 5, à mains nues) dans une salle avec un rat (PV 12, force 3)."""
+    cave = Zone(id="cave", name="Grotte", description="", entry_room="den", rooms={
+        "den": Room("Tanière", "", DEN, enemies=("rat", "ogre", "wolf")),
+        "hall": Room("Salle", "", HALL),
+    })
+    g = Game(
+        world=World(start=DEN, zones={"cave": cave}),
+        enemies=EnemyCatalog({"rat": enemy("rat", 12, 3), "ogre": enemy("ogre", 50, 20), "bat": enemy("bat", 5, 1),
+                              "wolf": enemy("wolf", 30, 2, speed=9)}),
+        catalog=ItemCatalog({"club": Item(id="club", category="weapons", slots=((Slot.RIGHT_HAND,),),
+                                          attack=Attack(damage_multiplier=2.0))}),
+        rng=FixedRolls(),
+    )
+    g.start()
+    g.player = Player("Bob", location=DEN)
+    g.screen = Screens.EXPLORATION
+    return g
+
+
+def message_keys(response) -> list[str]:
+    return [m.key for m in response.messages]
+
+
+# ----- formule -----
+
+def test_finalize_rounds_up_once():
+    assert finalize(5.5) == 6
+    assert finalize(5.0) == 5
+    assert finalize(10.000000000000002) == 10        # bruit des floats ignoré
+    assert finalize(0.2) == 1                        # un coup qui touche fait au moins 1
+    assert finalize(0) == 0
+
+
+@pytest.mark.parametrize("wear, luck, expected", [
+    (1.0, 0, 0.20),      # arme neuve, sans Chance
+    (0.5, 0, 0.10),      # usée à moitié : crit divisé par deux
+    (0.0, 0, 0.0),       # complètement usée : plus de crit
+    (1.0, 10, 0.26),     # 10 de Chance : x1.3
+])
+def test_crit_chance(wear, luck, expected):
+    assert crit_chance(Attack(crit_chance=0.2), wear, luck) == pytest.approx(expected)
+
+
+def test_luck_cannot_create_crit_from_nothing():
+    assert crit_chance(Attack(crit_chance=0.0), 1.0, 100) == 0.0
+
+
+def test_crit_chance_is_capped():
+    assert crit_chance(Attack(crit_chance=0.8), 1.0, 100) == CRIT_CAP
+
+
+def test_each_hit_rolls_its_own_crit():
+    attack = Attack(damage_multiplier=0.6, hits=2, crit_chance=0.5, crit_multiplier=2.0)
+    hits = resolve_attack(10, 0, attack, 1.0, FixedRolls(0.1, 0.9))     # 1er coup crit, pas le 2e
+    assert [(h.damage, h.crit) for h in hits] == [(12, True), (6, False)]
+
+
+# ----- déroulement -----
+
+
+def test_exploration_view_lists_room_enemies(game):
+    assert game._exploration_to_view().enemies == ("rat", "ogre", "wolf")
+
+
+@pytest.mark.parametrize("enemy_id", ["bat", "ghost"], ids=["absent-de-la-salle", "inconnu"])
+def test_cannot_fight_enemy_not_in_room(game, enemy_id):
+    response = game.handle_action(StartCombat(enemy_id))
+    assert response.screen is Screens.EXPLORATION
+    assert game.combat is None
+
+
+def test_start_combat(game):
+    response = game.handle_action(StartCombat("rat"))
+    assert response.screen is Screens.COMBAT
+    assert (response.view.enemy_id, response.view.enemy_health, response.view.enemy_max_health) == ("rat", 12, 12)
+    assert response.view.log == ()
+
+
+def test_attack_then_enemy_strikes_back(game):
+    game.handle_action(StartCombat("rat"))
+    response = game.handle_action(AttackEnemy())
+    assert response.view.enemy_health == 12 - 5
+    assert response.view.player_summary.health == 10 - 3
+    assert response.view.log == (CombatLogEntry("player", 5), CombatLogEntry("enemy", 3))
+
+
+def test_equipped_weapon_is_used(game):
+    game.player.inventory.equipped.append(Equipped(slots=(Slot.RIGHT_HAND,), instance=ItemInstance("club")))
+    game.handle_action(StartCombat("rat"))
+    assert game.handle_action(AttackEnemy()).view.enemy_health == 12 - 10
+
+
+def test_victory_returns_to_exploration(game):
+    game.handle_action(StartCombat("rat"))
+    game.handle_action(AttackEnemy())
+    game.handle_action(AttackEnemy())
+    response = game.handle_action(AttackEnemy())          # 5 + 5 + 5 >= 12
+    assert response.screen is Screens.EXPLORATION
+    assert message_keys(response) == ["ui.combat.victory"]
+    assert game.combat is None
+    assert game.player.health == 10 - 3 - 3               # le rat ne riposte pas au coup fatal
+
+
+def test_flee(game):
+    game.handle_action(StartCombat("rat"))
+    response = game.handle_action(Flee())
+    assert response.screen is Screens.EXPLORATION
+    assert message_keys(response) == ["ui.combat.fled"]
+    assert game.combat is None
+
+
+def test_defeat_leads_to_game_over_then_main_menu(game):
+    game.handle_action(StartCombat("ogre"))
+    response = game.handle_action(AttackEnemy())
+    assert response.screen is Screens.GAME_OVER
+    assert message_keys(response) == ["ui.combat.defeat"]
+    assert game.player.health == 0
+
+    response = game.handle_action(Quit())
+    assert response.screen is Screens.MAIN_MENU
+    assert game.player is None
+
+
+def test_faster_enemy_strikes_first(game):
+    game.handle_action(StartCombat("wolf"))
+    log = game.handle_action(AttackEnemy()).view.log
+    assert [e.attacker for e in log] == ["enemy", "player"]
+
+
+def test_crit_is_logged(game):
+    game.rng = FixedRolls(0.0)                       # premier jet : crit
+    game.catalog = ItemCatalog({"club": Item(id="club", category="weapons", slots=((Slot.RIGHT_HAND,),),
+                                             attack=Attack(crit_chance=0.5, crit_multiplier=2.0))})
+    game.player.inventory.equipped.append(Equipped(slots=(Slot.RIGHT_HAND,), instance=ItemInstance("club", wear=1.0)))
+    game.handle_action(StartCombat("rat"))
+    assert game.handle_action(AttackEnemy()).view.log[0] == CombatLogEntry("player", 10, crit=True)
+
+
+def test_worn_out_weapon_never_crits(game):
+    game.rng = FixedRolls(0.0)
+    game.catalog = ItemCatalog({"club": Item(id="club", category="weapons", slots=((Slot.RIGHT_HAND,),),
+                                             attack=Attack(crit_chance=0.5, crit_multiplier=2.0))})
+    game.player.inventory.equipped.append(Equipped(slots=(Slot.RIGHT_HAND,), instance=ItemInstance("club", wear=0.0)))
+    game.handle_action(StartCombat("rat"))
+    assert game.handle_action(AttackEnemy()).view.log[0] == CombatLogEntry("player", 5, crit=False)

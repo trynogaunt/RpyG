@@ -31,6 +31,7 @@ def detail_markup(t, d: ItemDetailView) -> str:
         rows.append((t("ui.inventory.details.attack"), " · ".join([
             f"{t('ui.inventory.details.damage')} ×{d.attack.damage_multiplier:g}",
             f"{t('ui.inventory.details.crit')} ×{d.attack.crit_multiplier:g}",
+            f"{t('ui.inventory.details.crit_chance')} {d.attack.crit_chance:.0%}",
             f"{t('ui.inventory.details.hits')} {d.attack.hits}",
         ])))
     if d.defense:

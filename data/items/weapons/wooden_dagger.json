@@ -5,6 +5,7 @@
     "attack": {
         "damage_multiplier": 0.7,
         "crit_multiplier": 1.5,
-        "hits": 2
+        "hits": 2,
+        "crit_chance": 0.15
     }
 }

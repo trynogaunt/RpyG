@@ -28,7 +28,7 @@ def test_load_real_enemies():
     assert rat.category == "cave"
     assert rat.max_health == 12
     assert rat.get_stat(Stat.SPEED) == 6
-    assert rat.attack == Attack(damage_multiplier=1.0, crit_multiplier=1.5, hits=1)
+    assert rat.attack == Attack(damage_multiplier=1.0, crit_multiplier=1.5, hits=1, crit_chance=0.1)
 
 
 def test_attack_defaults_when_missing(tmp_path):

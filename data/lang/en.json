@@ -33,6 +33,7 @@
             }
         },
         "presence": {
+            "fighting": "Fighting {enemy}",
             "main_menu": "In the main menu",
             "creation": "Creating a character",
             "exploring": "Exploring {room}",
@@ -59,7 +60,9 @@
             "east": "East",
             "west": "West"
         },
+        "combat": { "critical": "Critical hit!", "title": "Combat", "attack": "Attack", "flee": "Flee", "fight": "Fight: {enemy}", "fight_short": "Fight", "player_hits": "You hit {enemy} for {damage} damage.", "enemy_hits": "{enemy} hits you for {damage} damage.", "log": "Log", "game_over": "G A M E   O V E R", "victory": "You defeated your opponent!", "fled": "You ran away.", "defeat": "You have fallen..." },
         "exploration": {
+            "enemies": "Enemies: {names}",
             "look_around": "Look Around",
             "back_to_menu": "Back to Menu",
             "navigation": "Navigation",
@@ -87,6 +90,7 @@
                 "consumables": "Consumable"
             },
             "details": {
+                "crit_chance": "Crit chance",
                 "category": "Category",
                 "slots": "Slots",
                 "equipped_on": "Equipped on",

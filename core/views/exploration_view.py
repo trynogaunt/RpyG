@@ -12,3 +12,4 @@ class ExplorationView(BaseView):
     room_description: str
     can_move: dict[Direction, bool]
     player_summary: PlayerSummary
+    enemies: tuple[str, ...] = ()

@@ -17,10 +17,13 @@ class Attack:
     damage_multiplier: float = 1.0
     crit_multiplier: float = 1.0
     hits: int = 1
+    crit_chance: float = 0.0          # chance de critique de l'arme neuve, entre 0 et 1
 
     def __post_init__(self):
         if self.damage_multiplier <= 0:
             raise ValueError("Invalid damage multiplier")
+        if not 0 <= self.crit_chance <= 1:
+            raise ValueError("Invalid crit chance")
         if self.crit_multiplier <= 0:
             raise ValueError("Invalid crit multiplier")
         if self.hits <= 0:

@@ -2,6 +2,9 @@ from core.enums import Screens
 from core.updater import UpdateError, UpdateStatus, UpdateState, apply
 from core.game.response import GameResponse, Message
 from core.game.actions import (
+    StartCombat,
+    AttackEnemy,
+    Flee,
     CloseCatalog,
     OpenCatalog,
     UseItem,
@@ -55,6 +58,10 @@ from core.game.inventory import (
 )
 from core.items.catalog import ItemCatalog, UnknownItem
 from core.enemies.catalog import EnemyCatalog
+from core.enums import Stat
+from core.game.combat import CombatLogEntry, CombatState, resolve_attack
+from core.items.base import Attack
+from core.views.combat_view import CombatView
 from core.game.effect import EFFECTS
 from core.items.base import Slot
 
@@ -66,6 +73,7 @@ from core.views.inventory_view import (
 )
 
 import logging
+from random import Random
 
 log = logging.getLogger(__name__)
 
@@ -87,6 +95,7 @@ class Game:
         catalog: ItemCatalog | None = None,
         enemies: EnemyCatalog | None = None,
         dev: bool = False,
+        rng: Random | None = None,
     ):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
@@ -106,6 +115,8 @@ class Game:
         self.inventory_selection: int | Slot | None = None
         self._previous_screen: Screens | None = None
         self._catalog_selection: str | None = None
+        self.combat: CombatState | None = None
+        self.rng = rng or Random()       # injecté par les tests pour fixer les jets
         self.restart_requested: bool = (
             False  # lu par main.py après la fermeture de l'interface
         )
@@ -138,6 +149,8 @@ class Game:
                 return self._inventory_to_view()
             case Screens.CATALOG:
                 return self._catalog_to_view()
+            case Screens.COMBAT:
+                return self._combat_to_view()
             case _:
                 return None
 
@@ -176,6 +189,16 @@ class Game:
                 for direction in Direction
             },
             player_summary=self.player.to_summary(),
+            enemies=current_room.enemies,
+        )
+
+    def _combat_to_view(self) -> CombatView:
+        return CombatView(
+            enemy_id=self.combat.enemy.id,
+            enemy_health=self.combat.enemy_health,
+            enemy_max_health=self.combat.enemy.max_health,
+            player_summary=self.player.to_summary(),
+            log=tuple(self.combat.log),
         )
 
     def _options_to_view(self) -> OptionView:
@@ -394,12 +417,82 @@ class Game:
                 self._handle_inventory(action)
             case Screens.CATALOG:
                 self._handle_catalog(action)
+            case Screens.COMBAT:
+                self._handle_combat(action)
+            case Screens.GAME_OVER:
+                self._handle_game_over(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
         view = self._build_to_view()
         return GameResponse(
             screen=self.screen, view=view, messages=tuple(self._messages)
         )
+
+    def _handle_combat(self, action: Action) -> None:
+        match action:
+            case AttackEnemy():
+                # Le plus rapide frappe en premier ; le joueur gagne les égalités
+                enemy_first = self.combat.enemy.get_stat(Stat.SPEED) > self.player.get_stat(Stat.SPEED)
+                strikes = (self._enemy_strikes, self._player_strikes) if enemy_first \
+                    else (self._player_strikes, self._enemy_strikes)
+                for strike in strikes:
+                    strike()
+                    if self.combat.enemy_defeated:
+                        self._end_combat("ui.combat.victory")
+                        return
+                    if self.player.health <= 0:
+                        self.combat = None
+                        self.screen = Screens.GAME_OVER
+                        self._messages.append(Message(key="ui.combat.defeat"))
+                        return
+            case Flee():
+                self._end_combat("ui.combat.fled")
+            case _:
+                raise ValueError(
+                    f"Action inconnue : {action!r} (écran : {self.screen})"
+                )
+
+    def _player_strikes(self) -> None:
+        attack, wear = self._player_attack()
+        p = self.player
+        for hit in resolve_attack(p.get_stat(Stat.STRENGTH), p.get_stat(Stat.LUCK), attack, wear, self.rng):
+            self.combat.enemy_health = max(0, self.combat.enemy_health - hit.damage)
+            self.combat.log.append(CombatLogEntry(attacker="player", damage=hit.damage, crit=hit.crit))
+            if self.combat.enemy_defeated:
+                return
+
+    def _enemy_strikes(self) -> None:
+        enemy = self.combat.enemy
+        # Les ennemis n'ont pas d'exemplaire d'arme : leurs armes naturelles sont toujours « neuves »
+        for hit in resolve_attack(enemy.get_stat(Stat.STRENGTH), enemy.get_stat(Stat.LUCK), enemy.attack, 1.0, self.rng):
+            self.player.health = max(0, self.player.health - hit.damage)
+            self.combat.log.append(CombatLogEntry(attacker="enemy", damage=hit.damage, crit=hit.crit))
+            if self.player.health <= 0:
+                return
+
+    def _player_attack(self) -> tuple[Attack, float]:
+        """Attaque et usure de la première arme portée, ou poings nus (sans crit)."""
+        for equipped in self.player.inventory.equipped:
+            instance = equipped.instance
+            if instance.item_id in self.catalog and self.catalog.get(instance.item_id).attack is not None:
+                wear = instance.wear if instance.wear is not None else 1.0
+                return self.catalog.get(instance.item_id).attack, wear
+        return Attack(), 1.0
+
+    def _end_combat(self, message_key: str) -> None:
+        self.combat = None
+        self.screen = Screens.EXPLORATION
+        self._messages.append(Message(key=message_key))
+
+    def _handle_game_over(self, action: Action) -> None:
+        match action:
+            case Quit() | Back():
+                self.player = None
+                self.screen = Screens.MAIN_MENU
+            case _:
+                raise ValueError(
+                    f"Action inconnue : {action!r} (écran : {self.screen})"
+                )
 
     def _handle_catalog(self, action: Action) -> None:
         match action:
@@ -513,6 +606,11 @@ class Game:
                 self._previous_screen = self.screen
                 self.screen = Screens.INVENTORY
                 self.inventory_selection = None
+            case StartCombat(enemy_id=enemy_id):
+                room = self.world.get_room(self.player.location)
+                if enemy_id in room.enemies and enemy_id in self.enemies:
+                    self.combat = CombatState.start(self.enemies.get(enemy_id))
+                    self.screen = Screens.COMBAT
             case Quit():
                 self.screen = Screens.MAIN_MENU
             case _:

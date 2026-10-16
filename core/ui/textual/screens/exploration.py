@@ -7,7 +7,7 @@ from textual.containers import Grid, Horizontal, Vertical
 from textual.widgets import Button, Footer, RichLog, Static
 from textual.widgets.option_list import Option
 from textual import on
-from core.game.actions import NewGame, Quit, Move, Explore, OpenSlots, OpenInventory
+from core.game.actions import NewGame, Quit, Move, Explore, OpenSlots, OpenInventory, StartCombat
 from core.game.response import Message
 from core.views.exploration_view import ExplorationView
 from core.game.text_keys import room_key, zone_key
@@ -20,6 +20,7 @@ class ExplorationScreen(BaseScreen):
         Binding("down,s",  "move('SOUTH')", "", show=False),
         Binding("left,q",  "move('WEST')",  "", show=False),
         Binding("right,d", "move('EAST')",  "", show=False),
+        Binding("c", "fight", "ui.combat.fight_short"),
         Binding("i", "open_inventory", "ui.exploration.open_inventory"),
         Binding("e", "save_game", "ui.exploration.save_game"),
         Binding("escape",  "quit_game", "ui.common.quit")]
@@ -31,6 +32,7 @@ class ExplorationScreen(BaseScreen):
                 with Vertical(id="room-panel", classes="panel"):
                     yield Static("…", id="room-name")
                     yield Static("…", id="room-description")
+                    yield Static("", id="room-enemies")
                 yield RichLog(id="log-panel", classes="panel", wrap=True, highlight=True, min_width=0)
 
             with Vertical(id="right"):
@@ -57,10 +59,17 @@ class ExplorationScreen(BaseScreen):
 
     
     def update_view(self, view: ExplorationView):
+        self.view = view
         player = view.player_summary
         self.query_one("#room-panel").border_title = self.app.t(zone_key(view.zone_id, "name"))
         self.query_one("#room-name", Static).update(self.app.t(f'zones.{view.zone_id}.rooms.{view.room_id}.name'))
         self.query_one("#room-description", Static).update(self.app.t(f'zones.{view.zone_id}.rooms.{view.room_id}.description'))
+        enemies = self.query_one("#room-enemies", Static)
+        enemies.display = bool(view.enemies)
+        self.refresh_bindings()          # « Combattre » n'apparaît que face à un ennemi
+        if view.enemies:
+            names = ", ".join(self.app.t(f"enemies.{e}.name") for e in view.enemies)
+            enemies.update(self.app.t("ui.exploration.enemies", names=names))
         self.query_one("#player-panel").border_title = view.player_summary.name
         self.query_one("#player-level", Static).update(f"Lv. {view.player_summary.level}")
         self.query_one("#hp-label", Static).update(self.app.t("ui.stats.abrev.health"))
@@ -82,6 +91,17 @@ class ExplorationScreen(BaseScreen):
         self.query_one("#log-panel").border_title = "JOURNAL"
         super().on_mount()   
     
+    def check_action(self, action: str, parameters) -> bool | None:
+        if action == "fight":
+            view = getattr(self, "view", None)
+            return bool(view and view.enemies)
+        return True
+
+    def action_fight(self) -> None:
+        """Affronte le premier ennemi de la salle."""
+        if self.view.enemies:
+            self.app.dispatch(StartCombat(self.view.enemies[0]))
+
     def action_open_inventory(self) -> None:
         self.app.dispatch(OpenInventory())
 

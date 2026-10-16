@@ -154,3 +154,16 @@ class InspectCatalogItem(Action):
 class GiveCatalogItem(Action):
     """Action representing the intention to give an item from the catalog to the player."""
     item_id: str
+
+@dataclass(frozen=True)
+class StartCombat(Action):
+    """Action representing the intention to fight an enemy present in the current room."""
+    enemy_id: str
+
+@dataclass(frozen=True)
+class AttackEnemy(Action):
+    """Action representing the intention to strike the enemy during a combat."""
+
+@dataclass(frozen=True)
+class Flee(Action):
+    """Action representing the intention to run away from a combat."""
