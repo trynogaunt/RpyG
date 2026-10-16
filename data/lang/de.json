@@ -2,10 +2,12 @@
     "ui": {
         "common": { "quit": "Beenden", "level": "Stufe", "unavailable": "Nicht verfügbar", "back": "Zurück", "invalid_choice": "Ungültige Auswahl" },
         "slots": {"empty": "--Leerer Speicherplatz--", "title_load": "Spiel laden", "title_save": "Spiel speichern", "unreadable": "--Unlesbarer Speicherplatz--", "load": "Laden", "delete": "Löschen", "saved_at": "Gespeichert am {date}", "confirm_delete": "Spielstand von {name} endgültig löschen?", "yes": "Ja", "no": "Nein"},
-        "main_menu": { "new_game": "Neues Spiel", "quit": "Beenden", "options": "Optionen", "load_game": "Spiel laden", "update": "Spiel aktualisieren",
+        "main_menu": { "new_game": "Neues Spiel", "quit": "Beenden", "options": "Optionen", "load_game": "Spiel laden", "update": "Spiel aktualisieren", "catalog": "Gegenstandskatalog (Dev)",
         "title": "R P y G - L E G A C Y", "tagline": "Deine CPU kümmert sich um alle Drachen",
         "lore": "In einer Welt, in der Drachen den Himmel durchstreifen und uralte Magie in der Luft schwebt, bist du ein mutiger Abenteurer auf der Suche nach Ruhm und Reichtum. \nWirst du dich den kommenden Herausforderungen stellen und zur Legende werden?",
         "version": "Version {version} - Early Access" },
+          "dev_mode": { "title": "Dev-Modus - Gegenstandskatalog" },
+          "catalog": { "select": "Gegenstand auswählen", "prompt": "Gegenstandsnummer (leer zum Abbrechen):", "close": "Schließen", "count": "{count} Gegenstände" },
           "options": {
             "title": "Optionen",
             "language": "Sprache",
@@ -219,7 +221,7 @@
             "name": "Holzdolch",
             "description": "Ein leichter Holzdolch. Schwache Hiebe, aber schnell und präzise."
         },
-        "wooden_stick": {
+        "wooden_staff": {
             "name": "Holzstab",
             "description": "Ein langer Holzstab, der mit beiden Händen geführt wird."
         },

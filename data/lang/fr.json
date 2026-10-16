@@ -2,10 +2,12 @@
     "ui": {
         "common": { "quit": "Quitter", "level": "Niveau", "unavailable": "Indisponible", "back": "Retour", "invalid_choice": "Choix invalide" },
         "slots": {"empty": "--Emplacement Vide--", "title_load": "Charger la Partie", "title_save": "Sauvegarder la Partie", "unreadable": "--Emplacement Illisible--", "load": "Charger", "delete": "Supprimer", "saved_at": "Sauvegardé le {date}", "confirm_delete": "Supprimer définitivement la sauvegarde de {name} ?", "yes": "Oui", "no": "Non"},
-        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger la Partie", "update": "Mettre à Jour",
+        "main_menu": { "new_game": "Nouvelle Partie", "quit": "Quitter", "options": "Options", "load_game": "Charger la Partie", "update": "Mettre à Jour", "catalog": "Catalogue d'objets (dev)",
         "title": "R P y G - L E G A C Y", "tagline": "Votre CPU s'occupera de tous les dragons", 
         "lore":"Dans un monde où les dragons parcourent les cieux et où la magie ancienne flotte dans l'air, vous êtes un courageux aventurier en quête de gloire et de fortune. \nSerez-vous à la hauteur des défis à venir et deviendrez-vous une légende ?",
         "version": "Version {version} - Early Access" },
+        "dev_mode": { "title": "Mode Dev - Catalogue d'objets" },
+        "catalog": { "select": "Sélectionner un objet", "prompt": "Numéro de l'objet (vide pour annuler) :", "close": "Fermer", "count": "{count} objets" },
         "options": {
             "title": "Options",
             "language": "Langue",
@@ -219,7 +221,7 @@
             "name": "Dague en Bois",
             "description": "Une dague en bois légère. Coups faibles, mais rapides et précis."
         },
-        "wooden_stick": {
+        "wooden_staff": {
             "name": "Bâton en Bois",
             "description": "Un long bâton en bois, qui se manie à deux mains."
         },

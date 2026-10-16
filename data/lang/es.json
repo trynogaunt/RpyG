@@ -2,10 +2,12 @@
     "ui": {
         "common": { "quit": "Salir", "level": "Nivel", "unavailable": "No disponible", "back": "Atrás", "invalid_choice": "Elección inválida" },
         "slots": {"empty": "--Espacio Vacío--", "title_load": "Cargar Juego", "title_save": "Guardar Juego", "unreadable": "--Espacio Ilegible--", "load": "Cargar", "delete": "Eliminar", "saved_at": "Guardado el {date}", "confirm_delete": "¿Eliminar definitivamente la partida de {name}?", "yes": "Sí", "no": "No"},
-        "main_menu": { "new_game": "Nuevo Juego", "quit": "Salir", "options": "Opciones", "load_game": "Cargar Juego", "update": "Actualizar",
+        "main_menu": { "new_game": "Nuevo Juego", "quit": "Salir", "options": "Opciones", "load_game": "Cargar Juego", "update": "Actualizar", "catalog": "Catálogo de objetos (dev)",
         "title": "R P y G - L E G A C Y", "tagline": "Tu CPU se encargará de todos los dragones", 
         "lore":"En un mundo donde los dragones surcan los cielos y la magia antigua flota en el aire, eres un valiente aventurero en busca de gloria y fortuna. \n¿Enfrentarás los desafíos que se avecinan y te convertirás en una leyenda?",
         "version": "Version {version} - Early Access" },
+        "dev_mode": { "title": "Modo Dev - Catálogo de objetos" },
+        "catalog": { "select": "Seleccionar un objeto", "prompt": "Número del objeto (vacío para cancelar):", "close": "Cerrar", "count": "{count} objetos" },
         "options": {
             "title": "Opciones",
             "language": "Idioma",
@@ -219,7 +221,7 @@
             "name": "Daga de Madera",
             "description": "Una daga de madera ligera. Golpes débiles, pero rápidos y precisos."
         },
-        "wooden_stick": {
+        "wooden_staff": {
             "name": "Bastón de Madera",
             "description": "Un largo bastón de madera que se empuña con ambas manos."
         },

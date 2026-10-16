@@ -17,9 +17,6 @@ class CreationScreen(BaseConsoleScreen):
             print(f"{self.t('ui.creation.starter')} : {self._item_name(v.starter) if v.starter else '-'}")
             print()
 
-    def _item_name(self, item_id: str) -> str:
-        return self.t(f"items.{item_id}.name")
-
     def ask(self):
         v = self.view
         options = [(self.t("ui.creation.set_name"), self.ask_name)]

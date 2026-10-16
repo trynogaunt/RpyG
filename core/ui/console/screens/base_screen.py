@@ -218,3 +218,6 @@ class BaseConsoleScreen(ABC):
                 for letter, width, rgb in zip(letters, widths, self.LETTER_COLORS)
             ]
             print(margin + gap.join(parts))
+    
+    def _item_name(self, item_id: str) -> str:
+        return self.t(f"items.{item_id}.name")

@@ -148,9 +148,9 @@ class CloseCatalog(Action):
 @dataclass(frozen=True)
 class InspectCatalogItem(Action):
     """Action representing the intention to look at an item in the catalog."""
-    index: int
+    item_id: int
 
 @dataclass(frozen=True)
 class GiveCatalogItem(Action):
     """Action representing the intention to give an item from the catalog to the player."""
-    index: int
+    item_id: int

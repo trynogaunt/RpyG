@@ -138,9 +138,6 @@ class InventoryScreen(BaseConsoleScreen):
         bar = self.color("█" * filled + "░" * (bar_width - filled), code)
         return f"{bar} {round(wear * 100):>3}%"
 
-    def _item_name(self, item_id: str) -> str:
-        return self.t(f"items.{item_id}.name")
-
     def ask(self):
         if self.view.selected is not None:
             return self._ask_detail(self.view.selected)

@@ -2,10 +2,12 @@
     "ui": {
         "common": { "quit": "Quit", "level": "Level", "unavailable": "Unavailable", "back": "Back", "invalid_choice": "Invalid Choice" },
         "slots": {"empty": "--Empty Slot--", "title_load": "Load Game", "title_save": "Save Game", "unreadable": "--Unreadable Slot--", "load": "Load", "delete": "Delete", "saved_at": "Saved on {date}", "confirm_delete": "Permanently delete {name}'s save?", "yes": "Yes", "no": "No"},
-        "main_menu": { "new_game": "New Game", "quit": "Quit", "options": "Options", "load_game": "Load Game", "update": "Update",
+        "main_menu": { "new_game": "New Game", "quit": "Quit", "options": "Options", "load_game": "Load Game", "update": "Update", "catalog": "Item Catalog (dev)",
         "title": "R P y G - L E G A C Y", "tagline": "Your CPU will handle all the dragons", 
         "lore":"In a world where dragons roam the skies and ancient magic floats in the air, you are a brave adventurer seeking glory and fortune. \nWill you rise to the challenges ahead and become a legend?",
         "version": "Version {version} - Early Access" },
+        "dev_mode": { "title": "Dev Mode - Item Catalog" },
+        "catalog": { "select": "Select an item", "prompt": "Item number (empty to cancel):", "close": "Close", "count": "{count} items" },
         "options": {
             "title": "Options",
             "language": "Language",
@@ -219,7 +221,7 @@
             "name": "Wooden Dagger",
             "description": "A light wooden dagger. Weak blows, but quick and precise."
         },
-        "wooden_stick": {
+        "wooden_staff": {
             "name": "Wooden Staff",
             "description": "A long wooden staff, held with both hands."
         },
