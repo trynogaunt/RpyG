@@ -5,7 +5,7 @@ from core.enums import Stat
 from dataclasses import dataclass
 from pathlib import Path
 from core.game.response import GameResponse, Message
-from core.game.actions import UseItem, ChooseStarter, CloseInventory, InspectItem, InspectEquipped, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
+from core.game.actions import OpenCatalog, UseItem, ChooseStarter, CloseInventory, InspectItem, InspectEquipped, EquipItem, UnequipItem, OpenInventory, Action, NewGame, Quit, SetName, AllocatePoints, ConfirmCreation, Creation, Move, Explore, LoadGame, SaveGame, OpenSlots, SelectSlot, DeleteSave, ConfirmDelete, Back, Options, SetLocale, ApplyUpdate
 from core.enums import Direction
 from core.game.creation import CreationState
 from core.game.rules import STAT_RULES, CREATION_POINTS, STARTER_WEAPONS
@@ -270,11 +270,20 @@ class Game:
                 self._handle_options(action)
             case Screens.INVENTORY:
                 self._handle_inventory(action)
+            case Screens.CATALOG:
+                self._handle_catalog(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
         view = self._build_to_view()
         return GameResponse(screen=self.screen, view=view, messages=tuple(self._messages))
     
+    def _handle_catalog(self, action: Action) -> None:
+        match action:
+            case CloseCatalog():
+                self.screen = Screens.MAIN_MENU
+            case _:
+                raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
+
     def _handle_main_menu(self, action: Action) -> None:
         match action:
             case NewGame():
@@ -299,6 +308,8 @@ class Game:
                     self.update = UpdateStatus(UpdateState.UP_TO_DATE)
                 else:
                     self._messages.append(Message(key=UPDATE_ERROR_KEYS[result.error]))
+            case OpenCatalog():
+                self.screen = Screens.CATALOG
             case _:
                 raise ValueError(f"Action inconnue : {action!r} (écran : {self.screen})")
 
