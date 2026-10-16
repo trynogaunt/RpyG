@@ -37,7 +37,7 @@ UPDATE_ERROR_KEYS = {
 }
 
 class Game:
-    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None, update=None, catalog: ItemCatalog | None = None):
+    def __init__(self, world: World | None = None, world_state: WorldState | None = None, settings=None, store=None, update=None, catalog: ItemCatalog | None = None, dev: bool = False):
         self.screen: Screens | None = None
         self.creation: CreationState | None = None
         self.player: Player | None = None
@@ -55,7 +55,7 @@ class Game:
         self.inventory_selection: int | Slot | None = None
         self._previous_screen: Screens | None = None
         self.restart_requested: bool = False     # lu par main.py après la fermeture de l'interface
-
+        self.dev = dev
     def start(self) -> GameResponse:
         self.screen = Screens.MAIN_MENU
 

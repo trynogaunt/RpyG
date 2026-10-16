@@ -41,7 +41,7 @@ ProgressCallback = Callable[[int, BootStep, StepStatus], None]
 
 
 class Boot:
-    def __init__(self, settings, data_dir: Path, step_delay: float = 0.0):
+    def __init__(self, settings, data_dir: Path, step_delay: float = 0.0, dev : bool = False):
         self.settings = settings
         self.data_dir = data_dir
         self.step_delay = step_delay      # pause après chaque étape (captures d'écran, démos)
@@ -50,7 +50,7 @@ class Boot:
         self.presence = None
         self.update: UpdateStatus | None = None
         self.game: Game | None = None
-        self.mode: str | None = None
+        self.dev: bool = dev
 
     def steps(self) -> list[BootStep]:
         steps = [
@@ -73,7 +73,7 @@ class Boot:
 
     def build_game(self) -> Game:
         self.game = Game(world=self.world, store=SaveStore(), settings=self.settings,
-                         catalog=self.catalog, update=self.update)
+                         catalog=self.catalog, update=self.update, dev=self.dev)
         return self.game
 
     def _load_items(self) -> StepStatus:
@@ -86,7 +86,7 @@ class Boot:
 
     def _connect_discord(self) -> StepStatus:
         from core.integrations.discord import DiscordIntegration
-        # Gardée même sans connexion : le battement retentera tant que le jeu tourne
+        
         self.presence = DiscordIntegration(app_id=DISCORD_APP_ID)
         self.presence.connect()
         self.presence.start_heartbeat()

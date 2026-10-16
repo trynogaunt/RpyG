@@ -23,7 +23,7 @@ def parse_args():
     parser.add_argument("--ui", choices=FRONTENDS.keys())
     parser.add_argument("--loading-delay", type=float, default=0.0, metavar="SECONDES",
                         help="pause après chaque étape de l'écran de chargement (pour les captures d'écran)")
-    parser.add_argument("--dev", type=str, help="Opening in dev mode")
+    parser.add_argument("--dev", action="store_true", help="Opening in dev mode")
     return parser.parse_args()
 
 def resolve_frontend(cli_choice, settings):
@@ -51,7 +51,7 @@ def main():
     translation = Translation(locales_dir=lang_dir, locales=settings.locale)
     
     frontend = resolve_frontend(args.ui, settings)
-    boot = Boot(settings=settings, data_dir=data_dir, step_delay=args.loading_delay)
+    boot = Boot(settings=settings, data_dir=data_dir, step_delay=args.loading_delay, dev=args.dev)
     frontend.run(boot, translation=translation, settings=settings)
 
     if boot.game is not None and boot.game.restart_requested:

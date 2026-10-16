@@ -16,3 +16,4 @@ rpyg.egg-info/
 *.egg-info/
 __pycache__/
 .pytest_cache/
+CLAUDE.md
