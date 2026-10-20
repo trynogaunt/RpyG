@@ -60,7 +60,7 @@
             "east": "Est",
             "west": "Ovest"
         },
-        "combat": { "critical": "Colpo critico!", "title": "Combattimento", "attack": "Attacca", "flee": "Fuggi", "fight": "Combatti: {enemy}", "fight_short": "Combatti", "player_hits": "Colpisci {enemy}: {damage} danni.", "enemy_hits": "{enemy} ti colpisce: {damage} danni.", "log": "Diario", "game_over": "G A M E   O V E R", "victory": "Hai sconfitto il tuo avversario!", "fled": "Sei fuggito.", "defeat": "Sei caduto in battaglia..." },
+        "combat": { "player_blocked": "{enemy} para il tuo colpo!", "enemy_blocked": "Pari il colpo di {enemy}!", "critical": "Colpo critico!", "title": "Combattimento", "attack": "Attacca", "flee": "Fuggi", "fight": "Combatti: {enemy}", "fight_short": "Combatti", "player_hits": "Colpisci {enemy}: {damage} danni.", "enemy_hits": "{enemy} ti colpisce: {damage} danni.", "log": "Diario", "game_over": "G A M E   O V E R", "victory": "Hai sconfitto il tuo avversario!", "fled": "Sei fuggito.", "defeat": "Sei caduto in battaglia..." },
         "exploration": {
             "enemies": "Nemici: {names}",
             "look_around": "Guarda Intorno",

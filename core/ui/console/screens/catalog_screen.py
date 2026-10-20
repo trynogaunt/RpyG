@@ -46,11 +46,10 @@ class CatalogScreen(ItemDetailMixin, BaseConsoleScreen):
         ]
         while True:
             action = self.choose(options)
-            if action is not None:      # None = sélection annulée, on réaffiche le menu
+            if action is not None:
                 return action
 
     def _ask_item(self):
-        """Demande le numéro d'un objet du cadre ; None si la saisie est vide."""
         entries = self.sorted_entries()
         while True:
             raw = self.ask_text(self.t("ui.catalog.prompt"))

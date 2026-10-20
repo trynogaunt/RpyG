@@ -5,6 +5,6 @@
     "defense": {
         "armor": 3,
         "magic_resistance": 1.0,
-        "block_chance": 0.1
+        "block_chance": 0.05
     }
 }

@@ -20,6 +20,10 @@ class CombatScreen(BaseConsoleScreen):
             "",
         ]
         for entry in v.log[-LOG_LINES:]:
+            if entry.blocked:
+                key = "ui.combat.player_blocked" if entry.attacker == "player" else "ui.combat.enemy_blocked"
+                lines.append(self.color(f"> {self.t(key, enemy=enemy)}", colors.CYAN))
+                continue
             key = "ui.combat.player_hits" if entry.attacker == "player" else "ui.combat.enemy_hits"
             text = f"> {self.t(key, enemy=enemy, damage=entry.damage)}"
             if entry.crit:

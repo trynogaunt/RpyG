@@ -61,6 +61,10 @@ class CombatScreen(BaseScreen):
 
         log = self.query_one("#combat-log", RichLog)
         for entry in view.log[self._logged:]:
+            if entry.blocked:
+                key = "ui.combat.player_blocked" if entry.attacker == "player" else "ui.combat.enemy_blocked"
+                log.write(f"[cyan]#[/] [italic]{self.app.t(key, enemy=self._enemy_name())}[/]")
+                continue
             if entry.attacker == "player":
                 line = f"[#ffb000]>[/] {self.app.t('ui.combat.player_hits', enemy=self._enemy_name(), damage=entry.damage)}"
             else:

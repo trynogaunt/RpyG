@@ -60,7 +60,7 @@
             "east": "Est",
             "west": "Ouest"
         },
-        "combat": { "critical": "Coup critique !", "title": "Combat", "attack": "Attaquer", "flee": "Fuir", "fight": "Combattre : {enemy}", "fight_short": "Combattre", "player_hits": "Vous frappez {enemy} : {damage} dégâts.", "enemy_hits": "{enemy} vous frappe : {damage} dégâts.", "log": "Journal", "game_over": "G A M E   O V E R", "victory": "Vous avez vaincu votre adversaire !", "fled": "Vous avez pris la fuite.", "defeat": "Vous êtes tombé au combat..." },
+        "combat": { "player_blocked": "{enemy} pare votre coup !", "enemy_blocked": "Vous parez le coup de {enemy} !", "critical": "Coup critique !", "title": "Combat", "attack": "Attaquer", "flee": "Fuir", "fight": "Combattre : {enemy}", "fight_short": "Combattre", "player_hits": "Vous frappez {enemy} : {damage} dégâts.", "enemy_hits": "{enemy} vous frappe : {damage} dégâts.", "log": "Journal", "game_over": "G A M E   O V E R", "victory": "Vous avez vaincu votre adversaire !", "fled": "Vous avez pris la fuite.", "defeat": "Vous êtes tombé au combat..." },
         "exploration": {
             "enemies": "Ennemis : {names}",
             "look_around": "Regarder autour",

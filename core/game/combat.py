@@ -9,6 +9,10 @@ from core.items.base import Attack
 LUCK_RATIO = 0.03       
 CRIT_CAP = 0.85
 ARMOR_SCALE = 100       
+BLOCK_CAP = 0.30
+BLOCK_SCALE = 20
+BLOCK_STAT_BONUS = 2
+BLOCK_LUCK_WEIGHT = 0.5
 
 
 @dataclass(frozen=True)
@@ -16,6 +20,7 @@ class CombatLogEntry:
     attacker: str         
     damage: int
     crit: bool = False
+    blocked: bool = False
 
 
 @dataclass
@@ -38,6 +43,7 @@ class CombatState:
 class Hit:
     damage: int
     crit: bool
+    blocked: bool = False
 
 
 def crit_chance(attack: Attack, wear: float, luck: int) -> float:
@@ -45,6 +51,13 @@ def crit_chance(attack: Attack, wear: float, luck: int) -> float:
     chance = attack.crit_chance * wear
     chance *= 1 + luck * LUCK_RATIO
     return min(chance, CRIT_CAP)
+
+
+def block_chance(base: float, wear: float, speed: int, luck: int) -> float:
+    """Le blocage vient du bouclier : la Vitesse (et un peu la Chance) le multiplient, au plus par 3, sans l'atteindre."""
+    stat = speed + luck * BLOCK_LUCK_WEIGHT
+    chance = base * wear * (1 + BLOCK_STAT_BONUS * stat / (stat + BLOCK_SCALE))
+    return min(chance, BLOCK_CAP)
 
 
 def armor_ratio(armor: int) -> float:
@@ -68,11 +81,15 @@ def finalize(damage: float, rng: Random) -> int:
     return max(1, whole)
 
 
-def resolve_attack(strength: int, luck: int, attack: Attack, wear: float, armor: int, rng: Random) -> list[Hit]:
-    """Un coup par `hits`, chacun avec son propre jet de critique, réduit par l'armure de la cible."""
+def resolve_attack(strength: int, luck: int, attack: Attack, wear: float, armor: int, block: float,
+                   rng: Random) -> list[Hit]:
+    """Un coup par `hits` : jet de blocage de la cible, puis de critique, puis réduction par son armure."""
     chance = crit_chance(attack, wear, luck)
     hits = []
     for _ in range(attack.hits):
+        if block and rng.random() < block:
+            hits.append(Hit(damage=0, crit=False, blocked=True))
+            continue
         damage = strength * attack.damage_multiplier
         crit = rng.random() < chance
         if crit:

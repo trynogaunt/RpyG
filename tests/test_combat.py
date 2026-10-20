@@ -6,7 +6,7 @@ from core.enemies.base import Enemy
 from core.enemies.catalog import EnemyCatalog
 from core.enums import Screens, Stat
 from core.game.actions import AttackEnemy, Flee, Quit, StartCombat
-from core.game.combat import CRIT_CAP, CombatLogEntry, armor_ratio, crit_chance, finalize, resolve_attack
+from core.game.combat import BLOCK_CAP, CRIT_CAP, Hit, CombatLogEntry, armor_ratio, block_chance, crit_chance, finalize, resolve_attack
 from core.game.game import Game
 from core.game.inventory import Equipped
 from core.game.player import Player
@@ -90,8 +90,31 @@ def test_armor_ratio_has_diminishing_returns(armor, expected):
 
 
 def test_armor_reduces_each_hit():
-    hits = resolve_attack(10, 0, Attack(hits=2), 1.0, 100, FixedRolls())     # 10 x 0.5 = 5 par coup
+    hits = resolve_attack(10, 0, Attack(hits=2), 1.0, 100, 0.0, FixedRolls())     # 10 x 0.5 = 5 par coup
     assert [h.damage for h in hits] == [5, 5]
+
+
+@pytest.mark.parametrize("base, wear, speed, luck, expected", [
+    (0.05, 1.0, 5, 1, 0.05 * (1 + 2 * 5.5 / 25.5)),     # bouclier en bois au départ : ~7 %
+    (0.05, 0.5, 5, 1, 0.025 * (1 + 2 * 5.5 / 25.5)),    # usé à moitié : divisé par deux
+    (0.0, 1.0, 100, 100, 0.0),                           # sans bouclier, les stats ne suffisent pas
+])
+def test_block_chance(base, wear, speed, luck, expected):
+    assert block_chance(base, wear, speed, luck) == pytest.approx(expected)
+
+
+def test_stats_never_triple_the_shield():
+    assert block_chance(0.05, 1.0, 10_000, 10_000) < 0.15
+
+
+def test_block_chance_is_capped():
+    assert block_chance(0.5, 1.0, 100, 100) == BLOCK_CAP
+
+
+def test_blocked_hit_deals_nothing_and_skips_crit_roll():
+    attack = Attack(hits=2, crit_chance=1.0, crit_multiplier=2.0)
+    hits = resolve_attack(10, 0, attack, 1.0, 0, 0.2, FixedRolls(0.1, 0.5, 0.0))   # bloqué, puis non bloqué + crit
+    assert hits == [Hit(damage=0, crit=False, blocked=True), Hit(damage=20, crit=True)]
 
 
 def test_negative_armor_is_rejected():
@@ -119,7 +142,7 @@ def test_crit_chance_is_capped():
 
 def test_each_hit_rolls_its_own_crit():
     attack = Attack(damage_multiplier=0.6, hits=2, crit_chance=0.5, crit_multiplier=2.0)
-    hits = resolve_attack(10, 0, attack, 1.0, 0, FixedRolls(0.1, 0.9))     # 1er coup crit, pas le 2e
+    hits = resolve_attack(10, 0, attack, 1.0, 0, 0.0, FixedRolls(0.1, 0.9))     # 1er coup crit, pas le 2e
     assert [(h.damage, h.crit) for h in hits] == [(12, True), (6, False)]
 
 
@@ -177,6 +200,27 @@ def test_enemy_armor_reduces_player_hits(game):
                                                                Stat.LUCK: 1}, defense=Defense(armor=150))})
     game.handle_action(StartCombat("rat"))
     assert game.handle_action(AttackEnemy()).view.log[0] == CombatLogEntry("player", 2)   # 5 x 0.4
+
+
+def test_shield_blocks_enemy_hit(game):
+    game.rng = FixedRolls(0.99, 0.0)                                # crit du joueur raté, puis blocage du coup du rat
+    game.catalog = ItemCatalog({"shield": Item(id="shield", category="shields", slots=((Slot.LEFT_HAND,),),
+                                               defense=Defense(block_chance=0.05))})
+    game.player.inventory.equipped.append(Equipped(slots=(Slot.LEFT_HAND,), instance=ItemInstance("shield", wear=1.0)))
+    game.handle_action(StartCombat("rat"))
+    response = game.handle_action(AttackEnemy())
+    assert response.view.log[1] == CombatLogEntry("enemy", 0, blocked=True)
+    assert response.view.player_summary.health == 10
+
+
+def test_best_shield_is_used_not_the_sum(game):
+    game.catalog = ItemCatalog({
+        "small": Item(id="small", category="shields", slots=((Slot.LEFT_HAND,),), defense=Defense(block_chance=0.05)),
+        "big": Item(id="big", category="shields", slots=((Slot.RIGHT_HAND,),), defense=Defense(block_chance=0.08)),
+    })
+    game.player.inventory.equipped += [Equipped(slots=(Slot.LEFT_HAND,), instance=ItemInstance("small", wear=1.0)),
+                                       Equipped(slots=(Slot.RIGHT_HAND,), instance=ItemInstance("big", wear=1.0))]
+    assert game._player_block() == pytest.approx(block_chance(0.08, 1.0, 5, 1))
 
 
 def test_victory_returns_to_exploration(game):

@@ -59,7 +59,7 @@ from core.game.inventory import (
 from core.items.catalog import ItemCatalog, UnknownItem
 from core.enemies.catalog import EnemyCatalog
 from core.enums import Stat
-from core.game.combat import CombatLogEntry, CombatState, resolve_attack
+from core.game.combat import CombatLogEntry, CombatState, block_chance, resolve_attack
 from core.items.base import Attack
 from core.views.combat_view import CombatView
 from core.game.effect import EFFECTS
@@ -455,11 +455,16 @@ class Game:
     def _player_strikes(self) -> None:
         attack, wear = self._player_attack()
         p = self.player
-        enemy_defense = self.combat.enemy.defense
+        enemy = self.combat.enemy
+        enemy_defense = enemy.defense
         enemy_armor = enemy_defense.armor if enemy_defense else 0
-        for hit in resolve_attack(p.get_stat(Stat.STRENGTH), p.get_stat(Stat.LUCK), attack, wear, enemy_armor, self.rng):
+        enemy_block = block_chance(enemy_defense.block_chance, 1.0, enemy.get_stat(Stat.SPEED),
+                                   enemy.get_stat(Stat.LUCK)) if enemy_defense else 0.0
+        for hit in resolve_attack(p.get_stat(Stat.STRENGTH), p.get_stat(Stat.LUCK), attack, wear, enemy_armor,
+                                  enemy_block, self.rng):
             self.combat.enemy_health = max(0, self.combat.enemy_health - hit.damage)
-            self.combat.log.append(CombatLogEntry(attacker="player", damage=hit.damage, crit=hit.crit))
+            self.combat.log.append(CombatLogEntry(attacker="player", damage=hit.damage, crit=hit.crit,
+                                                  blocked=hit.blocked))
             if self.combat.enemy_defeated:
                 return
 
@@ -467,9 +472,10 @@ class Game:
         enemy = self.combat.enemy
         # Les ennemis n'ont pas d'exemplaire d'arme : leurs armes naturelles sont toujours « neuves »
         for hit in resolve_attack(enemy.get_stat(Stat.STRENGTH), enemy.get_stat(Stat.LUCK), enemy.attack, 1.0,
-                                  self._player_armor(), self.rng):
+                                  self._player_armor(), self._player_block(), self.rng):
             self.player.health = max(0, self.player.health - hit.damage)
-            self.combat.log.append(CombatLogEntry(attacker="enemy", damage=hit.damage, crit=hit.crit))
+            self.combat.log.append(CombatLogEntry(attacker="enemy", damage=hit.damage, crit=hit.crit,
+                                                  blocked=hit.blocked))
             if self.player.health <= 0:
                 return
 
@@ -490,6 +496,18 @@ class Game:
             if item_id in self.catalog and self.catalog.get(item_id).defense is not None:
                 armor += self.catalog.get(item_id).defense.armor
         return armor
+
+    def _player_block(self) -> float:
+        """Chance de blocage du meilleur bouclier porté (usure comprise) : deux boucliers ne s'additionnent pas."""
+        shields = []
+        for equipped in self.player.inventory.equipped:
+            instance = equipped.instance
+            if instance.item_id in self.catalog and self.catalog.get(instance.item_id).defense is not None:
+                wear = instance.wear if instance.wear is not None else 1.0
+                shields.append((self.catalog.get(instance.item_id).defense.block_chance, wear))
+        base, wear = max(shields, key=lambda s: s[0] * s[1], default=(0.0, 1.0))
+        p = self.player
+        return block_chance(base, wear, p.get_stat(Stat.SPEED), p.get_stat(Stat.LUCK))
 
     def _end_combat(self, message_key: str) -> None:
         self.combat = None

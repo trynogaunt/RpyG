@@ -60,7 +60,7 @@
             "east": "Este",
             "west": "Oeste"
         },
-        "combat": { "critical": "¡Golpe crítico!", "title": "Combate", "attack": "Atacar", "flee": "Huir", "fight": "Luchar: {enemy}", "fight_short": "Luchar", "player_hits": "Golpeas a {enemy}: {damage} de daño.", "enemy_hits": "{enemy} te golpea: {damage} de daño.", "log": "Registro", "game_over": "G A M E   O V E R", "victory": "¡Has derrotado a tu adversario!", "fled": "Has huido.", "defeat": "Has caído en combate..." },
+        "combat": { "player_blocked": "¡{enemy} bloquea tu golpe!", "enemy_blocked": "¡Bloqueas el golpe de {enemy}!", "critical": "¡Golpe crítico!", "title": "Combate", "attack": "Atacar", "flee": "Huir", "fight": "Luchar: {enemy}", "fight_short": "Luchar", "player_hits": "Golpeas a {enemy}: {damage} de daño.", "enemy_hits": "{enemy} te golpea: {damage} de daño.", "log": "Registro", "game_over": "G A M E   O V E R", "victory": "¡Has derrotado a tu adversario!", "fled": "Has huido.", "defeat": "Has caído en combate..." },
         "exploration": {
             "enemies": "Enemigos: {names}",
             "look_around": "Examinar Alrededor",

@@ -38,6 +38,8 @@ class Defense:
     def __post_init__(self):
         if self.armor < 0:
             raise ValueError("Invalid armor value")
+        if not 0 <= self.block_chance <= 1:
+            raise ValueError("Invalid block chance")
 
 @dataclass(frozen=True)
 class Effect:
