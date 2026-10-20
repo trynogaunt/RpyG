@@ -36,7 +36,7 @@ def detail_markup(t, d: ItemDetailView) -> str:
         ])))
     if d.defense:
         rows.append((t("ui.inventory.details.defense"), " · ".join([
-            f"{t('ui.inventory.details.armor')} ×{d.defense.armor_multiplier:g}",
+            f"{t('ui.inventory.details.armor')} {d.defense.armor}",
             f"{t('ui.inventory.details.magic_resistance')} ×{d.defense.magic_resistance:g}",
             f"{t('ui.inventory.details.block_chance')} {d.defense.block_chance:.0%}",
         ])))

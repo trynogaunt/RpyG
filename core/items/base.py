@@ -31,9 +31,13 @@ class Attack:
 
 @dataclass(frozen=True)
 class Defense:
-    armor_multiplier: float = 1.0
+    armor: int = 0                    # s'additionne sur tout l'équipement porté
     magic_resistance: float = 1.0
     block_chance: float = 0.0
+
+    def __post_init__(self):
+        if self.armor < 0:
+            raise ValueError("Invalid armor value")
 
 @dataclass(frozen=True)
 class Effect:

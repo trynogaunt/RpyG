@@ -28,7 +28,7 @@ class ItemDetailMixin:
             ])))
         if d.defense:
             rows.append((self.t("ui.inventory.details.defense"), ", ".join([
-                f"{self.t('ui.inventory.details.armor')} x{d.defense.armor_multiplier:g}",
+                f"{self.t('ui.inventory.details.armor')} {d.defense.armor}",
                 f"{self.t('ui.inventory.details.magic_resistance')} x{d.defense.magic_resistance:g}",
                 f"{self.t('ui.inventory.details.block_chance')} {d.defense.block_chance:.0%}",
             ])))

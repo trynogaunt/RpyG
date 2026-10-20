@@ -6,13 +6,14 @@ from random import Random
 from core.enemies.base import Enemy
 from core.items.base import Attack
 
-LUCK_RATIO = 0.03       # chaque point de Chance amplifie le crit de l'arme de 3 %
+LUCK_RATIO = 0.03       
 CRIT_CAP = 0.85
+ARMOR_SCALE = 100       
 
 
 @dataclass(frozen=True)
 class CombatLogEntry:
-    attacker: str          # "player" ou "enemy"
+    attacker: str         
     damage: int
     crit: bool = False
 
@@ -46,15 +47,29 @@ def crit_chance(attack: Attack, wear: float, luck: int) -> float:
     return min(chance, CRIT_CAP)
 
 
-def finalize(damage: float) -> int:
-    """Seul arrondi du pipeline : à l'entier supérieur, au moins 1 dès qu'il y a des dégâts."""
+def armor_ratio(armor: int) -> float:
+    """Part des dégâts qui passe l'armure : chaque point compte de moins en moins, sans jamais tout bloquer."""
+    return ARMOR_SCALE / (ARMOR_SCALE + armor)
+
+
+def finalize(damage: float, rng: Random) -> int:
+    """Seul arrondi du pipeline, stochastique : 2.7 donne 3 dans 70 % des cas, 2 sinon.
+
+    En moyenne on retombe sur la vraie valeur, donc même une petite armure compte.
+    Au moins 1 dès qu'il y a des dégâts.
+    """
     if damage <= 0:
         return 0
-    return max(1, math.ceil(round(damage, 6)))   # round : 10.000000000000002 ne doit pas devenir 11
+    damage = round(damage, 6)                    # 10.000000000000002 doit rester 10, sans jet
+    whole = math.floor(damage)
+    fraction = round(damage - whole, 6)          # 2.7 - 2 vaut 0.7000000000000002
+    if fraction and rng.random() < fraction:
+        whole += 1
+    return max(1, whole)
 
 
-def resolve_attack(strength: int, luck: int, attack: Attack, wear: float, rng: Random) -> list[Hit]:
-    """Un coup par `hits`, chacun avec son propre jet de critique."""
+def resolve_attack(strength: int, luck: int, attack: Attack, wear: float, armor: int, rng: Random) -> list[Hit]:
+    """Un coup par `hits`, chacun avec son propre jet de critique, réduit par l'armure de la cible."""
     chance = crit_chance(attack, wear, luck)
     hits = []
     for _ in range(attack.hits):
@@ -62,5 +77,6 @@ def resolve_attack(strength: int, luck: int, attack: Attack, wear: float, rng: R
         crit = rng.random() < chance
         if crit:
             damage *= attack.crit_multiplier
-        hits.append(Hit(damage=finalize(damage), crit=crit))
+        damage *= armor_ratio(armor)
+        hits.append(Hit(damage=finalize(damage, rng), crit=crit))
     return hits

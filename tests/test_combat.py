@@ -6,11 +6,11 @@ from core.enemies.base import Enemy
 from core.enemies.catalog import EnemyCatalog
 from core.enums import Screens, Stat
 from core.game.actions import AttackEnemy, Flee, Quit, StartCombat
-from core.game.combat import CRIT_CAP, CombatLogEntry, crit_chance, finalize, resolve_attack
+from core.game.combat import CRIT_CAP, CombatLogEntry, armor_ratio, crit_chance, finalize, resolve_attack
 from core.game.game import Game
 from core.game.inventory import Equipped
 from core.game.player import Player
-from core.items.base import Attack, Item, ItemInstance, Slot
+from core.items.base import Attack, Defense, Item, ItemInstance, Slot
 from core.items.catalog import ItemCatalog
 from core.world.models import Room, RoomRef, World, Zone
 
@@ -61,12 +61,42 @@ def message_keys(response) -> list[str]:
 
 # ----- formule -----
 
-def test_finalize_rounds_up_once():
-    assert finalize(5.5) == 6
-    assert finalize(5.0) == 5
-    assert finalize(10.000000000000002) == 10        # bruit des floats ignoré
-    assert finalize(0.2) == 1                        # un coup qui touche fait au moins 1
-    assert finalize(0) == 0
+@pytest.mark.parametrize("damage, roll, expected", [
+    (2.7, 0.69, 3),      # jet sous la partie décimale : arrondi vers le haut
+    (2.7, 0.70, 2),      # sinon vers le bas
+    (0.2, 0.99, 1),      # un coup qui touche fait au moins 1
+])
+def test_finalize_rounds_stochastically(damage, roll, expected):
+    assert finalize(damage, FixedRolls(roll)) == expected
+
+
+def test_finalize_whole_damage_needs_no_roll():
+    rng = FixedRolls(0.0)
+    assert finalize(5.0, rng) == 5
+    assert finalize(10.000000000000002, rng) == 10   # bruit des floats ignoré
+    assert finalize(0, rng) == 0
+    assert rng.rolls == [0.0]                        # aucun jet consommé
+
+
+def test_finalize_matches_real_damage_on_average():
+    rng = Random(42)
+    rolls = [finalize(2.7, rng) for _ in range(10_000)]
+    assert sum(rolls) / len(rolls) == pytest.approx(2.7, abs=0.02)
+
+
+@pytest.mark.parametrize("armor, expected", [(0, 1.0), (25, 0.8), (100, 0.5), (300, 0.25)])
+def test_armor_ratio_has_diminishing_returns(armor, expected):
+    assert armor_ratio(armor) == pytest.approx(expected)
+
+
+def test_armor_reduces_each_hit():
+    hits = resolve_attack(10, 0, Attack(hits=2), 1.0, 100, FixedRolls())     # 10 x 0.5 = 5 par coup
+    assert [h.damage for h in hits] == [5, 5]
+
+
+def test_negative_armor_is_rejected():
+    with pytest.raises(ValueError):
+        Defense(armor=-1)
 
 
 @pytest.mark.parametrize("wear, luck, expected", [
@@ -89,7 +119,7 @@ def test_crit_chance_is_capped():
 
 def test_each_hit_rolls_its_own_crit():
     attack = Attack(damage_multiplier=0.6, hits=2, crit_chance=0.5, crit_multiplier=2.0)
-    hits = resolve_attack(10, 0, attack, 1.0, FixedRolls(0.1, 0.9))     # 1er coup crit, pas le 2e
+    hits = resolve_attack(10, 0, attack, 1.0, 0, FixedRolls(0.1, 0.9))     # 1er coup crit, pas le 2e
     assert [(h.damage, h.crit) for h in hits] == [(12, True), (6, False)]
 
 
@@ -126,6 +156,27 @@ def test_equipped_weapon_is_used(game):
     game.player.inventory.equipped.append(Equipped(slots=(Slot.RIGHT_HAND,), instance=ItemInstance("club")))
     game.handle_action(StartCombat("rat"))
     assert game.handle_action(AttackEnemy()).view.enemy_health == 12 - 10
+
+
+def test_equipped_armor_adds_up_against_enemy_hits(game):
+    game.enemies = EnemyCatalog({"rat": enemy("rat", 12, 20)})
+    game.catalog = ItemCatalog({
+        "shield": Item(id="shield", category="shields", slots=((Slot.LEFT_HAND,),), defense=Defense(armor=60)),
+        "helmet": Item(id="helmet", category="helmets", slots=((Slot.HEAD,),), defense=Defense(armor=40)),
+    })
+    game.player.inventory.equipped += [Equipped(slots=(Slot.LEFT_HAND,), instance=ItemInstance("shield", wear=1.0)),
+                                       Equipped(slots=(Slot.HEAD,), instance=ItemInstance("helmet", wear=1.0))]
+    game.player.allocated_points[Stat.HEALTH] = 10                  # PV 60, pour survivre au coup
+    game.player.health = game.player.max_health
+    game.handle_action(StartCombat("rat"))
+    assert game.handle_action(AttackEnemy()).view.log[1] == CombatLogEntry("enemy", 10)   # 20 x 100/200
+
+
+def test_enemy_armor_reduces_player_hits(game):
+    game.enemies = EnemyCatalog({"rat": Enemy(id="rat", stats={Stat.HEALTH: 12, Stat.STRENGTH: 3, Stat.SPEED: 1,
+                                                               Stat.LUCK: 1}, defense=Defense(armor=150))})
+    game.handle_action(StartCombat("rat"))
+    assert game.handle_action(AttackEnemy()).view.log[0] == CombatLogEntry("player", 2)   # 5 x 0.4
 
 
 def test_victory_returns_to_exploration(game):

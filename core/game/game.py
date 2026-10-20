@@ -455,7 +455,9 @@ class Game:
     def _player_strikes(self) -> None:
         attack, wear = self._player_attack()
         p = self.player
-        for hit in resolve_attack(p.get_stat(Stat.STRENGTH), p.get_stat(Stat.LUCK), attack, wear, self.rng):
+        enemy_defense = self.combat.enemy.defense
+        enemy_armor = enemy_defense.armor if enemy_defense else 0
+        for hit in resolve_attack(p.get_stat(Stat.STRENGTH), p.get_stat(Stat.LUCK), attack, wear, enemy_armor, self.rng):
             self.combat.enemy_health = max(0, self.combat.enemy_health - hit.damage)
             self.combat.log.append(CombatLogEntry(attacker="player", damage=hit.damage, crit=hit.crit))
             if self.combat.enemy_defeated:
@@ -464,7 +466,8 @@ class Game:
     def _enemy_strikes(self) -> None:
         enemy = self.combat.enemy
         # Les ennemis n'ont pas d'exemplaire d'arme : leurs armes naturelles sont toujours « neuves »
-        for hit in resolve_attack(enemy.get_stat(Stat.STRENGTH), enemy.get_stat(Stat.LUCK), enemy.attack, 1.0, self.rng):
+        for hit in resolve_attack(enemy.get_stat(Stat.STRENGTH), enemy.get_stat(Stat.LUCK), enemy.attack, 1.0,
+                                  self._player_armor(), self.rng):
             self.player.health = max(0, self.player.health - hit.damage)
             self.combat.log.append(CombatLogEntry(attacker="enemy", damage=hit.damage, crit=hit.crit))
             if self.player.health <= 0:
@@ -478,6 +481,15 @@ class Game:
                 wear = instance.wear if instance.wear is not None else 1.0
                 return self.catalog.get(instance.item_id).attack, wear
         return Attack(), 1.0
+
+    def _player_armor(self) -> int:
+        """Somme de l'armure de tout l'équipement porté."""
+        armor = 0
+        for equipped in self.player.inventory.equipped:
+            item_id = equipped.instance.item_id
+            if item_id in self.catalog and self.catalog.get(item_id).defense is not None:
+                armor += self.catalog.get(item_id).defense.armor
+        return armor
 
     def _end_combat(self, message_key: str) -> None:
         self.combat = None
