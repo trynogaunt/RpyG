@@ -60,7 +60,7 @@
             "east": "Est",
             "west": "Ovest"
         },
-        "combat": { "player_blocked": "{enemy} para il tuo colpo!", "enemy_blocked": "Pari il colpo di {enemy}!", "critical": "Colpo critico!", "title": "Combattimento", "attack": "Attacca", "flee": "Fuggi", "fight": "Combatti: {enemy}", "fight_short": "Combatti", "player_hits": "Colpisci {enemy}: {damage} danni.", "enemy_hits": "{enemy} ti colpisce: {damage} danni.", "log": "Diario", "game_over": "G A M E   O V E R", "victory": "Hai sconfitto il tuo avversario!", "fled": "Sei fuggito.", "defeat": "Sei caduto in battaglia..." },
+        "combat": { "player_blocked": "{enemy} para il tuo colpo!", "enemy_blocked": "Pari il colpo di {enemy}!", "critical": "Colpo critico!", "title": "Combattimento", "attack": "Attacca", "attack_target": "Attacca {enemy}", "change_target": "Cambia bersaglio", "flee": "Fuggi", "fight": "Combatti: {enemy}", "fight_short": "Combatti", "player_hits": "Colpisci {enemy}: {damage} danni.", "enemy_hits": "{enemy} ti colpisce: {damage} danni.", "log": "Diario", "game_over": "G A M E   O V E R", "victory": "Hai sconfitto il tuo avversario!", "fled": "Sei fuggito.", "defeat": "Sei caduto in battaglia..." },
         "exploration": {
             "enemies": "Nemici: {names}",
             "look_around": "Guarda Intorno",
@@ -201,6 +201,11 @@
                     "name": "Passaggio Stretto",
                     "description": "Un passaggio stretto e tortuoso all'interno della grotta, appena abbastanza largo da poterci passare.",
                     "look_around": "Vedi le pareti del passaggio che si stringono e la debole luce proveniente dalla pozza d'acqua dietro di te."
+                },
+                "sunken_grotto": {
+                    "name": "Grotta Sommersa",
+                    "description": "Una vasta sala allagata alla fine del passaggio. Un'acqua nera la riempie quasi fino alle pareti, e qualcosa di lungo si muove sotto la superficie.",
+                    "look_around": "Increspature attraversano l'acqua scura senza un filo di vento. Vecchie ossa ricoprono la stretta sporgenza su cui ti trovi."
                 }
             }
         }
@@ -239,6 +244,14 @@
         "cave_rat": {
             "name": "Ratto delle Caverne",
             "description": "Un grosso ratto rognoso che si aggira nei tunnel umidi. Veloce, ma fragile."
+        },
+        "cave_bat": {
+            "name": "Pipistrello delle Caverne",
+            "description": "Un pipistrello stridente che si getta dalla volta. Veloce, ma il suo morso è debole."
+        },
+        "black_eel": {
+            "name": "Anguilla Nera",
+            "description": "Un'enorme anguilla, scura come l'acqua in cui si nasconde. Colpisce con morsi rapidi e ripetuti prima che si possa reagire."
         }
     }
 }

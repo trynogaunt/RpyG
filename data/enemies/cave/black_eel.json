@@ -1,0 +1,6 @@
+{
+    "id": "black_eel",
+    "level": 3,
+    "stats": { "health": 40, "strength": 4, "speed": 12, "luck": 3 },
+    "attack": { "damage_multiplier": 0.5, "crit_multiplier": 1.5, "hits": 3, "crit_chance": 0.1 }
+}

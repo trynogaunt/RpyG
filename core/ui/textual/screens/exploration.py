@@ -65,10 +65,10 @@ class ExplorationScreen(BaseScreen):
         self.query_one("#room-name", Static).update(self.app.t(f'zones.{view.zone_id}.rooms.{view.room_id}.name'))
         self.query_one("#room-description", Static).update(self.app.t(f'zones.{view.zone_id}.rooms.{view.room_id}.description'))
         enemies = self.query_one("#room-enemies", Static)
-        enemies.display = bool(view.enemies)
+        enemies.display = bool(view.encounters)
         self.refresh_bindings()          # « Combattre » n'apparaît que face à un ennemi
-        if view.enemies:
-            names = ", ".join(self.app.t(f"enemies.{e}.name") for e in view.enemies)
+        if view.encounters:
+            names = " / ".join(self._encounter_label(e) for e in view.encounters)
             enemies.update(self.app.t("ui.exploration.enemies", names=names))
         self.query_one("#player-panel").border_title = view.player_summary.name
         self.query_one("#player-level", Static).update(f"Lv. {view.player_summary.level}")
@@ -94,13 +94,18 @@ class ExplorationScreen(BaseScreen):
     def check_action(self, action: str, parameters) -> bool | None:
         if action == "fight":
             view = getattr(self, "view", None)
-            return bool(view and view.enemies)
+            return bool(view and view.encounters)
         return True
 
     def action_fight(self) -> None:
-        """Affronte le premier ennemi de la salle."""
-        if self.view.enemies:
-            self.app.dispatch(StartCombat(self.view.enemies[0]))
+        """Affronte le premier groupe de la salle."""
+        if self.view.encounters:
+            self.app.dispatch(StartCombat(self.view.encounters[0].id))
+
+    def _encounter_label(self, encounter) -> str:
+        """« Rat des Cavernes x2, Chauve-souris des Cavernes »."""
+        return ", ".join(self.app.t(f"enemies.{enemy_id}.name") + (f" x{count}" if count > 1 else "")
+                         for enemy_id, count in encounter.enemies)
 
     def action_open_inventory(self) -> None:
         self.app.dispatch(OpenInventory())

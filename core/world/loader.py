@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from core.enums import Direction
-from core.world.models import Room, RoomRef, World, Zone
+from core.world.models import Encounter, Room, RoomRef, World, Zone
 
 
 def load_world(data_dir) -> World:
@@ -58,9 +58,21 @@ def load_rooms(zone_data: dict, entries: dict[str, RoomRef]) -> dict[str, Room]:
             ref=RoomRef(zone_id, room_id),
             look_around=room_data.get("look_around", ""),
             exits=load_exits(room_data.get("exits", {}), zone_id, room_id, entries),
-            enemies=tuple(room_data.get("enemies", ())),
+            encounters=load_encounters(room_data.get("encounters", []), zone_id, room_id),
         )
     return rooms
+
+
+def load_encounters(raw_encounters: list, zone_id: str, room_id: str) -> tuple[Encounter, ...]:
+    encounters = []
+    for raw in raw_encounters:
+        where = f"rencontre '{raw.get('id')}' de {zone_id}/{room_id}"
+        if not raw.get("id") or not raw.get("enemies"):
+            raise ValueError(f"Rencontre sans id ou sans ennemis : {where}")
+        if any(e.id == raw["id"] for e in encounters):
+            raise ValueError(f"Rencontre en double : {where}")
+        encounters.append(Encounter(id=raw["id"], enemies=tuple(raw["enemies"])))
+    return tuple(encounters)
 
 
 def load_exits(raw_exits: dict, zone_id: str, room_id: str,

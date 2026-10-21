@@ -9,6 +9,7 @@ from core.enemies.base import Enemy
 from core.enums import Stat
 from core.game.player import Player
 from core.items.base import Attack
+from core.items.catalog import ItemCatalog
 
 
 class Fighter(Protocol):
@@ -87,6 +88,13 @@ class PlayerFighter:
     wear: float
     armor: int
     block: float
+
+    @classmethod
+    def from_player(cls, player: Player, catalog: ItemCatalog) -> PlayerFighter:
+        attack, wear = player.inventory.weapon(catalog)
+        base, shield_wear = player.inventory.best_shield(catalog)
+        block = block_chance(base, shield_wear, player.get_stat(Stat.SPEED), player.get_stat(Stat.LUCK))
+        return cls(player=player, attack=attack, wear=wear, armor=player.inventory.armor(catalog), block=block)
 
     def take_damage(self, damage: int) -> None:
         self.player.health = max(0, self.player.health - damage)

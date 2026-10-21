@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from core.items.base import Item, Slot, ItemInstance
+from core.items.base import Attack, Item, Slot, ItemInstance
+from core.items.catalog import ItemCatalog
 
 
 class InventoryError(Exception):
@@ -67,6 +68,34 @@ class Inventory:
 
     def occupant(self, slot: Slot) -> Equipped | None:
         return next((e for e in self.equipped if slot in e.slots), None)
+
+    def weapon(self, catalog: ItemCatalog) -> tuple[Attack, float]:
+        """Attaque et usure de la première arme portée, ou poings nus (sans crit)."""
+        for equipped in self.equipped:
+            instance = equipped.instance
+            if instance.item_id in catalog and catalog.get(instance.item_id).attack is not None:
+                wear = instance.wear if instance.wear is not None else 1.0
+                return catalog.get(instance.item_id).attack, wear
+        return Attack(), 1.0
+
+    def armor(self, catalog: ItemCatalog) -> int:
+        """Somme de l'armure de tout l'équipement porté."""
+        armor = 0
+        for equipped in self.equipped:
+            item_id = equipped.instance.item_id
+            if item_id in catalog and catalog.get(item_id).defense is not None:
+                armor += catalog.get(item_id).defense.armor
+        return armor
+
+    def best_shield(self, catalog: ItemCatalog) -> tuple[float, float]:
+        """(blocage de base, usure) du meilleur bouclier porté : deux boucliers ne s'additionnent pas."""
+        shields = []
+        for equipped in self.equipped:
+            instance = equipped.instance
+            if instance.item_id in catalog and catalog.get(instance.item_id).defense is not None:
+                wear = instance.wear if instance.wear is not None else 1.0
+                shields.append((catalog.get(instance.item_id).defense.block_chance, wear))
+        return max(shields, key=lambda s: s[0] * s[1], default=(0.0, 1.0))
 
     def _empty_cases(self) -> list[InventoryCase]:
         return [case for case in self.cases if case.is_empty]

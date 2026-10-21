@@ -157,8 +157,8 @@ class GiveCatalogItem(Action):
 
 @dataclass(frozen=True)
 class StartCombat(Action):
-    """Action representing the intention to fight an enemy present in the current room."""
-    enemy_id: str
+    """Action representing the intention to fight an encounter of the current room."""
+    encounter_id: str
 
 @dataclass(frozen=True)
 class AttackEnemy(Action):

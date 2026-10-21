@@ -17,7 +17,8 @@ from core.game.player import Player
 from core.items.base import Attack, Defense, Item, ItemInstance, Slot
 from core.items.catalog import ItemCatalog
 from core.views.combat_view import FoeView
-from core.world.models import Room, RoomRef, World, Zone
+from core.views.exploration_view import EncounterView
+from core.world.models import Encounter, Room, RoomRef, World, Zone
 
 DEN = RoomRef("cave", "den")
 HALL = RoomRef("cave", "hall")
@@ -48,7 +49,9 @@ def fighter() -> PlayerFighter:
 def game() -> Game:
     """Joueur (PV 10, force 5, à mains nues) dans une salle avec un rat (PV 12, force 3)."""
     cave = Zone(id="cave", name="Grotte", description="", entry_room="den", rooms={
-        "den": Room("Tanière", "", DEN, enemies=("rat", "ogre", "wolf")),
+        "den": Room("Tanière", "", DEN, encounters=(Encounter("rat", ("rat",)), Encounter("ogre", ("ogre",)),
+                                                   Encounter("wolf", ("wolf",)),
+                                                   Encounter("pack", ("rat", "rat", "wolf")))),
         "hall": Room("Salle", "", HALL),
     })
     g = Game(
@@ -217,13 +220,14 @@ def test_foe_killed_before_its_turn_does_not_strike():
 # ----- déroulement -----
 
 
-def test_exploration_view_lists_room_enemies(game):
-    assert game._exploration_to_view().enemies == ("rat", "ogre", "wolf")
+def test_exploration_view_lists_room_encounters(game):
+    assert game._exploration_to_view().encounters[-1] == EncounterView("pack", (("rat", 2), ("wolf", 1)))
+    assert [e.id for e in game._exploration_to_view().encounters] == ["rat", "ogre", "wolf", "pack"]
 
 
-@pytest.mark.parametrize("enemy_id", ["bat", "ghost"], ids=["absent-de-la-salle", "inconnu"])
-def test_cannot_fight_enemy_not_in_room(game, enemy_id):
-    response = game.handle_action(StartCombat(enemy_id))
+@pytest.mark.parametrize("encounter_id", ["bat", "ghost"], ids=["ennemi-hors-de-la-salle", "inconnue"])
+def test_cannot_fight_encounter_not_in_room(game, encounter_id):
+    response = game.handle_action(StartCombat(encounter_id))
     assert response.screen is Screens.EXPLORATION
     assert game.combat is None
 
@@ -233,6 +237,12 @@ def test_start_combat(game):
     assert response.screen is Screens.COMBAT
     assert response.view.foes == (FoeView("rat", 12, 12),)
     assert response.view.log == ()
+
+
+def test_start_combat_against_a_group(game):
+    response = game.handle_action(StartCombat("pack"))
+    assert response.view.foes == (FoeView("rat", 12, 12, tag="A"), FoeView("rat", 12, 12, tag="B"),
+                                  FoeView("wolf", 30, 30))
 
 
 def test_attack_then_enemy_strikes_back(game):
@@ -288,7 +298,7 @@ def test_best_shield_is_used_not_the_sum(game):
     })
     game.player.inventory.equipped += [Equipped(slots=(Slot.LEFT_HAND,), instance=ItemInstance("small", wear=1.0)),
                                        Equipped(slots=(Slot.RIGHT_HAND,), instance=ItemInstance("big", wear=1.0))]
-    assert game._player_block() == pytest.approx(block_chance(0.08, 1.0, 5, 1))
+    assert PlayerFighter.from_player(game.player, game.catalog).block == pytest.approx(block_chance(0.08, 1.0, 5, 1))
 
 
 def test_victory_returns_to_exploration(game):

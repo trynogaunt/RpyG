@@ -42,7 +42,7 @@ from core.game.player import Player
 from core.world.loader import World, RoomRef
 from core.world.models import WorldState
 from core.views.base_view import BaseView
-from core.views.exploration_view import ExplorationView
+from core.views.exploration_view import EncounterView, ExplorationView
 from core.views.catalog_view import CatalogView, ItemDetailView, CatalogEntryView
 from core.views.option_view import OptionView
 from core.views.slot_view import SlotsView
@@ -58,12 +58,9 @@ from core.game.inventory import (
 )
 from core.items.catalog import ItemCatalog, UnknownItem
 from core.enemies.catalog import EnemyCatalog
-from core.enums import Stat
 from core.combat.fighters import PlayerFighter
 from core.combat.moves import Strike
-from core.combat.resolution import block_chance
 from core.combat.state import CombatState, Outcome
-from core.items.base import Attack
 from core.views.combat_view import CombatView, FoeView
 from core.game.effect import EFFECTS
 from core.items.base import Slot
@@ -76,6 +73,7 @@ from core.views.inventory_view import (
 )
 
 import logging
+from collections import Counter
 from random import Random
 
 log = logging.getLogger(__name__)
@@ -192,7 +190,8 @@ class Game:
                 for direction in Direction
             },
             player_summary=self.player.to_summary(),
-            enemies=current_room.enemies,
+            encounters=tuple(EncounterView(id=e.id, enemies=tuple(Counter(e.enemies).items()))
+                             for e in current_room.encounters),
         )
 
     def _combat_to_view(self) -> CombatView:
@@ -459,42 +458,6 @@ class Game:
                     f"Action inconnue : {action!r} (écran : {self.screen})"
                 )
 
-    def _player_fighter(self) -> PlayerFighter:
-        """Le joueur tel qu'il entre en combat : l'équipement ne change pas pendant l'affrontement."""
-        attack, wear = self._player_attack()
-        return PlayerFighter(player=self.player, attack=attack, wear=wear, armor=self._player_armor(),
-                             block=self._player_block())
-
-    def _player_attack(self) -> tuple[Attack, float]:
-        """Attaque et usure de la première arme portée, ou poings nus (sans crit)."""
-        for equipped in self.player.inventory.equipped:
-            instance = equipped.instance
-            if instance.item_id in self.catalog and self.catalog.get(instance.item_id).attack is not None:
-                wear = instance.wear if instance.wear is not None else 1.0
-                return self.catalog.get(instance.item_id).attack, wear
-        return Attack(), 1.0
-
-    def _player_armor(self) -> int:
-        """Somme de l'armure de tout l'équipement porté."""
-        armor = 0
-        for equipped in self.player.inventory.equipped:
-            item_id = equipped.instance.item_id
-            if item_id in self.catalog and self.catalog.get(item_id).defense is not None:
-                armor += self.catalog.get(item_id).defense.armor
-        return armor
-
-    def _player_block(self) -> float:
-        """Chance de blocage du meilleur bouclier porté (usure comprise) : deux boucliers ne s'additionnent pas."""
-        shields = []
-        for equipped in self.player.inventory.equipped:
-            instance = equipped.instance
-            if instance.item_id in self.catalog and self.catalog.get(instance.item_id).defense is not None:
-                wear = instance.wear if instance.wear is not None else 1.0
-                shields.append((self.catalog.get(instance.item_id).defense.block_chance, wear))
-        base, wear = max(shields, key=lambda s: s[0] * s[1], default=(0.0, 1.0))
-        p = self.player
-        return block_chance(base, wear, p.get_stat(Stat.SPEED), p.get_stat(Stat.LUCK))
-
     def _end_combat(self, message_key: str) -> None:
         self.combat = None
         self.screen = Screens.EXPLORATION
@@ -622,10 +585,13 @@ class Game:
                 self._previous_screen = self.screen
                 self.screen = Screens.INVENTORY
                 self.inventory_selection = None
-            case StartCombat(enemy_id=enemy_id):
+            case StartCombat(encounter_id=encounter_id):
                 room = self.world.get_room(self.player.location)
-                if enemy_id in room.enemies and enemy_id in self.enemies:
-                    self.combat = CombatState.start(self._player_fighter(), [self.enemies.get(enemy_id)])
+                encounter = next((e for e in room.encounters if e.id == encounter_id), None)
+                if encounter is not None:
+                    # check_world_enemies garantit au chargement que chaque id existe dans le catalogue
+                    self.combat = CombatState.start(PlayerFighter.from_player(self.player, self.catalog),
+                                                      [self.enemies.get(i) for i in encounter.enemies])
                     self.screen = Screens.COMBAT
             case Quit():
                 self.screen = Screens.MAIN_MENU

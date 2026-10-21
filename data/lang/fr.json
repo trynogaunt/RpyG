@@ -60,7 +60,7 @@
             "east": "Est",
             "west": "Ouest"
         },
-        "combat": { "player_blocked": "{enemy} pare votre coup !", "enemy_blocked": "Vous parez le coup de {enemy} !", "critical": "Coup critique !", "title": "Combat", "attack": "Attaquer", "flee": "Fuir", "fight": "Combattre : {enemy}", "fight_short": "Combattre", "player_hits": "Vous frappez {enemy} : {damage} dégâts.", "enemy_hits": "{enemy} vous frappe : {damage} dégâts.", "log": "Journal", "game_over": "G A M E   O V E R", "victory": "Vous avez vaincu votre adversaire !", "fled": "Vous avez pris la fuite.", "defeat": "Vous êtes tombé au combat..." },
+        "combat": { "player_blocked": "{enemy} pare votre coup !", "enemy_blocked": "Vous parez le coup de {enemy} !", "critical": "Coup critique !", "title": "Combat", "attack": "Attaquer", "attack_target": "Attaquer {enemy}", "change_target": "Changer de cible", "flee": "Fuir", "fight": "Combattre : {enemy}", "fight_short": "Combattre", "player_hits": "Vous frappez {enemy} : {damage} dégâts.", "enemy_hits": "{enemy} vous frappe : {damage} dégâts.", "log": "Journal", "game_over": "G A M E   O V E R", "victory": "Vous avez vaincu votre adversaire !", "fled": "Vous avez pris la fuite.", "defeat": "Vous êtes tombé au combat..." },
         "exploration": {
             "enemies": "Ennemis : {names}",
             "look_around": "Regarder autour",
@@ -201,6 +201,11 @@
                     "name": "Passage Étroit",
                     "description": "Un passage étroit et sinueux à l'intérieur de la grotte, à peine assez large pour se faufiler.",
                     "look_around": "Vous voyez les parois du passage se refermer et la faible lumière du bassin d'eau derrière vous."
+                },
+                "sunken_grotto": {
+                    "name": "Grotte Engloutie",
+                    "description": "Une vaste salle inondée au bout du passage. Une eau noire l'emplit presque jusqu'aux parois, et quelque chose de long ondule sous la surface.",
+                    "look_around": "Des rides traversent l'eau sombre sans le moindre souffle d'air. De vieux os jonchent l'étroite corniche où vous vous tenez."
                 }
             }
         }
@@ -239,6 +244,14 @@
         "cave_rat": {
             "name": "Rat des Cavernes",
             "description": "Un gros rat galeux qui rôde dans les tunnels humides. Rapide, mais fragile."
+        },
+        "cave_bat": {
+            "name": "Chauve-souris des Cavernes",
+            "description": "Une chauve-souris criarde qui plonge depuis la voûte. Vive, mais sa morsure est faible."
+        },
+        "black_eel": {
+            "name": "Anguille Noire",
+            "description": "Une anguille énorme, aussi sombre que l'eau où elle se cache. Elle frappe en morsures rapides et répétées avant qu'on ait pu réagir."
         }
     }
 }

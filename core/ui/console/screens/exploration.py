@@ -10,13 +10,18 @@ class ExplorationScreen(BaseConsoleScreen):
         name = self.app.t(f'zones.{v.zone_id}.rooms.{v.room_id}.name')
         room_description = self.app.t(f'zones.{v.zone_id}.rooms.{v.room_id}.description') if v.room_id else v.description
         lines = [room_description]
-        if v.enemies:
-            names = ", ".join(self.t(f"enemies.{e}.name") for e in v.enemies)
+        if v.encounters:
+            names = " / ".join(self._encounter_label(e) for e in v.encounters)
             lines += ["", self.color(self.t("ui.exploration.enemies", names=names), colors.RED)]
         self.box(lines, header=self.t(f"zones.{v.zone_id}.name"), title=name)
         print()
         self.draw_player(p)
         print()
+
+    def _encounter_label(self, encounter) -> str:
+        """« Rat des Cavernes x2, Chauve-souris des Cavernes »."""
+        return ", ".join(self.t(f"enemies.{enemy_id}.name") + (f" x{count}" if count > 1 else "")
+                         for enemy_id, count in encounter.enemies)
 
     def draw_player(self, p):
         bar_len = 20
@@ -36,9 +41,9 @@ class ExplorationScreen(BaseConsoleScreen):
             if allowed:
                 label = self.t(f"ui.directions.{direction.name.lower()}")
                 options.append((label, Move(direction=direction)))
-        for enemy_id in v.enemies:
-            label = self.t("ui.combat.fight", enemy=self.t(f"enemies.{enemy_id}.name"))
-            options.append((label, StartCombat(enemy_id)))
+        for encounter in v.encounters:
+            label = self.t("ui.combat.fight", enemy=self._encounter_label(encounter))
+            options.append((label, StartCombat(encounter.id)))
         options.append((self.t("ui.exploration.look_around"), Explore()))
         options.append((self.t("ui.exploration.open_inventory"), OpenInventory()))
         options.append((self.t("ui.exploration.save_game"), OpenSlots(mode="save")))

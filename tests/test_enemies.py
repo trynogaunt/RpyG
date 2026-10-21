@@ -64,10 +64,11 @@ def test_catalog_get_and_unknown():
         catalog.get("ghost")
 
 
-def test_rooms_load_their_enemies():
+def test_rooms_load_their_encounters():
     world = load_world(DATA_DIR)
-    assert world.get_room(RoomRef("flooded_cave", "water_pool")).enemies == ("cave_rat",)
-    assert world.get_room(RoomRef("flooded_cave", "entrance")).enemies == ()
+    pack, = world.get_room(RoomRef("flooded_cave", "narrow_passage")).encounters
+    assert (pack.id, pack.enemies) == ("rat_pack", ("cave_rat", "cave_rat", "cave_bat"))
+    assert world.get_room(RoomRef("flooded_cave", "entrance")).encounters == ()
 
 
 def test_world_enemies_must_exist():

@@ -1,0 +1,6 @@
+{
+    "id": "cave_bat",
+    "level": 1,
+    "stats": { "health": 6, "strength": 2, "speed": 9, "luck": 2 },
+    "attack": { "damage_multiplier": 0.8, "crit_multiplier": 1.5, "hits": 1, "crit_chance": 0.1 }
+}

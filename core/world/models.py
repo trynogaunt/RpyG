@@ -11,13 +11,20 @@ class RoomRef:
     room_id: str
 
 @dataclass(frozen=True)
+class Encounter:
+    """Un groupe d'ennemis qu'on affronte ensemble."""
+    id: str
+    enemies: tuple[str, ...]             # ids d'ennemis, un par exemplaire : deux rats = deux fois l'id
+
+
+@dataclass(frozen=True)
 class Room:
     name: str
     description: str
     ref: RoomRef
     look_around: str = ""
     exits: dict[Direction, RoomRef] = field(default_factory=dict)
-    enemies: tuple[str, ...] = ()        # ids d'ennemis présents dans la salle
+    encounters: tuple[Encounter, ...] = ()
 
 
 @dataclass(frozen=True)

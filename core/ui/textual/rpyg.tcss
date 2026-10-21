@@ -202,6 +202,8 @@ SlotsScreen {
 .fighter-hp-text      { width: auto; margin-left: 1; }
 .enemy                { border: round $error; border-title-color: $error; }
 .enemy Bar > .bar--bar { color: $error; }
+.enemy.-target         { border: double $error; }
+.enemy.-dead           { opacity: 50%; }
 #combat-log           { height: 1fr; background: $background; }
 #combat-actions       { height: auto; align-horizontal: center; }
 #combat-actions Button { margin: 0 2; }

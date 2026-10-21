@@ -49,6 +49,7 @@ def check_world_enemies(world: World, catalog: EnemyCatalog) -> None:
     """Chaque ennemi placé dans une salle doit exister dans le catalogue."""
     for zone in world.zones.values():
         for room_id, room in zone.rooms.items():
-            for enemy_id in room.enemies:
-                if enemy_id not in catalog:
-                    raise EnemyLoadError(f"Ennemi inconnu '{enemy_id}' dans {zone.id}/{room_id}")
+            for encounter in room.encounters:
+                for enemy_id in encounter.enemies:
+                    if enemy_id not in catalog:
+                        raise EnemyLoadError(f"Ennemi inconnu '{enemy_id}' dans {zone.id}/{room_id}")

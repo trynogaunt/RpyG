@@ -5,7 +5,7 @@ import pytest
 
 from core.enums import Direction
 from core.world.loader import load_world
-from core.world.models import RoomRef, World
+from core.world.models import Encounter, RoomRef, World
 
 
 # --- Construction de mondes de test ------------------------------------------
@@ -120,6 +120,23 @@ def test_exits_are_optional(tmp_path, world_data):
     del world_data["zones"]["cave"]["rooms"]["pool"]["exits"]
     world = load_world(write_world(tmp_path, world_data))
     assert world.get_room(RoomRef("cave", "pool")).exits == {}
+
+
+def test_encounters_are_loaded(tmp_path, world_data):
+    world_data["zones"]["cave"]["rooms"]["pool"]["encounters"] = [{"id": "pack", "enemies": ["rat", "rat"]}]
+    world = load_world(write_world(tmp_path, world_data))
+    assert world.get_room(RoomRef("cave", "pool")).encounters == (Encounter("pack", ("rat", "rat")),)
+
+
+@pytest.mark.parametrize("encounters", [
+    [{"id": "pack", "enemies": []}],
+    [{"enemies": ["rat"]}],
+    [{"id": "pack", "enemies": ["rat"]}, {"id": "pack", "enemies": ["bat"]}],
+], ids=["sans-ennemis", "sans-id", "id-en-double"])
+def test_invalid_encounters_are_rejected(tmp_path, world_data, encounters):
+    world_data["zones"]["cave"]["rooms"]["pool"]["encounters"] = encounters
+    with pytest.raises(ValueError):
+        load_world(write_world(tmp_path, world_data))
 
 
 def test_zone_fields(world):

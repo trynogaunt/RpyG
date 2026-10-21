@@ -1,6 +1,7 @@
 from textual import on
 from textual.binding import Binding
 from textual.containers import Center, Horizontal, Vertical
+from textual.message import Message as UIMessage
 from textual.widgets import Button, Footer, ProgressBar, RichLog, Static
 
 from core.game.actions import AttackEnemy, Flee, Quit
@@ -11,6 +12,19 @@ from core.views.combat_view import CombatView
 
 class Fighter(Vertical):
     """Panneau d'un combattant : barre de PV et valeur."""
+
+    class Selected(UIMessage):
+        """Clic sur le panneau : l'écran en fait la cible."""
+        def __init__(self, fighter: "Fighter"):
+            super().__init__()
+            self.fighter = fighter
+
+        @property
+        def control(self) -> "Fighter":       # permet @on(Fighter.Selected, ".enemy")
+            return self.fighter
+
+    def on_click(self) -> None:
+        self.post_message(self.Selected(self))
 
     def compose(self):
         with Horizontal(classes="fighter-hp"):
@@ -28,6 +42,9 @@ class CombatScreen(BaseScreen):
 
     BINDINGS = [
         Binding("a,enter", "attack", "ui.combat.attack"),
+        Binding("z/s", "", "ui.combat.change_target"),
+        Binding("up,z", "cycle_target(-1)", "", show=False),
+        Binding("down,s", "cycle_target(1)", "", show=False),
         Binding("f,escape", "flee", "ui.combat.flee"),
     ]
 
@@ -35,6 +52,7 @@ class CombatScreen(BaseScreen):
         super().__init__(view=view, **kwargs)
         self.view = view
         self._logged = 0                      # entrées du journal déjà écrites
+        self._target = 0                      # index dans view.foes de l'ennemi visé
 
     def compose(self):
         with Horizontal(id="combat-fighters"):
@@ -60,8 +78,13 @@ class CombatScreen(BaseScreen):
         self.view = view
         p = view.player_summary
         self.query_one("#combat-player", Fighter).set_health(p.name, p.health, p.max_health)
+        if view.foes[self._target].health <= 0:        # la cible vient de tomber : on passe à la suivante
+            self._target = self._next_living(self._target, 1)
         for i, foe in enumerate(view.foes):
-            self.query_one(f"#combat-enemy-{i}", Fighter).set_health(self._foe_name(i), foe.health, foe.max_health)
+            panel = self.query_one(f"#combat-enemy-{i}", Fighter)
+            panel.set_health(self._foe_name(i), foe.health, foe.max_health)
+            panel.set_class(foe.health <= 0, "-dead")
+            panel.set_class(i == self._target, "-target")
 
         log = self.query_one("#combat-log", RichLog)
         for entry in view.log[self._logged:]:
@@ -84,8 +107,31 @@ class CombatScreen(BaseScreen):
         name = self.app.t(f"enemies.{foe.enemy_id}.name")
         return f"{name} {foe.tag}" if foe.tag else name
 
+    def _next_living(self, start: int, step: int) -> int:
+        """Premier ennemi vivant après `start` dans le sens `step`, en bouclant ; `start` s'il est le seul."""
+        count = len(self.view.foes)
+        for offset in range(1, count + 1):
+            index = (start + step * offset) % count
+            if self.view.foes[index].health > 0:
+                return index
+        return start
+
+    def _select(self, index: int) -> None:
+        self._target = index
+        for i in range(len(self.view.foes)):
+            self.query_one(f"#combat-enemy-{i}", Fighter).set_class(i == index, "-target")
+
+    def action_cycle_target(self, step: int) -> None:
+        self._select(self._next_living(self._target, step))
+
+    @on(Fighter.Selected, ".enemy")
+    def _on_enemy_clicked(self, event: Fighter.Selected) -> None:
+        index = int(event.fighter.id.removeprefix("combat-enemy-"))
+        if self.view.foes[index].health > 0:
+            self._select(index)
+
     def action_attack(self) -> None:
-        self.app.dispatch(AttackEnemy())
+        self.app.dispatch(AttackEnemy(self._target))
 
     def action_flee(self) -> None:
         self.app.dispatch(Flee())

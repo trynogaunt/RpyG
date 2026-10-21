@@ -45,10 +45,12 @@ class CombatScreen(BaseConsoleScreen):
         return f"{name} {foe.tag}" if foe.tag else name
 
     def ask(self):
-        return self.choose([
-            (self.t("ui.combat.attack"), AttackEnemy()),
-            (self.t("ui.combat.flee"), Flee()),
-        ])
+        living = [i for i, foe in enumerate(self.view.foes) if foe.health > 0]
+        if len(living) == 1:
+            attacks = [(self.t("ui.combat.attack"), AttackEnemy(living[0]))]
+        else:                                   # une ligne par cible vivante
+            attacks = [(self.t("ui.combat.attack_target", enemy=self._foe_name(i)), AttackEnemy(i)) for i in living]
+        return self.choose([*attacks, (self.t("ui.combat.flee"), Flee())])
 
 
 class GameOverScreen(BaseConsoleScreen):

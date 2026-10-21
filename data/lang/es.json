@@ -60,7 +60,7 @@
             "east": "Este",
             "west": "Oeste"
         },
-        "combat": { "player_blocked": "¡{enemy} bloquea tu golpe!", "enemy_blocked": "¡Bloqueas el golpe de {enemy}!", "critical": "¡Golpe crítico!", "title": "Combate", "attack": "Atacar", "flee": "Huir", "fight": "Luchar: {enemy}", "fight_short": "Luchar", "player_hits": "Golpeas a {enemy}: {damage} de daño.", "enemy_hits": "{enemy} te golpea: {damage} de daño.", "log": "Registro", "game_over": "G A M E   O V E R", "victory": "¡Has derrotado a tu adversario!", "fled": "Has huido.", "defeat": "Has caído en combate..." },
+        "combat": { "player_blocked": "¡{enemy} bloquea tu golpe!", "enemy_blocked": "¡Bloqueas el golpe de {enemy}!", "critical": "¡Golpe crítico!", "title": "Combate", "attack": "Atacar", "attack_target": "Atacar a {enemy}", "change_target": "Cambiar de objetivo", "flee": "Huir", "fight": "Luchar: {enemy}", "fight_short": "Luchar", "player_hits": "Golpeas a {enemy}: {damage} de daño.", "enemy_hits": "{enemy} te golpea: {damage} de daño.", "log": "Registro", "game_over": "G A M E   O V E R", "victory": "¡Has derrotado a tu adversario!", "fled": "Has huido.", "defeat": "Has caído en combate..." },
         "exploration": {
             "enemies": "Enemigos: {names}",
             "look_around": "Examinar Alrededor",
@@ -201,6 +201,11 @@
                     "name": "Pasaje Estrecho",
                     "description": "Un pasaje estrecho y sinuoso dentro de la cueva, apenas lo suficientemente ancho para pasar.",
                     "look_around": "Ves cómo las paredes del pasaje se cierran y la tenue luz del charco de agua detrás de ti."
+                },
+                "sunken_grotto": {
+                    "name": "Gruta Sumergida",
+                    "description": "Una vasta cámara inundada al final del pasaje. Un agua negra la llena casi hasta las paredes, y algo alargado se mueve bajo la superficie.",
+                    "look_around": "Las ondas cruzan el agua oscura aunque no sopla el viento. Viejos huesos cubren la estrecha cornisa en la que estás."
                 }
             }
         }
@@ -239,6 +244,14 @@
         "cave_rat": {
             "name": "Rata de Cueva",
             "description": "Una rata gorda y sarnosa que acecha en los túneles húmedos. Rápida, pero frágil."
+        },
+        "cave_bat": {
+            "name": "Murciélago de Cueva",
+            "description": "Un murciélago chillón que se lanza desde el techo. Rápido, pero su mordisco es débil."
+        },
+        "black_eel": {
+            "name": "Anguila Negra",
+            "description": "Una anguila enorme, tan oscura como el agua en la que se esconde. Ataca con mordiscos rápidos y repetidos antes de que nadie pueda reaccionar."
         }
     }
 }

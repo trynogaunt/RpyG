@@ -16,7 +16,9 @@
       "name": "Water Pool",
       "description": "A shallow pool of water fills this part of the cave. The water is clear but cold.",
       "look_around": "Something glints at the bottom of the pool, just out of reach.",
-      "enemies": ["cave_rat"],
+      "encounters": [
+        { "id": "lone_rat", "enemies": ["cave_rat"] }
+      ],
       "exits": {
         "north": { "room": "entrance" },
         "east": { "room": "narrow_passage" }
@@ -25,8 +27,23 @@
     "narrow_passage": {
       "name": "Narrow Passage",
       "description": "A tight passageway that seems to lead deeper into the cave system.",
+      "encounters": [
+        { "id": "rat_pack", "enemies": ["cave_rat", "cave_rat", "cave_bat"] }
+      ],
       "exits": {
-        "west": { "room": "water_pool" }
+        "west": { "room": "water_pool" },
+        "east": { "room": "sunken_grotto" }
+      }
+    },
+    "sunken_grotto": {
+      "name": "Sunken Grotto",
+      "description": "A vast flooded chamber at the end of the passage. Black water fills it almost to the walls.",
+      "look_around": "Ripples cross the dark water though no wind blows. Old bones line the narrow ledge you stand on.",
+      "encounters": [
+        { "id": "black_eel", "enemies": ["black_eel"] }
+      ],
+      "exits": {
+        "west": { "room": "narrow_passage" }
       }
     }
   }
