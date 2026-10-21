@@ -9,7 +9,19 @@
       "description": "The entrance to the cave, where light from outside barely reaches.",
       "exits": {
         "north": { "zone": "entry_village", "room": "village_gate" },
-        "south": { "room": "water_pool" }
+        "south": { "room": "water_pool" },
+        "west": { "room": "dripping_hollow" }
+      }
+    },
+    "dripping_hollow": {
+      "name": "Dripping Hollow",
+      "description": "A low, damp hollow where water seeps from every crack. Rats nest in the crevices.",
+      "look_around": "Scratching echoes from the walls. No matter how many you chase off, more always come back.",
+      "encounters": [
+        { "id": "hollow_rat", "enemies": ["cave_rat"], "respawn": true }
+      ],
+      "exits": {
+        "east": { "room": "entrance" }
       }
     },
     "water_pool": {
@@ -21,7 +33,28 @@
       ],
       "exits": {
         "north": { "room": "entrance" },
-        "east": { "room": "narrow_passage" }
+        "east": { "room": "narrow_passage" },
+        "south": { "room": "bat_roost" }
+      }
+    },
+    "bat_roost": {
+      "name": "Bat Roost",
+      "description": "A high chamber whose ceiling is lost in darkness. The floor is thick with droppings.",
+      "look_around": "Hundreds of small shapes hang overhead, stirring at the slightest noise.",
+      "encounters": [
+        { "id": "bat_swarm", "enemies": ["cave_bat", "cave_bat", "cave_bat"] }
+      ],
+      "exits": {
+        "north": { "room": "water_pool" },
+        "south": { "room": "miners_camp" }
+      }
+    },
+    "miners_camp": {
+      "name": "Old Miners' Camp",
+      "description": "The remains of a camp: a cold fire pit, a broken cart and rusted tools.",
+      "look_around": "Among the debris, a battered crate still seems intact.",
+      "exits": {
+        "north": { "room": "bat_roost" }
       }
     },
     "narrow_passage": {

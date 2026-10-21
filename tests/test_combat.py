@@ -10,7 +10,10 @@ from core.combat.fighters import Combatant, PlayerFighter
 from core.combat.resolution import (BLOCK_CAP, CRIT_CAP, Hit, armor_ratio, block_chance, crit_chance, finalize,
                                     resolve_attack)
 from core.combat.moves import Strike
+from core.combat.rewards import xp_gain
 from core.combat.state import CombatLogEntry, CombatState, Outcome
+from core.game.response import Message
+from core.game.rules import LEVEL_XP
 from core.game.game import Game
 from core.game.inventory import Equipped
 from core.game.player import Player
@@ -35,9 +38,10 @@ class FixedRolls(Random):
         return self.rolls.pop(0) if self.rolls else 0.99
 
 
-def enemy(enemy_id: str, health: int, strength: int, attack: Attack = Attack(), speed: int = 1) -> Enemy:
+def enemy(enemy_id: str, health: int, strength: int, attack: Attack = Attack(), speed: int = 1, xp: int = 0,
+          level: int = 1) -> Enemy:
     return Enemy(id=enemy_id, stats={Stat.HEALTH: health, Stat.STRENGTH: strength, Stat.SPEED: speed, Stat.LUCK: 1},
-                 attack=attack)
+                 attack=attack, xp=xp, level=level)
 
 
 def fighter() -> PlayerFighter:
@@ -51,12 +55,13 @@ def game() -> Game:
     cave = Zone(id="cave", name="Grotte", description="", entry_room="den", rooms={
         "den": Room("Tanière", "", DEN, encounters=(Encounter("rat", ("rat",)), Encounter("ogre", ("ogre",)),
                                                    Encounter("wolf", ("wolf",)),
-                                                   Encounter("pack", ("rat", "rat", "wolf")))),
+                                                   Encounter("pack", ("rat", "rat", "wolf")),
+                                                   Encounter("nest", ("rat",), respawn=True))),
         "hall": Room("Salle", "", HALL),
     })
     g = Game(
         world=World(start=DEN, zones={"cave": cave}),
-        enemies=EnemyCatalog({"rat": enemy("rat", 12, 3), "ogre": enemy("ogre", 50, 20), "bat": enemy("bat", 5, 1),
+        enemies=EnemyCatalog({"rat": enemy("rat", 12, 3, xp=8), "ogre": enemy("ogre", 50, 20), "bat": enemy("bat", 5, 1),
                               "wolf": enemy("wolf", 30, 2, speed=9)}),
         catalog=ItemCatalog({"club": Item(id="club", category="weapons", slots=((Slot.RIGHT_HAND,),),
                                           attack=Attack(damage_multiplier=2.0))}),
@@ -221,8 +226,8 @@ def test_foe_killed_before_its_turn_does_not_strike():
 
 
 def test_exploration_view_lists_room_encounters(game):
-    assert game._exploration_to_view().encounters[-1] == EncounterView("pack", (("rat", 2), ("wolf", 1)))
-    assert [e.id for e in game._exploration_to_view().encounters] == ["rat", "ogre", "wolf", "pack"]
+    assert game._exploration_to_view().encounters[3] == EncounterView("pack", (("rat", 2), ("wolf", 1)))
+    assert [e.id for e in game._exploration_to_view().encounters] == ["rat", "ogre", "wolf", "pack", "nest"]
 
 
 @pytest.mark.parametrize("encounter_id", ["bat", "ghost"], ids=["ennemi-hors-de-la-salle", "inconnue"])
@@ -307,7 +312,7 @@ def test_victory_returns_to_exploration(game):
     game.handle_action(AttackEnemy())
     response = game.handle_action(AttackEnemy())          # 5 + 5 + 5 >= 12
     assert response.screen is Screens.EXPLORATION
-    assert message_keys(response) == ["ui.combat.victory"]
+    assert message_keys(response) == ["ui.combat.victory", "ui.combat.xp_gained"]
     assert game.combat is None
     assert game.player.health == 10 - 3 - 3               # le rat ne riposte pas au coup fatal
 
@@ -339,6 +344,48 @@ def test_defeated_encounter_cannot_be_fought_again(game):
     response = game.handle_action(StartCombat("rat"))
     assert response.screen is Screens.EXPLORATION
     assert game.combat is None
+
+
+def test_respawning_encounter_is_never_recorded(game):
+    game.handle_action(StartCombat("nest"))
+    for _ in range(3):
+        response = game.handle_action(AttackEnemy())
+    assert response.screen is Screens.EXPLORATION
+    assert game.world_state.defeated == set()
+    assert "nest" in [e.id for e in response.view.encounters]
+
+
+def test_victory_grants_xp(game):
+    response = win_against_rat(game)
+    assert game.player.xp == 8
+    assert response.messages[1] == Message(key="ui.combat.xp_gained", params={"xp": 8})
+
+
+def test_victory_announces_level_up(game):
+    game.player.xp = LEVEL_XP[1] - 1
+    response = win_against_rat(game)
+    assert game.player.level == 2
+    assert message_keys(response) == ["ui.combat.victory", "ui.combat.xp_gained", "ui.combat.level_up"]
+
+
+def test_fleeing_grants_no_xp(game):
+    game.handle_action(StartCombat("rat"))
+    game.handle_action(Flee())
+    assert game.player.xp == 0
+
+
+@pytest.mark.parametrize("player_level, expected", [(1, 10), (2, 10), (3, 7), (4, 4), (6, 1), (20, 1)])
+def test_xp_drops_once_the_player_outlevels_the_enemy(player_level, expected):
+    assert xp_gain(10, 2, player_level) == expected
+
+
+def test_xp_free_enemy_gives_nothing():
+    assert xp_gain(0, 1, 1) == 0
+
+
+def test_combat_xp_adds_up_every_foe():
+    combat = CombatState.start(fighter(), [enemy("rat", 12, 3, xp=5), enemy("bat", 5, 1, xp=4, level=3)])
+    assert combat.xp_reward(player_level=2) == 4 + 4          # rat dépassé d'un niveau : 5 × 0.7 ≈ 4 ; chauve-souris pleine
 
 
 def test_fleeing_does_not_record_the_encounter(game):

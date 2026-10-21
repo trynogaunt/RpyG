@@ -126,6 +126,25 @@ def test_decode_save_without_defeated_section(snapshot):
     assert codec.decode(data).defeated == ()
 
 
+def test_xp_survives_save_and_restore(progressed_game, make_game):
+    progressed_game.player.xp = 37
+    other = make_game()
+    other.restore(codec.decode(codec.encode(progressed_game.snapshot())))
+    assert other.player.xp == 37
+
+
+def test_decode_save_without_xp(snapshot):
+    data = codec.encode(snapshot)
+    del data["player"]["xp"]                             # sauvegarde 1.2
+    data["version"] = "1.2"
+    assert codec.decode(data).player.xp == 0
+
+
+def test_restore_negative_xp_raises(progressed_game, snapshot):
+    with pytest.raises(InvalidSave):
+        progressed_game.restore(replace(snapshot, player=replace(snapshot.player, xp=-1)))
+
+
 def test_new_game_starts_with_nothing_defeated(progressed_game):
     progressed_game.world_state.defeated.add(RATS)
     progressed_game.handle_action(Quit())

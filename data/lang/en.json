@@ -206,6 +206,47 @@
                     "name": "Sunken Grotto",
                     "description": "A vast flooded chamber at the end of the passage. Black water fills it almost to the walls, and something long moves beneath the surface.",
                     "look_around": "Ripples cross the dark water though no wind blows. Old bones line the narrow ledge you stand on."
+                },
+                "dripping_hollow": {
+                    "name": "Dripping Hollow",
+                    "description": "A low, damp hollow where water seeps from every crack. Rats nest in the crevices.",
+                    "look_around": "Scratching echoes from the walls. No matter how many you chase off, more always come back."
+                },
+                "bat_roost": {
+                    "name": "Bat Roost",
+                    "description": "A high chamber whose ceiling is lost in darkness. The floor is thick with droppings.",
+                    "look_around": "Hundreds of small shapes hang overhead, stirring at the slightest noise."
+                },
+                "miners_camp": {
+                    "name": "Old Miners' Camp",
+                    "description": "The remains of a camp: a cold fire pit, a broken cart and rusted tools.",
+                    "look_around": "Among the debris, a battered crate still seems intact."
+                }
+            }
+        },
+        "whispering_woods": {
+            "name": "Whispering Woods",
+            "description": "An old forest west of the village, where the wind never stops murmuring through the leaves.",
+            "rooms": {
+                "forest_edge": {
+                    "name": "Forest Edge",
+                    "description": "The village fields give way to tall, crooked trees. A muddy trail leads north into the woods.",
+                    "look_around": "Fresh tracks churn the mud: something heavy and tusked often passes here."
+                },
+                "clearing": {
+                    "name": "Sunlit Clearing",
+                    "description": "A wide clearing where light finally reaches the ground. Trails leave in every direction.",
+                    "look_around": "Gnawed bones lie in the grass, and you hear howling not far away."
+                },
+                "old_oak": {
+                    "name": "Old Oak",
+                    "description": "A colossal oak, its trunk split by lightning. The ground around it is torn up and trampled.",
+                    "look_around": "Deep gouges scar the bark at shoulder height. Whatever made them is big."
+                },
+                "hunters_hut": {
+                    "name": "Hunter's Hut",
+                    "description": "A small abandoned hut of mossy logs. The door hangs open on a single hinge.",
+                    "look_around": "Snares and empty racks hang from the walls. Someone left in a hurry."
                 }
             }
         }
@@ -252,6 +293,18 @@
         "black_eel": {
             "name": "Black Eel",
             "description": "A huge eel as dark as the water it hides in. It strikes in quick, repeated bites before anyone can react."
+        },
+        "wild_boar": {
+            "name": "Wild Boar",
+            "description": "A bristly boar with sharp tusks. It charges anything that enters its territory."
+        },
+        "forest_wolf": {
+            "name": "Forest Wolf",
+            "description": "A lean grey wolf that hunts in pairs. Quick and relentless."
+        },
+        "old_boar": {
+            "name": "Old Boar",
+            "description": "A huge, scarred boar, master of the woods. Its thick hide turns aside the weakest blows."
         }
     }
 }

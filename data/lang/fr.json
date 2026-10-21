@@ -206,6 +206,47 @@
                     "name": "Grotte Engloutie",
                     "description": "Une vaste salle inondée au bout du passage. Une eau noire l'emplit presque jusqu'aux parois, et quelque chose de long ondule sous la surface.",
                     "look_around": "Des rides traversent l'eau sombre sans le moindre souffle d'air. De vieux os jonchent l'étroite corniche où vous vous tenez."
+                },
+                "dripping_hollow": {
+                    "name": "Creux Suintant",
+                    "description": "Un creux bas et humide où l'eau suinte de chaque fissure. Des rats nichent dans les crevasses.",
+                    "look_around": "Des grattements résonnent dans les parois. On a beau les chasser, il en revient toujours."
+                },
+                "bat_roost": {
+                    "name": "Perchoir des Chauves-souris",
+                    "description": "Une haute salle dont la voûte se perd dans l'obscurité. Le sol est couvert de fientes.",
+                    "look_around": "Des centaines de petites silhouettes pendent au-dessus de vous et s'agitent au moindre bruit."
+                },
+                "miners_camp": {
+                    "name": "Ancien Camp de Mineurs",
+                    "description": "Les restes d'un campement : un foyer froid, une charrette brisée et des outils rouillés.",
+                    "look_around": "Parmi les débris, une caisse cabossée semble encore intacte."
+                }
+            }
+        },
+        "whispering_woods": {
+            "name": "Bois des Murmures",
+            "description": "Une vieille forêt à l'ouest du village, où le vent ne cesse jamais de murmurer dans les feuilles.",
+            "rooms": {
+                "forest_edge": {
+                    "name": "Lisière du Bois",
+                    "description": "Les champs du village laissent place à de grands arbres tordus. Un sentier boueux s'enfonce vers le nord.",
+                    "look_around": "Des traces fraîches labourent la boue : quelque chose de lourd, armé de défenses, passe souvent par ici."
+                },
+                "clearing": {
+                    "name": "Clairière Ensoleillée",
+                    "description": "Une vaste clairière où la lumière atteint enfin le sol. Des sentiers partent dans toutes les directions.",
+                    "look_around": "Des os rongés traînent dans l'herbe, et vous entendez hurler non loin."
+                },
+                "old_oak": {
+                    "name": "Vieux Chêne",
+                    "description": "Un chêne colossal, le tronc fendu par la foudre. Le sol alentour est retourné et piétiné.",
+                    "look_around": "De profondes entailles marquent l'écorce à hauteur d'épaule. Ce qui les a faites est énorme."
+                },
+                "hunters_hut": {
+                    "name": "Cabane du Chasseur",
+                    "description": "Une petite cabane abandonnée, en rondins couverts de mousse. La porte pend sur un seul gond.",
+                    "look_around": "Des collets et des râteliers vides pendent aux murs. Quelqu'un est parti en hâte."
                 }
             }
         }
@@ -252,6 +293,18 @@
         "black_eel": {
             "name": "Anguille Noire",
             "description": "Une anguille énorme, aussi sombre que l'eau où elle se cache. Elle frappe en morsures rapides et répétées avant qu'on ait pu réagir."
+        },
+        "wild_boar": {
+            "name": "Sanglier Sauvage",
+            "description": "Un sanglier hérissé aux défenses acérées. Il charge tout ce qui entre sur son territoire."
+        },
+        "forest_wolf": {
+            "name": "Loup des Bois",
+            "description": "Un loup gris et efflanqué qui chasse en couple. Rapide et tenace."
+        },
+        "old_boar": {
+            "name": "Vieux Sanglier",
+            "description": "Un énorme sanglier couvert de cicatrices, maître des bois. Son cuir épais dévie les coups les plus faibles."
         }
     }
 }

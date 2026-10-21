@@ -128,6 +128,12 @@ def test_encounters_are_loaded(tmp_path, world_data):
     assert world.get_room(RoomRef("cave", "pool")).encounters == (Encounter("pack", ("rat", "rat")),)
 
 
+def test_encounter_respawn_flag(tmp_path, world_data):
+    world_data["zones"]["cave"]["rooms"]["pool"]["encounters"] = [{"id": "nest", "enemies": ["rat"], "respawn": True}]
+    world = load_world(write_world(tmp_path, world_data))
+    assert world.get_room(RoomRef("cave", "pool")).encounters[0].respawn
+
+
 @pytest.mark.parametrize("encounters", [
     [{"id": "pack", "enemies": []}],
     [{"enemies": ["rat"]}],

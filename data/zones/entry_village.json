@@ -11,7 +11,8 @@
       "exits": {
         "north": { "room": "blacksmith_shop" },
         "east": { "room": "tavern" },
-        "south": { "room": "village_gate" }
+        "south": { "room": "village_gate" },
+        "west": { "zone": "whispering_woods" }
       }
     },
     "blacksmith_shop": {

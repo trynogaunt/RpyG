@@ -2,7 +2,7 @@ import pytest
 
 from core.enums import Stat
 from core.game.player import Player
-from core.game.rules import STAT_RULES
+from core.game.rules import LEVEL_XP, STAT_RULES
 
 
 @pytest.fixture
@@ -55,3 +55,34 @@ def test_allocated_points_are_copied():
     player = Player(name="Test", allocated_points=points)
     points[Stat.STRENGTH] = 99
     assert player.allocated_points[Stat.STRENGTH] == 2
+
+# ----- expérience et niveaux -----
+
+
+def test_new_player_has_no_xp(fresh_player):
+    assert (fresh_player.xp, fresh_player.xp_next) == (0, LEVEL_XP[1])
+
+
+def test_xp_below_threshold_keeps_level(fresh_player):
+    assert fresh_player.gain_xp(LEVEL_XP[1] - 1) == 0
+    assert fresh_player.level == 1
+
+
+def test_reaching_threshold_levels_up_and_adds_the_health_gained(fresh_player):
+    fresh_player.health = 4
+    assert fresh_player.gain_xp(LEVEL_XP[1]) == 1
+    assert fresh_player.level == 2
+    assert fresh_player.health == 4 + STAT_RULES[Stat.HEALTH].growth_per_level
+    assert fresh_player.xp_next == LEVEL_XP[2]
+
+
+def test_big_gain_climbs_several_levels(fresh_player):
+    assert fresh_player.gain_xp(LEVEL_XP[3]) == 3
+    assert fresh_player.level == 4
+
+
+def test_level_is_capped_but_xp_keeps_counting(fresh_player):
+    fresh_player.gain_xp(LEVEL_XP[-1] + 500)
+    assert fresh_player.level == len(LEVEL_XP)
+    assert fresh_player.xp_next is None
+    assert fresh_player.xp == LEVEL_XP[-1] + 500

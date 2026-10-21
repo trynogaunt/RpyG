@@ -206,6 +206,47 @@
                     "name": "Gruta Sumergida",
                     "description": "Una vasta cámara inundada al final del pasaje. Un agua negra la llena casi hasta las paredes, y algo alargado se mueve bajo la superficie.",
                     "look_around": "Las ondas cruzan el agua oscura aunque no sopla el viento. Viejos huesos cubren la estrecha cornisa en la que estás."
+                },
+                "dripping_hollow": {
+                    "name": "Hondonada Goteante",
+                    "description": "Una hondonada baja y húmeda donde el agua rezuma de cada grieta. Las ratas anidan en las hendiduras.",
+                    "look_around": "Se oyen arañazos en las paredes. Por muchas que ahuyentes, siempre vuelven más."
+                },
+                "bat_roost": {
+                    "name": "Nido de Murciélagos",
+                    "description": "Una cámara alta cuyo techo se pierde en la oscuridad. El suelo está cubierto de excrementos.",
+                    "look_around": "Cientos de pequeñas siluetas cuelgan sobre ti y se agitan al menor ruido."
+                },
+                "miners_camp": {
+                    "name": "Viejo Campamento Minero",
+                    "description": "Los restos de un campamento: una hoguera fría, un carro roto y herramientas oxidadas.",
+                    "look_around": "Entre los escombros, una caja abollada parece seguir intacta."
+                }
+            }
+        },
+        "whispering_woods": {
+            "name": "Bosque de los Susurros",
+            "description": "Un viejo bosque al oeste del pueblo, donde el viento nunca deja de susurrar entre las hojas.",
+            "rooms": {
+                "forest_edge": {
+                    "name": "Linde del Bosque",
+                    "description": "Los campos del pueblo dan paso a árboles altos y retorcidos. Un sendero embarrado se adentra hacia el norte.",
+                    "look_around": "Huellas frescas remueven el barro: algo pesado y con colmillos pasa por aquí a menudo."
+                },
+                "clearing": {
+                    "name": "Claro Soleado",
+                    "description": "Un amplio claro donde la luz por fin llega al suelo. Los senderos parten en todas direcciones.",
+                    "look_around": "Hay huesos roídos entre la hierba, y oyes aullidos no muy lejos."
+                },
+                "old_oak": {
+                    "name": "Viejo Roble",
+                    "description": "Un roble colosal con el tronco partido por un rayo. El suelo a su alrededor está removido y pisoteado.",
+                    "look_around": "Profundos surcos marcan la corteza a la altura del hombro. Lo que los hizo es enorme."
+                },
+                "hunters_hut": {
+                    "name": "Cabaña del Cazador",
+                    "description": "Una pequeña cabaña abandonada de troncos cubiertos de musgo. La puerta cuelga de una sola bisagra.",
+                    "look_around": "Trampas y estantes vacíos cuelgan de las paredes. Alguien se marchó con prisa."
                 }
             }
         }
@@ -252,6 +293,18 @@
         "black_eel": {
             "name": "Anguila Negra",
             "description": "Una anguila enorme, tan oscura como el agua en la que se esconde. Ataca con mordiscos rápidos y repetidos antes de que nadie pueda reaccionar."
+        },
+        "wild_boar": {
+            "name": "Jabalí Salvaje",
+            "description": "Un jabalí erizado de colmillos afilados. Embiste a todo lo que entra en su territorio."
+        },
+        "forest_wolf": {
+            "name": "Lobo del Bosque",
+            "description": "Un lobo gris y flaco que caza en pareja. Rápido e implacable."
+        },
+        "old_boar": {
+            "name": "Viejo Jabalí",
+            "description": "Un jabalí enorme y lleno de cicatrices, amo del bosque. Su gruesa piel desvía los golpes más débiles."
         }
     }
 }

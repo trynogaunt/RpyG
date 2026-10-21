@@ -206,6 +206,47 @@
                     "name": "Versunkene Grotte",
                     "description": "Eine weite, überflutete Kammer am Ende des Gangs. Schwarzes Wasser füllt sie fast bis an die Wände, und etwas Langes bewegt sich unter der Oberfläche.",
                     "look_around": "Wellen ziehen über das dunkle Wasser, obwohl kein Wind weht. Alte Knochen säumen den schmalen Felsvorsprung, auf dem du stehst."
+                },
+                "dripping_hollow": {
+                    "name": "Tropfende Senke",
+                    "description": "Eine niedrige, feuchte Senke, in der aus jedem Spalt Wasser sickert. Ratten nisten in den Ritzen.",
+                    "look_around": "Kratzen hallt aus den Wänden. Wie viele du auch vertreibst, es kommen immer neue zurück."
+                },
+                "bat_roost": {
+                    "name": "Fledermaushorst",
+                    "description": "Eine hohe Kammer, deren Decke sich in der Dunkelheit verliert. Der Boden ist dick mit Kot bedeckt.",
+                    "look_around": "Hunderte kleiner Gestalten hängen über dir und regen sich beim leisesten Geräusch."
+                },
+                "miners_camp": {
+                    "name": "Altes Bergarbeiterlager",
+                    "description": "Die Überreste eines Lagers: eine kalte Feuerstelle, ein zerbrochener Karren und rostiges Werkzeug.",
+                    "look_around": "Zwischen den Trümmern scheint eine verbeulte Kiste noch unversehrt zu sein."
+                }
+            }
+        },
+        "whispering_woods": {
+            "name": "Flüsterwald",
+            "description": "Ein alter Wald westlich des Dorfes, in dem der Wind nie aufhört, durch die Blätter zu flüstern.",
+            "rooms": {
+                "forest_edge": {
+                    "name": "Waldrand",
+                    "description": "Die Felder des Dorfes weichen hohen, krummen Bäumen. Ein schlammiger Pfad führt nach Norden in den Wald.",
+                    "look_around": "Frische Spuren wühlen den Schlamm auf: Etwas Schweres mit Hauern kommt hier oft vorbei."
+                },
+                "clearing": {
+                    "name": "Sonnige Lichtung",
+                    "description": "Eine weite Lichtung, auf der das Licht endlich den Boden erreicht. Pfade führen in alle Richtungen.",
+                    "look_around": "Abgenagte Knochen liegen im Gras, und nicht weit entfernt hörst du Heulen."
+                },
+                "old_oak": {
+                    "name": "Alte Eiche",
+                    "description": "Eine gewaltige Eiche, deren Stamm vom Blitz gespalten wurde. Der Boden ringsum ist aufgewühlt und zertrampelt.",
+                    "look_around": "Tiefe Furchen zeichnen die Rinde in Schulterhöhe. Was immer sie verursacht hat, ist riesig."
+                },
+                "hunters_hut": {
+                    "name": "Jägerhütte",
+                    "description": "Eine kleine, verlassene Hütte aus bemoosten Stämmen. Die Tür hängt an einer einzigen Angel.",
+                    "look_around": "Schlingen und leere Gestelle hängen an den Wänden. Jemand ist in Eile aufgebrochen."
                 }
             }
         }
@@ -252,6 +293,18 @@
         "black_eel": {
             "name": "Schwarzer Aal",
             "description": "Ein riesiger Aal, so dunkel wie das Wasser, in dem er sich verbirgt. Er schlägt mit schnellen, wiederholten Bissen zu, bevor man reagieren kann."
+        },
+        "wild_boar": {
+            "name": "Wildschwein",
+            "description": "Ein borstiges Wildschwein mit scharfen Hauern. Es greift alles an, was sein Revier betritt."
+        },
+        "forest_wolf": {
+            "name": "Waldwolf",
+            "description": "Ein hagerer grauer Wolf, der zu zweit jagt. Schnell und unerbittlich."
+        },
+        "old_boar": {
+            "name": "Alter Keiler",
+            "description": "Ein riesiger, vernarbter Keiler, Herr des Waldes. Seine dicke Haut lenkt die schwächsten Schläge ab."
         }
     }
 }

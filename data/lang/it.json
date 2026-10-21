@@ -206,6 +206,47 @@
                     "name": "Grotta Sommersa",
                     "description": "Una vasta sala allagata alla fine del passaggio. Un'acqua nera la riempie quasi fino alle pareti, e qualcosa di lungo si muove sotto la superficie.",
                     "look_around": "Increspature attraversano l'acqua scura senza un filo di vento. Vecchie ossa ricoprono la stretta sporgenza su cui ti trovi."
+                },
+                "dripping_hollow": {
+                    "name": "Conca Gocciolante",
+                    "description": "Una conca bassa e umida dove l'acqua trasuda da ogni crepa. I ratti fanno il nido nelle fessure.",
+                    "look_around": "Grattii riecheggiano tra le pareti. Per quanti ne scacci, ne tornano sempre altri."
+                },
+                "bat_roost": {
+                    "name": "Covo dei Pipistrelli",
+                    "description": "Una sala alta il cui soffitto si perde nel buio. Il pavimento è coperto di guano.",
+                    "look_around": "Centinaia di piccole sagome pendono sopra di te e si agitano al minimo rumore."
+                },
+                "miners_camp": {
+                    "name": "Vecchio Accampamento dei Minatori",
+                    "description": "I resti di un accampamento: un focolare spento, un carro rotto e attrezzi arrugginiti.",
+                    "look_around": "Tra i detriti, una cassa ammaccata sembra ancora intatta."
+                }
+            }
+        },
+        "whispering_woods": {
+            "name": "Bosco dei Sussurri",
+            "description": "Un antico bosco a ovest del villaggio, dove il vento non smette mai di sussurrare tra le foglie.",
+            "rooms": {
+                "forest_edge": {
+                    "name": "Margine del Bosco",
+                    "description": "I campi del villaggio lasciano il posto ad alberi alti e contorti. Un sentiero fangoso si inoltra verso nord.",
+                    "look_around": "Tracce fresche smuovono il fango: qualcosa di pesante e con le zanne passa spesso di qui."
+                },
+                "clearing": {
+                    "name": "Radura Soleggiata",
+                    "description": "Un'ampia radura dove la luce raggiunge finalmente il suolo. I sentieri partono in ogni direzione.",
+                    "look_around": "Ossa rosicchiate giacciono nell'erba, e senti ululare poco lontano."
+                },
+                "old_oak": {
+                    "name": "Vecchia Quercia",
+                    "description": "Una quercia colossale, con il tronco spaccato da un fulmine. Il terreno attorno è smosso e calpestato.",
+                    "look_around": "Profondi solchi segnano la corteccia all'altezza della spalla. Ciò che li ha fatti è enorme."
+                },
+                "hunters_hut": {
+                    "name": "Capanno del Cacciatore",
+                    "description": "Un piccolo capanno abbandonato di tronchi coperti di muschio. La porta pende da un solo cardine.",
+                    "look_around": "Lacci e rastrelliere vuote pendono dalle pareti. Qualcuno è partito in fretta."
                 }
             }
         }
@@ -252,6 +293,18 @@
         "black_eel": {
             "name": "Anguilla Nera",
             "description": "Un'enorme anguilla, scura come l'acqua in cui si nasconde. Colpisce con morsi rapidi e ripetuti prima che si possa reagire."
+        },
+        "wild_boar": {
+            "name": "Cinghiale Selvatico",
+            "description": "Un cinghiale ispido dalle zanne affilate. Carica qualunque cosa entri nel suo territorio."
+        },
+        "forest_wolf": {
+            "name": "Lupo dei Boschi",
+            "description": "Un lupo grigio e magro che caccia in coppia. Veloce e implacabile."
+        },
+        "old_boar": {
+            "name": "Vecchio Cinghiale",
+            "description": "Un enorme cinghiale pieno di cicatrici, padrone del bosco. La sua pelle spessa devia i colpi più deboli."
         }
     }
 }
