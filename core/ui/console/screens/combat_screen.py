@@ -1,25 +1,34 @@
 from core.game.actions import AttackEnemy, Flee, Quit
 from core.ui.console import colors
-from core.ui.console.screens.base_screen import BaseConsoleScreen
+from core.ui.console.screens.base_screen import BaseConsoleScreen, fit
 
-BAR_WIDTH = 20
+BAR_WIDTH = 10
 LOG_LINES = 4
 
 
 class CombatScreen(BaseConsoleScreen):
     def draw(self):
+        """Joueur à gauche, ennemis à droite, journal sur toute la largeur en dessous."""
         v = self.view
         p = v.player_summary
         names = [self._foe_name(i) for i in range(len(v.foes))]
-        label_width = max(len(p.name), *map(len, names))
 
-        lines = [""]
-        for name, foe in zip(names, v.foes):
-            lines.append(f"{name:<{label_width}}  {self._bar(foe.health, foe.max_health, colors.RED)}")
-        lines += [
-            f"{p.name:<{label_width}}  {self._bar(p.health, p.max_health, colors.GREEN)}",
-            "",
+        xp = f"{p.xp}/{p.xp_next}" if p.xp_next is not None else f"{p.xp}"
+        player = [
+            f"{p.name}  {self.t('ui.common.level')} {p.level}",
+            self._bar(p.health, p.max_health, colors.GREEN),
+            f"{self.t('ui.stats.xp')} {xp}",
+            "  ".join(f"{self.t(f'ui.stats.abrev.{stat.name.lower()}')} {value}" for stat, value in p.stats.items()),
         ]
+        foes = []
+        right_width = (self.column_widths() or (0, self.width - 4))[1]
+        for name, foe in zip(names, v.foes):
+            # Un ennemi à terre reste affiché, grisé, pour garder les lettres A, B... à leur place
+            name = fit(name, right_width)                 # avant la couleur : fit() ne coupe pas un texte coloré
+            foes.append(name if foe.health > 0 else self.color(name, colors.LIGHT_GRAY))
+            foes.append(self._bar(foe.health, foe.max_health, colors.RED))
+
+        lines = self.columns([""] + player, [""] + foes) + [self.column_rule()]
         for entry in v.log[-LOG_LINES:]:
             enemy = names[entry.foe]
             if entry.blocked:

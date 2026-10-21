@@ -17,6 +17,15 @@ def pad(s: str, width: int) -> str:
     return s + " " * max(0, width - visible_len(s))
 
 
+def fit(s: str, width: int) -> str:
+    """Coupe un texte sans couleur trop long ; un texte coloré est supposé déjà à la bonne taille."""
+    if visible_len(s) <= width or ANSI.search(s):
+        return s
+    return s[: width - 1] + "…"
+
+MIN_COLUMN = 28        # en dessous, columns() empile les deux colonnes
+
+
 class BaseConsoleScreen(ABC):
     def __init__(self, app, view=None):
         self.app = app
@@ -102,6 +111,31 @@ class BaseConsoleScreen(ABC):
         line = text.center(self.width)
         print(self.color(line, code) if code else line)
     
+    def column_widths(self) -> tuple[int, int] | None:
+        """Largeurs des deux colonnes d'un box(), ou None si le terminal est trop étroit."""
+        inner = self.width - 4
+        left = (inner - 3) // 2
+        right = inner - 3 - left
+        return (left, right) if left >= MIN_COLUMN else None
+
+    def columns(self, left: list[str], right: list[str]) -> list[str]:
+        """Lignes de box() en deux colonnes séparées par « | » ; empilées si le terminal est trop étroit."""
+        widths = self.column_widths()
+        if widths is None:
+            return left + [""] + right
+        left_w, right_w = widths
+        rows = max(len(left), len(right))
+        left, right = left + [""] * (rows - len(left)), right + [""] * (rows - len(right))
+        return [pad(fit(l, left_w), left_w) + " | " + fit(r, right_w) for l, r in zip(left, right)]
+
+    def column_rule(self) -> str:
+        """Ligne de box() qui ferme les deux colonnes : -----+-----."""
+        widths = self.column_widths()
+        if widths is None:
+            return "-" * (self.width - 4)
+        left_w, right_w = widths
+        return "-" * left_w + "-+-" + "-" * right_w
+
     def empty_line_box(self) -> None:
         print(f"| {' ' * (self.width - 4)} |")
 
