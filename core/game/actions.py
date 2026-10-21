@@ -168,3 +168,9 @@ class AttackEnemy(Action):
 @dataclass(frozen=True)
 class Flee(Action):
     """Action representing the intention to run away from a combat."""
+
+@dataclass(frozen=True)
+class BuyItem(Action):
+    """Action representing the intention to buy an item"""
+    item_id: int
+    quantity: int = 0

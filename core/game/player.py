@@ -11,6 +11,7 @@ class Player:
         self.xp = 0                        # XP totale depuis la création, jamais remise à zéro
         self.location: RoomRef | None = location
         self.inventory = Inventory()
+        self.golds: int = 0
 
         self.allocated_points = {stat: 0 for stat in STAT_RULES}
         if allocated_points:

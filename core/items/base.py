@@ -63,6 +63,7 @@ class Item:
     equipped: tuple[Effect, ...] | None = None
     # Slots format [["slot"]], for multiple slot needed [["slot", "slot²"]] and unique but mutiple choice [["slot"], ["slot"]]
     slots: tuple[tuple[Slot, ...], ...] | None = None
+    price: int | None = None
 
     @property
     def equippable(self) -> bool:

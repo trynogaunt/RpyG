@@ -12,6 +12,7 @@ class Screens(Enum):
     EXIT = auto()
     CATALOG = auto()
     COMBAT = auto()
+    SHOP = auto()
 
 class Stat(Enum):
     HEALTH = auto()

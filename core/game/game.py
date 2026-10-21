@@ -2,6 +2,7 @@ from core.enums import Screens
 from core.updater import UpdateError, UpdateStatus, UpdateState, apply
 from core.game.response import GameResponse, Message
 from core.game.actions import (
+    BuyItem,
     StartCombat,
     AttackEnemy,
     Flee,
@@ -447,12 +448,48 @@ class Game:
                 self._handle_combat(action)
             case Screens.GAME_OVER:
                 self._handle_game_over(action)
+            case Screens.SHOP:
+                self._handle_shop(action)
             case _:
                 raise ValueError(f"Aucun handler pour l'écran : {self.screen}")
         view = self._build_to_view()
         return GameResponse(
             screen=self.screen, view=view, messages=tuple(self._messages)
         )
+    
+    def _handle_shop(self, action: Action) -> None:
+        match action:
+            case BuyItem(item_id=item_id, quantity=quantity):
+                if quantity < 0:
+                    raise ValueError("Quantity can't be negative")
+                item = self.catalog.get(item_id=item_id)
+                cost = item.price * quantity
+
+                if self.player.golds < cost:
+                    self._messages.append(Message(key="ui.shop.not_enough_gold"))
+                    return
+                
+                if item.has_state:
+                    left = quantity
+                    for _ in range(quantity):
+                        if self.player.inventory.add(item, instance=self.catalog.create(item_id)):
+                            break
+                        left -= 1
+                else:
+                    left = self.player.inventory.add(item, quantity)
+
+                bought = quantity - left
+                if not bought:
+                    self._messages.append(Message(key="ui.shop.inventory_full"))
+                
+                self.player.golds -= item.price * bought
+                self._messages.append(Message(key="ui.shop.item_buy", params={"item": item_id, "quantity": bought}))
+            case Back():
+                self.screen = Screens.EXPLORATION
+            case _:
+                raise ValueError(
+                    f"Action inconnue : {action!r} (écran : {self.screen})"
+                )
 
     def _handle_combat(self, action: Action) -> None:
         match action:
