@@ -47,6 +47,7 @@ from core.views.exploration_view import EncounterView, ExplorationView
 from core.views.catalog_view import CatalogView, ItemDetailView, CatalogEntryView
 from core.views.option_view import OptionView
 from core.views.slot_view import SlotsView
+from core.views.shop_view import ShopView
 from core.game.text_keys import room_key
 from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot, BagEntry, EquippedEntry
@@ -154,8 +155,17 @@ class Game:
                 return self._catalog_to_view()
             case Screens.COMBAT:
                 return self._combat_to_view()
+            case Screens.SHOP:
+                return self._shop_to_view()
             case _:
                 return None
+
+    def _shop_to_view(self):
+        return ShopView(
+            shop_id=0,
+            gold=self.player.golds,
+            stock=[],
+        )
 
     def _catalog_to_view(self) -> CatalogView:
         items: list = []
@@ -484,8 +494,10 @@ class Game:
                 
                 self.player.golds -= item.price * bought
                 self._messages.append(Message(key="ui.shop.item_buy", params={"item": item_id, "quantity": bought}))
+
             case Back():
                 self.screen = Screens.EXPLORATION
+
             case _:
                 raise ValueError(
                     f"Action inconnue : {action!r} (écran : {self.screen})"
