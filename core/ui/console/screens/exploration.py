@@ -27,7 +27,8 @@ class ExplorationScreen(BaseConsoleScreen):
         bar_len = 20
         filled = round(bar_len * p.health / p.max_health) if p.max_health else 0
         bar = "█" * filled + "░" * (bar_len - filled)
-        print(f"{p.name}  {self.t('ui.common.level')} {p.level}")
+        xp = f"{p.xp}/{p.xp_next}" if p.xp_next is not None else f"{p.xp}"
+        print(f"{p.name}  {self.t('ui.common.level')} {p.level}  {self.t('ui.stats.xp')} {xp}")
         print(f"{self.t('ui.stats.health')} {self.color(bar, colors.GREEN)} {p.health}/{p.max_health}")
         print("  ".join(
             f"{self.t(f'ui.stats.{stat.name.lower()}')} {value}"

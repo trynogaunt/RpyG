@@ -8,3 +8,5 @@ class PlayerSummary:
     health: int
     max_health: int
     stats: dict[Stat, int]
+    xp: int = 0
+    xp_next: int | None = None          # None au niveau max

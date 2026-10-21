@@ -11,10 +11,18 @@ class RoomRef:
     room_id: str
 
 @dataclass(frozen=True)
+class EncounterRef:
+    """Une rencontre précise du monde : son id n'est unique que dans sa salle."""
+    room: RoomRef
+    encounter_id: str
+
+
+@dataclass(frozen=True)
 class Encounter:
     """Un groupe d'ennemis qu'on affronte ensemble."""
     id: str
     enemies: tuple[str, ...]             # ids d'ennemis, un par exemplaire : deux rats = deux fois l'id
+    respawn: bool = False                # revient après chaque victoire (terrain d'entraînement)
 
 
 @dataclass(frozen=True)
@@ -74,3 +82,4 @@ class World:
 @dataclass
 class WorldState:
     explored: set[RoomRef] = field(default_factory=set)
+    defeated: set[EncounterRef] = field(default_factory=set)      # rencontres vaincues : elles ne reviennent pas

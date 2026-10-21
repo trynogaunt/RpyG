@@ -10,6 +10,7 @@ class Enemy:
     id: str
     stats: dict[Stat, int]
     level: int = 1
+    xp: int = 0                                       # XP donnée à sa défaite, avant la baisse par niveau
     category: str | None = None
     attack: Attack = field(default_factory=Attack)    # armes naturelles : crocs, griffes...
     defense: Defense | None = None
@@ -24,6 +25,8 @@ class Enemy:
             raise ValueError("Invalid stat value")
         if self.level <= 0:
             raise ValueError("Invalid level")
+        if self.xp < 0:
+            raise ValueError("Invalid xp")
 
     @property
     def max_health(self) -> int:

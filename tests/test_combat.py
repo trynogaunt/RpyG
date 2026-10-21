@@ -18,7 +18,7 @@ from core.items.base import Attack, Defense, Item, ItemInstance, Slot
 from core.items.catalog import ItemCatalog
 from core.views.combat_view import FoeView
 from core.views.exploration_view import EncounterView
-from core.world.models import Encounter, Room, RoomRef, World, Zone
+from core.world.models import Encounter, EncounterRef, Room, RoomRef, World, Zone
 
 DEN = RoomRef("cave", "den")
 HALL = RoomRef("cave", "hall")
@@ -318,6 +318,34 @@ def test_flee(game):
     assert response.screen is Screens.EXPLORATION
     assert message_keys(response) == ["ui.combat.fled"]
     assert game.combat is None
+
+
+def win_against_rat(game):
+    game.handle_action(StartCombat("rat"))
+    for _ in range(3):                                    # 5 + 5 + 5 >= 12
+        response = game.handle_action(AttackEnemy())
+    return response
+
+
+def test_victory_records_the_encounter(game):
+    response = win_against_rat(game)
+    assert game.world_state.defeated == {EncounterRef(DEN, "rat")}
+    assert "rat" not in [e.id for e in response.view.encounters]
+
+
+def test_defeated_encounter_cannot_be_fought_again(game):
+    win_against_rat(game)
+    game.player.health = game.player.max_health
+    response = game.handle_action(StartCombat("rat"))
+    assert response.screen is Screens.EXPLORATION
+    assert game.combat is None
+
+
+def test_fleeing_does_not_record_the_encounter(game):
+    game.handle_action(StartCombat("rat"))
+    response = game.handle_action(Flee())
+    assert game.world_state.defeated == set()
+    assert "rat" in [e.id for e in response.view.encounters]
 
 
 def test_defeat_leads_to_game_over_then_main_menu(game):

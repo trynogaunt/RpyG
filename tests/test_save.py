@@ -5,10 +5,11 @@ from dataclasses import replace
 from core.game.game import Game
 from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot
-from core.game.actions import SetName, AllocatePoints, ConfirmCreation, Explore, Move
+from core.game.actions import SetName, AllocatePoints, ConfirmCreation, Explore, Move, NewGame, Quit
 from core.enums import Stat, Direction
 from core.save import codec, storage
 from core.save.store import SaveStore
+from core.world.models import EncounterRef, RoomRef
 from core.views.slot_view import SlotView
 
 
@@ -97,6 +98,41 @@ def test_restore_unknown_room_raises_and_keeps_state(progressed_game, snapshot):
     with pytest.raises(InvalidSave):
         progressed_game.restore(bad)
     assert progressed_game.snapshot() == before   # état intact après un échec
+
+
+RATS = EncounterRef(RoomRef("cave", "pool"), "rats")
+
+
+def test_defeated_encounters_survive_save_and_restore(progressed_game, make_game, snapshot):
+    snap = replace(snapshot, defeated=(RATS,))
+    other = make_game()
+    other.restore(codec.decode(codec.encode(snap)))
+    assert other.world_state.defeated == {RATS}
+    assert other.snapshot().defeated == (RATS,)
+
+
+@pytest.mark.parametrize("ref", [EncounterRef(RoomRef("cave", "pool"), "dragon"),
+                                 EncounterRef(RoomRef("cave", "salle_fantome"), "rats")],
+                         ids=["rencontre-inconnue", "salle-inconnue"])
+def test_restore_unknown_encounter_raises(progressed_game, snapshot, ref):
+    with pytest.raises(InvalidSave):
+        progressed_game.restore(replace(snapshot, defeated=(ref,)))
+
+
+def test_decode_save_without_defeated_section(snapshot):
+    data = codec.encode(snapshot)
+    del data["defeated"]                                 # sauvegarde 1.1
+    data["version"] = "1.1"
+    assert codec.decode(data).defeated == ()
+
+
+def test_new_game_starts_with_nothing_defeated(progressed_game):
+    progressed_game.world_state.defeated.add(RATS)
+    progressed_game.handle_action(Quit())
+    progressed_game.handle_action(NewGame())
+    progressed_game.handle_action(SetName("Bob"))
+    progressed_game.handle_action(ConfirmCreation())
+    assert progressed_game.world_state.defeated == set()
 
 
 def test_restore_inconsistent_points_raises(progressed_game, snapshot):

@@ -71,7 +71,8 @@ class ExplorationScreen(BaseScreen):
             names = " / ".join(self._encounter_label(e) for e in view.encounters)
             enemies.update(self.app.t("ui.exploration.enemies", names=names))
         self.query_one("#player-panel").border_title = view.player_summary.name
-        self.query_one("#player-level", Static).update(f"Lv. {view.player_summary.level}")
+        xp = f"{player.xp}/{player.xp_next}" if player.xp_next is not None else f"{player.xp}"
+        self.query_one("#player-level", Static).update(f"Lv. {player.level}  {self.app.t('ui.stats.xp')} {xp}")
         self.query_one("#hp-label", Static).update(self.app.t("ui.stats.abrev.health"))
         self.query_one("#hp-bar", ProgressBar).update(total=player.max_health, progress=player.health)
         self.query_one("#hp-text", Static).update(f"{player.health}/{player.max_health}")

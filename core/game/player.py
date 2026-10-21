@@ -1,5 +1,5 @@
 from core.enums import Stat
-from core.game.rules import STAT_RULES
+from core.game.rules import LEVEL_XP, STAT_RULES
 from core.world.models import RoomRef
 from core.views.player_summary import PlayerSummary
 from core.game.inventory import Inventory
@@ -8,6 +8,7 @@ class Player:
     def __init__(self, name: str, allocated_points: dict[Stat, int] | None = None, location: RoomRef | None = None):
         self.name = name
         self.level = 1
+        self.xp = 0                        # XP totale depuis la création, jamais remise à zéro
         self.location: RoomRef | None = location
         self.inventory = Inventory()
 
@@ -21,6 +22,25 @@ class Player:
     @property
     def max_health(self) -> int:
         return self.get_stat(Stat.HEALTH)
+
+    @property
+    def xp_next(self) -> int | None:
+        """XP totale à atteindre pour le niveau suivant, None au niveau max."""
+        return LEVEL_XP[self.level] if self.level < len(LEVEL_XP) else None
+
+    def gain_xp(self, amount: int) -> int:
+        """Ajoute l'XP et monte d'autant de niveaux que possible ; renvoie le nombre de niveaux gagnés.
+
+        Les PV max gagnés en montant s'ajoutent aussi aux PV actuels.
+        """
+        self.xp += amount
+        gained = 0
+        while self.xp_next is not None and self.xp >= self.xp_next:
+            before = self.max_health
+            self.level += 1
+            self.health += self.max_health - before
+            gained += 1
+        return gained
 
     def get_stat(self, stat: Stat) -> int:
         rule = STAT_RULES[stat]
@@ -38,6 +58,8 @@ class Player:
             health=self.health,
             max_health=self.max_health,
             stats={stat: self.get_stat(stat) for stat in STAT_RULES if stat != Stat.HEALTH},
+            xp=self.xp,
+            xp_next=self.xp_next,
         )
 
     def add_item_to_inventory(self, item, quantity: int = 1) -> int:

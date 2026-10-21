@@ -5,9 +5,9 @@ from core.errors import InvalidSave
 from core.game.snapshot import GameSnapshot, PlayerSnapshot, BagEntry, EquippedEntry
 from core.enums import Stat
 from core.items.base import ItemInstance, Slot
-from core.world.models import RoomRef
+from core.world.models import EncounterRef, RoomRef
 
-SAVE_VERSION = "1.1"
+SAVE_VERSION = "1.3"
 
 
 def parse_version(raw) -> tuple[int, int]:
@@ -28,6 +28,17 @@ def _ref_from_dict(data) -> RoomRef:
         return RoomRef(zone_id=data["zone_id"], room_id=data["room_id"])
     except (KeyError, TypeError) as e:
         raise InvalidSave(f"Référence de salle invalide : {data!r}") from e
+
+
+def _encounter_to_dict(ref: EncounterRef) -> dict:
+    return {**_ref_to_dict(ref.room), "encounter_id": ref.encounter_id}
+
+
+def _encounter_from_dict(data) -> EncounterRef:
+    encounter_id = data.get("encounter_id") if isinstance(data, dict) else None
+    if not isinstance(encounter_id, str):
+        raise InvalidSave(f"Rencontre invalide : {data!r}")
+    return EncounterRef(room=_ref_from_dict(data), encounter_id=encounter_id)
 
 
 def _instance_to_dict(instance: ItemInstance) -> dict:
@@ -88,6 +99,7 @@ def encode(snap: GameSnapshot) -> dict:
         "player": {
             "name": p.name,
             "level": p.level,
+            "xp": p.xp,
             "health": p.health,
             "allocated_points": {stat.name: value for stat, value in p.allocated_points},
             "inventory": {
@@ -106,6 +118,7 @@ def encode(snap: GameSnapshot) -> dict:
             _ref_to_dict(r)
             for r in sorted(snap.explored, key=lambda r: (r.zone_id, r.room_id))
         ],
+        "defeated": [_encounter_to_dict(d) for d in snap.defeated],
     }
 
 
@@ -141,9 +154,12 @@ def decode(data: dict) -> GameSnapshot:
                 allocated_points=tuple(sorted(allocated_points, key=lambda kv: kv[0].name)),
                 bag=bag,
                 equipped=equipped,
+                xp=_int(player.get("xp", 0), "XP"),         # absente avant 1.3
             ),
             location=_ref_from_dict(data["location"]),
             explored=tuple(_ref_from_dict(r) for r in data["explored"]),
+            # Absent des sauvegardes 1.0 et 1.1 : aucune rencontre vaincue
+            defeated=tuple(_encounter_from_dict(d) for d in data.get("defeated", [])),
         )
     except (KeyError, TypeError, AttributeError) as e:
         raise InvalidSave(f"Sauvegarde incomplète ou mal formée : {e!r}") from e

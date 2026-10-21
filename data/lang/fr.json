@@ -50,7 +50,7 @@
             "choose_starter": "Prendre {item}"
         },
 
-        "stats": {
+        "stats": { "xp": "XP",
             "health": "Santé", "strength": "Force", "speed": "Vitesse", "luck": "Chance",
             "abrev": { "health": "PV", "strength": "FOR", "speed": "VIT", "luck": "CHC" }
         },
@@ -60,7 +60,7 @@
             "east": "Est",
             "west": "Ouest"
         },
-        "combat": { "player_blocked": "{enemy} pare votre coup !", "enemy_blocked": "Vous parez le coup de {enemy} !", "critical": "Coup critique !", "title": "Combat", "attack": "Attaquer", "attack_target": "Attaquer {enemy}", "change_target": "Changer de cible", "flee": "Fuir", "fight": "Combattre : {enemy}", "fight_short": "Combattre", "player_hits": "Vous frappez {enemy} : {damage} dégâts.", "enemy_hits": "{enemy} vous frappe : {damage} dégâts.", "log": "Journal", "game_over": "G A M E   O V E R", "victory": "Vous avez vaincu votre adversaire !", "fled": "Vous avez pris la fuite.", "defeat": "Vous êtes tombé au combat..." },
+        "combat": { "player_blocked": "{enemy} pare votre coup !", "enemy_blocked": "Vous parez le coup de {enemy} !", "critical": "Coup critique !", "title": "Combat", "attack": "Attaquer", "attack_target": "Attaquer {enemy}", "change_target": "Changer de cible", "xp_gained": "Vous gagnez {xp} points d'expérience.", "level_up": "Vous passez au niveau {level} !", "flee": "Fuir", "fight": "Combattre : {enemy}", "fight_short": "Combattre", "player_hits": "Vous frappez {enemy} : {damage} dégâts.", "enemy_hits": "{enemy} vous frappe : {damage} dégâts.", "log": "Journal", "game_over": "G A M E   O V E R", "victory": "Vous avez vaincu votre adversaire !", "fled": "Vous avez pris la fuite.", "defeat": "Vous êtes tombé au combat..." },
         "exploration": {
             "enemies": "Ennemis : {names}",
             "look_around": "Regarder autour",

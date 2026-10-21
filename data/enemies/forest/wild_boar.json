@@ -1,0 +1,7 @@
+{
+    "id": "wild_boar",
+    "level": 2,
+    "xp": 10,
+    "stats": { "health": 20, "strength": 5, "speed": 4, "luck": 1 },
+    "attack": { "damage_multiplier": 1.0, "crit_multiplier": 1.5, "hits": 1, "crit_chance": 0.1 }
+}

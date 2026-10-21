@@ -40,7 +40,7 @@ from core.game.creation import CreationState
 from core.game.rules import CREATION_POINTS, STARTER_WEAPONS
 from core.game.player import Player
 from core.world.loader import World, RoomRef
-from core.world.models import WorldState
+from core.world.models import EncounterRef, WorldState
 from core.views.base_view import BaseView
 from core.views.exploration_view import EncounterView, ExplorationView
 from core.views.catalog_view import CatalogView, ItemDetailView, CatalogEntryView
@@ -117,6 +117,7 @@ class Game:
         self._previous_screen: Screens | None = None
         self._catalog_selection: str | None = None
         self.combat: CombatState | None = None
+        self._fighting: EncounterRef | None = None     # rencontre en cours, notée vaincue à la victoire (sauf respawn)
         self.rng = rng or Random()       # injecté par les tests pour fixer les jets
         self.restart_requested: bool = (
             False  # lu par main.py après la fermeture de l'interface
@@ -191,7 +192,8 @@ class Game:
             },
             player_summary=self.player.to_summary(),
             encounters=tuple(EncounterView(id=e.id, enemies=tuple(Counter(e.enemies).items()))
-                             for e in current_room.encounters),
+                             for e in current_room.encounters
+                             if EncounterRef(self.player.location, e.id) not in self.world_state.defeated),
         )
 
     def _combat_to_view(self) -> CombatView:
@@ -334,6 +336,7 @@ class Game:
                 name=p.name,
                 health=p.health,
                 level=p.level,
+                xp=p.xp,
                 allocated_points=tuple(
                     sorted(p.allocated_points.items(), key=lambda kv: kv[0].name)
                 ),
@@ -350,6 +353,10 @@ class Game:
             location=p.location,
             explored=tuple(
                 sorted(self.world_state.explored, key=lambda r: (r.zone_id, r.room_id))
+            ),
+            defeated=tuple(
+                sorted(self.world_state.defeated,
+                       key=lambda d: (d.room.zone_id, d.room.room_id, d.encounter_id))
             ),
         )
 
@@ -397,9 +404,16 @@ class Game:
         self._check_room(snap.location)
         for ref in snap.explored:
             self._check_room(ref)
+        for ref in snap.defeated:
+            self._check_room(ref.room)
+            if all(e.id != ref.encounter_id for e in self.world.get_room(ref.room).encounters):
+                raise InvalidSave(f"Rencontre inconnue : {ref}")
 
         player = Player(name=snap.player.name)
         player.level = snap.player.level
+        if snap.player.xp < 0:
+            raise InvalidSave(f"XP invalide : {snap.player.xp}")
+        player.xp = snap.player.xp
         player.allocated_points = dict(snap.player.allocated_points)
         if sum(player.allocated_points.values()) > CREATION_POINTS:
             raise InvalidSave("Points alloués incohérents")
@@ -409,6 +423,7 @@ class Game:
 
         self.player = player
         self.world_state.explored = set(snap.explored)
+        self.world_state.defeated = set(snap.defeated)
         self.screen = Screens.EXPLORATION
 
     def handle_action(self, action: Action) -> GameResponse:
@@ -448,7 +463,11 @@ class Game:
                     return
                 match self.combat.play_round(Strike(target_index), self.rng):
                     case Outcome.VICTORY:
+                        if self._fighting is not None:
+                            self.world_state.defeated.add(self._fighting)
+                        xp = self.combat.xp_reward(self.player.level)
                         self._end_combat("ui.combat.victory")
+                        self._grant_xp(xp)
                     case Outcome.DEFEAT:
                         self.combat = None
                         self.screen = Screens.GAME_OVER
@@ -458,8 +477,17 @@ class Game:
                     f"Action inconnue : {action!r} (écran : {self.screen})"
                 )
 
+    def _grant_xp(self, xp: int) -> None:
+        if not xp:
+            return
+        levels = self.player.gain_xp(xp)
+        self._messages.append(Message(key="ui.combat.xp_gained", params={"xp": xp}))
+        if levels:
+            self._messages.append(Message(key="ui.combat.level_up", params={"level": self.player.level}))
+
     def _end_combat(self, message_key: str) -> None:
         self.combat = None
+        self._fighting = None
         self.screen = Screens.EXPLORATION
         self._messages.append(Message(key=message_key))
 
@@ -542,6 +570,7 @@ class Game:
                             starter, instance=self.catalog.create(starter.id)
                         )
                     self.creation = None
+                    self.world_state = WorldState()     # nouvelle partie : rien d'exploré ni de vaincu
                     self.screen = Screens.EXPLORATION
             case NewGame() | Quit():
                 pass
@@ -588,10 +617,12 @@ class Game:
             case StartCombat(encounter_id=encounter_id):
                 room = self.world.get_room(self.player.location)
                 encounter = next((e for e in room.encounters if e.id == encounter_id), None)
-                if encounter is not None:
+                ref = EncounterRef(self.player.location, encounter_id)
+                if encounter is not None and ref not in self.world_state.defeated:
                     # check_world_enemies garantit au chargement que chaque id existe dans le catalogue
                     self.combat = CombatState.start(PlayerFighter.from_player(self.player, self.catalog),
                                                       [self.enemies.get(i) for i in encounter.enemies])
+                    self._fighting = None if encounter.respawn else ref
                     self.screen = Screens.COMBAT
             case Quit():
                 self.screen = Screens.MAIN_MENU

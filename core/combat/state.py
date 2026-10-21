@@ -9,6 +9,7 @@ from random import Random
 from core.combat.fighters import Combatant, Fighter, PlayerFighter
 from core.combat.moves import Strike
 from core.combat.resolution import resolve_attack
+from core.combat.rewards import xp_gain
 from core.enemies.base import Enemy
 
 
@@ -46,6 +47,9 @@ class CombatState:
     @property
     def defeated(self) -> bool:
         return all(not f.alive for f in self.foes)
+
+    def xp_reward(self, player_level: int) -> int:
+        return sum(xp_gain(f.enemy.xp, f.enemy.level, player_level) for f in self.foes)
 
     def can_target(self, index: int) -> bool:
         return 0 <= index < len(self.foes) and self.foes[index].alive

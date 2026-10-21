@@ -71,7 +71,8 @@ def load_encounters(raw_encounters: list, zone_id: str, room_id: str) -> tuple[E
             raise ValueError(f"Rencontre sans id ou sans ennemis : {where}")
         if any(e.id == raw["id"] for e in encounters):
             raise ValueError(f"Rencontre en double : {where}")
-        encounters.append(Encounter(id=raw["id"], enemies=tuple(raw["enemies"])))
+        encounters.append(Encounter(id=raw["id"], enemies=tuple(raw["enemies"]),
+                                    respawn=bool(raw.get("respawn", False))))
     return tuple(encounters)
 
 

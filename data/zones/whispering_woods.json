@@ -1,0 +1,52 @@
+{
+  "id": "whispering_woods",
+  "name": "Whispering Woods",
+  "description": "An old forest west of the village, where the wind never stops murmuring through the leaves.",
+  "entry_room": "forest_edge",
+  "rooms": {
+    "forest_edge": {
+      "name": "Forest Edge",
+      "description": "The village fields give way to tall, crooked trees. A muddy trail leads north into the woods.",
+      "look_around": "Fresh tracks churn the mud: something heavy and tusked often passes here.",
+      "encounters": [
+        { "id": "boar", "enemies": ["wild_boar"] }
+      ],
+      "exits": {
+        "east": { "zone": "entry_village", "room": "village_square" },
+        "north": { "room": "clearing" }
+      }
+    },
+    "clearing": {
+      "name": "Sunlit Clearing",
+      "description": "A wide clearing where light finally reaches the ground. Trails leave in every direction.",
+      "look_around": "Gnawed bones lie in the grass, and you hear howling not far away.",
+      "encounters": [
+        { "id": "wolf_pair", "enemies": ["forest_wolf", "forest_wolf"] }
+      ],
+      "exits": {
+        "south": { "room": "forest_edge" },
+        "north": { "room": "old_oak" },
+        "west": { "room": "hunters_hut" }
+      }
+    },
+    "old_oak": {
+      "name": "Old Oak",
+      "description": "A colossal oak, its trunk split by lightning. The ground around it is torn up and trampled.",
+      "look_around": "Deep gouges scar the bark at shoulder height. Whatever made them is big.",
+      "encounters": [
+        { "id": "old_boar", "enemies": ["old_boar"] }
+      ],
+      "exits": {
+        "south": { "room": "clearing" }
+      }
+    },
+    "hunters_hut": {
+      "name": "Hunter's Hut",
+      "description": "A small abandoned hut of mossy logs. The door hangs open on a single hinge.",
+      "look_around": "Snares and empty racks hang from the walls. Someone left in a hurry.",
+      "exits": {
+        "east": { "room": "clearing" }
+      }
+    }
+  }
+}

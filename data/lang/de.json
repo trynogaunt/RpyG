@@ -50,7 +50,7 @@
             "choose_starter": "{item} nehmen"
         },
 
-        "stats": {
+        "stats": { "xp": "EP",
             "health": "Gesundheit", "strength": "Stärke", "speed": "Geschwindigkeit", "luck": "Glück",
             "abrev": { "health": "LP", "strength": "STÄ", "speed": "GES", "luck": "GLÜ" }
         },
@@ -60,7 +60,7 @@
             "east": "Osten",
             "west": "Westen"
         },
-        "combat": { "player_blocked": "{enemy} blockt deinen Schlag!", "enemy_blocked": "Du blockst den Schlag von {enemy}!", "critical": "Kritischer Treffer!", "title": "Kampf", "attack": "Angreifen", "attack_target": "{enemy} angreifen", "change_target": "Ziel wechseln", "flee": "Fliehen", "fight": "Kämpfen: {enemy}", "fight_short": "Kämpfen", "player_hits": "Du triffst {enemy} für {damage} Schaden.", "enemy_hits": "{enemy} trifft dich für {damage} Schaden.", "log": "Protokoll", "game_over": "G A M E   O V E R", "victory": "Du hast deinen Gegner besiegt!", "fled": "Du bist geflohen.", "defeat": "Du bist gefallen..." },
+        "combat": { "player_blocked": "{enemy} blockt deinen Schlag!", "enemy_blocked": "Du blockst den Schlag von {enemy}!", "critical": "Kritischer Treffer!", "title": "Kampf", "attack": "Angreifen", "attack_target": "{enemy} angreifen", "change_target": "Ziel wechseln", "xp_gained": "Du erhältst {xp} Erfahrungspunkte.", "level_up": "Du erreichst Stufe {level}!", "flee": "Fliehen", "fight": "Kämpfen: {enemy}", "fight_short": "Kämpfen", "player_hits": "Du triffst {enemy} für {damage} Schaden.", "enemy_hits": "{enemy} trifft dich für {damage} Schaden.", "log": "Protokoll", "game_over": "G A M E   O V E R", "victory": "Du hast deinen Gegner besiegt!", "fled": "Du bist geflohen.", "defeat": "Du bist gefallen..." },
         "exploration": {
             "enemies": "Gegner: {names}",
             "look_around": "Umgebung untersuchen",

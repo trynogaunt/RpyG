@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from core.enums import Stat
-from core.world.models import RoomRef, WorldState
+from core.world.models import EncounterRef, RoomRef, WorldState
 from core.items.base import ItemInstance, Slot
 
 @dataclass(frozen=True)
@@ -11,6 +11,7 @@ class PlayerSnapshot:
     allocated_points: tuple[tuple[Stat, int], ...]
     bag: tuple["BagEntry", ...] = ()
     equipped: tuple["EquippedEntry", ...] = ()
+    xp: int = 0
 
 @dataclass(frozen=True)
 class BagEntry:
@@ -28,3 +29,4 @@ class GameSnapshot:
     player: PlayerSnapshot
     location: RoomRef
     explored: tuple[RoomRef, ...]
+    defeated: tuple[EncounterRef, ...] = ()

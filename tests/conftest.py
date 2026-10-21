@@ -8,7 +8,7 @@ import pytest
 from core.enums import Direction
 from core.game.actions import NewGame
 from core.game.game import Game
-from core.world.models import Room, RoomRef, World, Zone
+from core.world.models import Encounter, Room, RoomRef, World, Zone
 
 
 @pytest.fixture
@@ -47,7 +47,8 @@ def small_world() -> World:
             "entrance": Room("Entrée", "L'entrée de la grotte.", entrance,
                              exits={Direction.NORTH: gate, Direction.SOUTH: pool}),
             "pool": Room("Bassin", "Un bassin d'eau froide.", pool,
-                         exits={Direction.NORTH: entrance}),
+                         exits={Direction.NORTH: entrance},
+                         encounters=(Encounter("rats", ("rat", "rat")),)),
         },
     )
     return World(start=square, zones={"village": village, "cave": cave})
