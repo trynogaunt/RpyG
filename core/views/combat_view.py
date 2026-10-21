@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from core.game.combat import CombatLogEntry
+from core.combat.state import CombatLogEntry
 from core.views.base_view import BaseView
 from core.views.player_summary import PlayerSummary
 

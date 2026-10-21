@@ -163,6 +163,7 @@ class StartCombat(Action):
 @dataclass(frozen=True)
 class AttackEnemy(Action):
     """Action representing the intention to strike the enemy during a combat."""
+    target_index: int = 0
 
 @dataclass(frozen=True)
 class Flee(Action):

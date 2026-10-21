@@ -1,13 +1,8 @@
-"""Combat au tour par tour contre un seul ennemi, et résolution des coups."""
-from __future__ import annotations
+"""Résolution d'un coup : blocage, critique, armure et arrondi. Fonctions pures, sans état de combat."""
 import math
-
-from collections.abc import Sequence
-
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from random import Random
 
-from core.enemies.base import Enemy
 from core.items.base import Attack
 
 LUCK_RATIO = 0.03       
@@ -17,57 +12,6 @@ BLOCK_CAP = 0.30
 BLOCK_SCALE = 20
 BLOCK_STAT_BONUS = 2
 BLOCK_LUCK_WEIGHT = 0.5
-
-
-@dataclass(frozen=True)
-class CombatLogEntry:
-    attacker: str         
-    damage: int
-    crit: bool = False
-    blocked: bool = False
-    foe: int = 0          # index dans CombatState.foes de l'ennemi qui frappe ou qui est frappé
-
-@dataclass
-class Combatant:
-    """Un exemplaire d'ennemi en combat seuls ses PV baissent"""
-    enemy: Enemy
-    health: int
-
-    @classmethod
-    def spawn(cls, enemy: Enemy) -> Combatant:
-        return cls(enemy=enemy, health=enemy.max_health)
-    
-    def take_damage(self, damage) -> None:
-        self.health = max(0, self.health - damage)
-
-    @property
-    def alive(self) -> bool:
-        return not self.health <= 0
-
-@dataclass
-class CombatState:
-    foes: list[Combatant]
-    log: list[CombatLogEntry] = field(default_factory=list)
-
-    @classmethod
-    def start(cls, enemy: Sequence[Enemy]) -> CombatState:
-        if not enemy:
-            raise ValueError("Liste d'ennemie vide")
-
-        enemy_list = []
-        for e in enemy:
-            comb = Combatant.spawn(e)
-            enemy_list.append(comb)
-        
-        return cls(foes=enemy_list, log=[])
-    
-    @property
-    def living(self) -> list[Combatant]:
-        return [f for f in self.foes if f.alive]
-
-    @property
-    def defeated(self) -> bool:
-        return all(not f.alive for f in self.foes)
 
 
 @dataclass(frozen=True)

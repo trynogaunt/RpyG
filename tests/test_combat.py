@@ -6,8 +6,11 @@ from core.enemies.base import Enemy
 from core.enemies.catalog import EnemyCatalog
 from core.enums import Screens, Stat
 from core.game.actions import AttackEnemy, Flee, Quit, StartCombat
-from core.game.combat import (BLOCK_CAP, CRIT_CAP, CombatLogEntry, CombatState, Combatant, Hit, armor_ratio,
-                              block_chance, crit_chance, finalize, resolve_attack)
+from core.combat.fighters import Combatant, PlayerFighter
+from core.combat.resolution import (BLOCK_CAP, CRIT_CAP, Hit, armor_ratio, block_chance, crit_chance, finalize,
+                                    resolve_attack)
+from core.combat.moves import Strike
+from core.combat.state import CombatLogEntry, CombatState, Outcome
 from core.game.game import Game
 from core.game.inventory import Equipped
 from core.game.player import Player
@@ -34,6 +37,11 @@ class FixedRolls(Random):
 def enemy(enemy_id: str, health: int, strength: int, attack: Attack = Attack(), speed: int = 1) -> Enemy:
     return Enemy(id=enemy_id, stats={Stat.HEALTH: health, Stat.STRENGTH: strength, Stat.SPEED: speed, Stat.LUCK: 1},
                  attack=attack)
+
+
+def fighter() -> PlayerFighter:
+    """Joueur à mains nues, sans armure ni bouclier."""
+    return PlayerFighter(player=Player("Bob"), attack=Attack(), wear=1.0, armor=0, block=0.0)
 
 
 @pytest.fixture
@@ -166,20 +174,20 @@ def test_take_damage_never_goes_below_zero(damage, expected):
 
 def test_same_enemy_twice_gives_independent_copies():
     rat = enemy("rat", 12, 3)
-    combat = CombatState.start([rat, rat])
+    combat = CombatState.start(fighter(), [rat, rat])
     combat.foes[0].take_damage(5)
     assert [f.health for f in combat.foes] == [7, 12]
     assert combat.foes[0].enemy is combat.foes[1].enemy     # la définition reste partagée
 
 
 def test_living_skips_dead_foes_and_keeps_order():
-    combat = CombatState.start([enemy("rat", 12, 3), enemy("bat", 5, 1), enemy("wolf", 30, 2)])
+    combat = CombatState.start(fighter(), [enemy("rat", 12, 3), enemy("bat", 5, 1), enemy("wolf", 30, 2)])
     combat.foes[1].take_damage(5)
     assert [f.enemy.id for f in combat.living] == ["rat", "wolf"]
 
 
 def test_defeated_only_when_every_foe_is_down():
-    combat = CombatState.start([enemy("rat", 12, 3), enemy("bat", 5, 1)])
+    combat = CombatState.start(fighter(), [enemy("rat", 12, 3), enemy("bat", 5, 1)])
     combat.foes[0].take_damage(12)
     assert not combat.defeated
     combat.foes[1].take_damage(5)
@@ -188,7 +196,22 @@ def test_defeated_only_when_every_foe_is_down():
 
 def test_cannot_start_combat_without_enemies():
     with pytest.raises(ValueError):
-        CombatState.start([])
+        CombatState.start(fighter(), [])
+
+
+def test_every_living_foe_strikes_once_per_round():
+    rat = enemy("rat", 12, 3)
+    combat = CombatState.start(fighter(), [rat, rat])
+    assert combat.play_round(Strike(0), FixedRolls()) is Outcome.ONGOING
+    assert combat.log == [CombatLogEntry("player", 5, foe=0), CombatLogEntry("enemy", 3, foe=0),
+                          CombatLogEntry("enemy", 3, foe=1)]
+    assert combat.player.player.health == 10 - 6
+
+
+def test_foe_killed_before_its_turn_does_not_strike():
+    combat = CombatState.start(fighter(), [enemy("bat", 5, 1), enemy("rat", 12, 3)])
+    combat.play_round(Strike(0), FixedRolls())
+    assert combat.log == [CombatLogEntry("player", 5, foe=0), CombatLogEntry("enemy", 3, foe=1)]
 
 
 # ----- déroulement -----

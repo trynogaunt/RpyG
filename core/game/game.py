@@ -59,7 +59,10 @@ from core.game.inventory import (
 from core.items.catalog import ItemCatalog, UnknownItem
 from core.enemies.catalog import EnemyCatalog
 from core.enums import Stat
-from core.game.combat import CombatLogEntry, CombatState, block_chance, resolve_attack
+from core.combat.fighters import PlayerFighter
+from core.combat.moves import Strike
+from core.combat.resolution import block_chance
+from core.combat.state import CombatState, Outcome
 from core.items.base import Attack
 from core.views.combat_view import CombatView, FoeView
 from core.game.effect import EFFECTS
@@ -441,37 +444,26 @@ class Game:
         match action:
             case Flee():
                 self._end_combat("ui.combat.fled")
+            case AttackEnemy(target_index=target_index):
+                if not self.combat.can_target(target_index):
+                    return
+                match self.combat.play_round(Strike(target_index), self.rng):
+                    case Outcome.VICTORY:
+                        self._end_combat("ui.combat.victory")
+                    case Outcome.DEFEAT:
+                        self.combat = None
+                        self.screen = Screens.GAME_OVER
+                        self._messages.append(Message(key="ui.combat.defeat"))
             case _:
                 raise ValueError(
                     f"Action inconnue : {action!r} (écran : {self.screen})"
                 )
 
-    def _player_strikes(self) -> None:
+    def _player_fighter(self) -> PlayerFighter:
+        """Le joueur tel qu'il entre en combat : l'équipement ne change pas pendant l'affrontement."""
         attack, wear = self._player_attack()
-        p = self.player
-        enemy = self.combat.enemy
-        enemy_defense = enemy.defense
-        enemy_armor = enemy_defense.armor if enemy_defense else 0
-        enemy_block = block_chance(enemy_defense.block_chance, 1.0, enemy.get_stat(Stat.SPEED),
-                                   enemy.get_stat(Stat.LUCK)) if enemy_defense else 0.0
-        for hit in resolve_attack(p.get_stat(Stat.STRENGTH), p.get_stat(Stat.LUCK), attack, wear, enemy_armor,
-                                  enemy_block, self.rng):
-            self.combat.enemy_health = max(0, self.combat.enemy_health - hit.damage)
-            self.combat.log.append(CombatLogEntry(attacker="player", damage=hit.damage, crit=hit.crit,
-                                                  blocked=hit.blocked))
-            if self.combat.enemy_defeated:
-                return
-
-    def _enemy_strikes(self) -> None:
-        enemy = self.combat.enemy
-        # Les ennemis n'ont pas d'exemplaire d'arme : leurs armes naturelles sont toujours « neuves »
-        for hit in resolve_attack(enemy.get_stat(Stat.STRENGTH), enemy.get_stat(Stat.LUCK), enemy.attack, 1.0,
-                                  self._player_armor(), self._player_block(), self.rng):
-            self.player.health = max(0, self.player.health - hit.damage)
-            self.combat.log.append(CombatLogEntry(attacker="enemy", damage=hit.damage, crit=hit.crit,
-                                                  blocked=hit.blocked))
-            if self.player.health <= 0:
-                return
+        return PlayerFighter(player=self.player, attack=attack, wear=wear, armor=self._player_armor(),
+                             block=self._player_block())
 
     def _player_attack(self) -> tuple[Attack, float]:
         """Attaque et usure de la première arme portée, ou poings nus (sans crit)."""
@@ -633,7 +625,7 @@ class Game:
             case StartCombat(enemy_id=enemy_id):
                 room = self.world.get_room(self.player.location)
                 if enemy_id in room.enemies and enemy_id in self.enemies:
-                    self.combat = CombatState.start([self.enemies.get(enemy_id)])
+                    self.combat = CombatState.start(self._player_fighter(), [self.enemies.get(enemy_id)])
                     self.screen = Screens.COMBAT
             case Quit():
                 self.screen = Screens.MAIN_MENU
