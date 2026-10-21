@@ -1,0 +1,11 @@
+{
+    "id": "leather_cap",
+    "max_stack": 1,
+    "slots": [["head"]],
+    "defense": {
+        "armor": 4,
+        "magic_resistance": 1.0,
+        "block_chance": 0.0
+    },
+    "price": 25
+}

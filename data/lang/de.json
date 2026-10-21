@@ -279,6 +279,22 @@
         "medicinal_herb": {
             "name": "Heilkraut",
             "description": "Ein gewöhnliches Kraut, das kleine Wunden lindert."
+        },
+        "iron_sword": {
+            "name": "Eisenschwert",
+            "description": "Eine gut ausbalancierte Eisenklinge aus der Dorfschmiede. Robuster und schärfer als Holz."
+        },
+        "hunting_knife": {
+            "name": "Jagdmesser",
+            "description": "Das scharfe Stahlmesser eines Jägers. Leicht genug, um zweimal zuzustechen, bevor die Beute reagiert."
+        },
+        "iron_buckler": {
+            "name": "Eiserner Faustschild",
+            "description": "Ein kleiner, eisenbeschlagener Rundschild. Schnell erhoben gegen eine Flut von Schlägen."
+        },
+        "leather_cap": {
+            "name": "Lederkappe",
+            "description": "Eine Kappe aus gehärtetem Leder. Sie hält kein Schwert auf, dämpft aber die Schläge."
         }
     },
     "enemies": {

@@ -1,0 +1,11 @@
+{
+    "id": "iron_buckler",
+    "max_stack": 1,
+    "slots": [["right_hand"], ["left_hand"]], 
+    "defense": {
+        "armor": 6,
+        "magic_resistance": 1.0,
+        "block_chance": 0.1
+    },
+    "price": 60
+}

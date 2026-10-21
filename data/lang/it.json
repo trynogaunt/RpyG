@@ -279,6 +279,22 @@
         "medicinal_herb": {
             "name": "Erba Medicinale",
             "description": "Un'erba comune che lenisce le piccole ferite."
+        },
+        "iron_sword": {
+            "name": "Spada di Ferro",
+            "description": "Una lama di ferro ben bilanciata, uscita dalla forgia del villaggio. Più robusta e affilata del legno."
+        },
+        "hunting_knife": {
+            "name": "Coltello da Caccia",
+            "description": "L'affilato coltello d'acciaio di un cacciatore. Abbastanza leggero da colpire due volte prima che la preda reagisca."
+        },
+        "iron_buckler": {
+            "name": "Brocchiere di Ferro",
+            "description": "Un piccolo scudo rotondo cerchiato di ferro. Si alza in fretta contro una raffica di colpi."
+        },
+        "leather_cap": {
+            "name": "Elmo di Cuoio",
+            "description": "Un elmo di cuoio indurito. Non fermerà una spada, ma attutisce i colpi."
         }
     },
     "enemies": {

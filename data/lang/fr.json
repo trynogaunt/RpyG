@@ -279,6 +279,22 @@
         "medicinal_herb": {
             "name": "Herbe Médicinale",
             "description": "Une herbe commune qui apaise les petites blessures."
+        },
+        "iron_sword": {
+            "name": "Épée en Fer",
+            "description": "Une lame en fer bien équilibrée, sortie de la forge du village. Plus solide et plus tranchante que le bois."
+        },
+        "hunting_knife": {
+            "name": "Couteau de Chasse",
+            "description": "Le couteau d'acier affûté d'un chasseur. Assez léger pour frapper deux fois avant que la proie ne réagisse."
+        },
+        "iron_buckler": {
+            "name": "Rondache en Fer",
+            "description": "Un petit bouclier rond cerclé de fer. Vite levé face à une volée de coups."
+        },
+        "leather_cap": {
+            "name": "Casque de Cuir",
+            "description": "Un casque en cuir durci. Il n'arrêtera pas une épée, mais il amortit les coups."
         }
     },
     "enemies": {

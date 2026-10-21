@@ -1,0 +1,12 @@
+{
+    "id": "hunting_knife",
+    "max_stack": 1,
+    "slots": [["right_hand"], ["left_hand"]], 
+    "price": 35,
+    "attack": {
+        "damage_multiplier": 0.85,
+        "crit_multiplier": 1.5,
+        "hits": 2,
+        "crit_chance": 0.2
+    }
+}

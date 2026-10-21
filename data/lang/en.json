@@ -279,6 +279,22 @@
         "medicinal_herb": {
             "name": "Medicinal Herb",
             "description": "A common herb that soothes small wounds."
+        },
+        "iron_sword": {
+            "name": "Iron Sword",
+            "description": "A well-balanced iron blade from the village forge. Sturdier and sharper than wood."
+        },
+        "hunting_knife": {
+            "name": "Hunting Knife",
+            "description": "A hunter's keen steel knife. Light enough to strike twice before the prey reacts."
+        },
+        "iron_buckler": {
+            "name": "Iron Buckler",
+            "description": "A small round shield rimmed with iron. Quick to raise against a flurry of blows."
+        },
+        "leather_cap": {
+            "name": "Leather Cap",
+            "description": "A cap of hardened leather. It won't stop a sword, but it softens the blows."
         }
     },
     "enemies": {

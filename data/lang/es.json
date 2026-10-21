@@ -279,6 +279,22 @@
         "medicinal_herb": {
             "name": "Hierba Medicinal",
             "description": "Una hierba común que alivia las heridas leves."
+        },
+        "iron_sword": {
+            "name": "Espada de Hierro",
+            "description": "Una hoja de hierro bien equilibrada, salida de la forja del pueblo. Más resistente y afilada que la madera."
+        },
+        "hunting_knife": {
+            "name": "Cuchillo de Caza",
+            "description": "El afilado cuchillo de acero de un cazador. Lo bastante ligero para golpear dos veces antes de que la presa reaccione."
+        },
+        "iron_buckler": {
+            "name": "Rodela de Hierro",
+            "description": "Un pequeño escudo redondo con borde de hierro. Se alza rápido ante una lluvia de golpes."
+        },
+        "leather_cap": {
+            "name": "Gorro de Cuero",
+            "description": "Un gorro de cuero endurecido. No detendrá una espada, pero amortigua los golpes."
         }
     },
     "enemies": {
