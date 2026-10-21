@@ -2,6 +2,7 @@
     "id": "wooden_staff",
     "max_stack": 1,
     "slots": [["right_hand", "left_hand"]], 
+    "price": 12,
     "attack": {
         "damage_multiplier": 1.2,
         "crit_multiplier": 1.2,

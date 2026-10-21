@@ -1,6 +1,7 @@
 {
     "id": "medicinal_herb",
     "max_stack": 15,
+    "price": 3,
     "on_use": [
         {
             "type": "heal", 

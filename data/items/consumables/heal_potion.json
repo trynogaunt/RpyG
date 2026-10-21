@@ -1,6 +1,7 @@
 {
     "id": "heal_potion",
     "max_stack": 10,
+    "price": 5,
     "on_use": [
         {
             "type": "heal", 
