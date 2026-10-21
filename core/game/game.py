@@ -194,9 +194,7 @@ class Game:
 
     def _combat_to_view(self) -> CombatView:
         return CombatView(
-            enemy_id=self.combat.enemy.id,
-            enemy_health=self.combat.enemy_health,
-            enemy_max_health=self.combat.enemy.max_health,
+            enemies_list=self.combat.foes,
             player_summary=self.player.to_summary(),
             log=tuple(self.combat.log),
         )
@@ -432,7 +430,8 @@ class Game:
         match action:
             case AttackEnemy():
                 # Le plus rapide frappe en premier ; le joueur gagne les égalités
-                enemy_first = self.combat.enemy.get_stat(Stat.SPEED) > self.player.get_stat(Stat.SPEED)
+                foe = self.combat.foes[0]
+                enemy_first = foe.enemy.get_stat(Stat.SPEED) > self.player.get_stat(Stat.SPEED)
                 strikes = (self._enemy_strikes, self._player_strikes) if enemy_first \
                     else (self._player_strikes, self._enemy_strikes)
                 for strike in strikes:
@@ -639,7 +638,7 @@ class Game:
             case StartCombat(enemy_id=enemy_id):
                 room = self.world.get_room(self.player.location)
                 if enemy_id in room.enemies and enemy_id in self.enemies:
-                    self.combat = CombatState.start(self.enemies.get(enemy_id))
+                    self.combat = CombatState.start([self.enemies.get(enemy_id)])
                     self.screen = Screens.COMBAT
             case Quit():
                 self.screen = Screens.MAIN_MENU

@@ -1,5 +1,9 @@
 """Combat au tour par tour contre un seul ennemi, et résolution des coups."""
+from __future__ import annotations
 import math
+
+from collections.abc import Sequence
+
 from dataclasses import dataclass, field
 from random import Random
 
@@ -22,21 +26,47 @@ class CombatLogEntry:
     crit: bool = False
     blocked: bool = False
 
+@dataclass
+class Combatant:
+    """Un exemplaire d'ennemi en combat seuls ses PV baissent"""
+    enemy: Enemy
+    health: int
+
+    @classmethod
+    def spawn(cls, enemy: Enemy) -> Combatant:
+        return cls(enemy=enemy, health=enemy.max_health)
+    
+    def take_damage(self, damage) -> None:
+        self.health = max(0, self.health - damage)
+
+    @property
+    def alive(self) -> bool:
+        return not self.health <= 0
 
 @dataclass
 class CombatState:
-    """L'exemplaire de l'ennemi affronté : sa définition ne bouge pas, ses PV si."""
-    enemy: Enemy
-    enemy_health: int
+    foes: list[Combatant]
     log: list[CombatLogEntry] = field(default_factory=list)
 
     @classmethod
-    def start(cls, enemy: Enemy) -> "CombatState":
-        return cls(enemy=enemy, enemy_health=enemy.max_health)
+    def start(cls, enemy: Sequence[Enemy]) -> CombatState:
+        if not enemy:
+            raise ValueError("Liste d'ennemie vide")
+
+        enemy_list = []
+        for e in enemy:
+            comb = Combatant.spawn(e)
+            enemy_list.append(comb)
+        
+        return enemy_list
+    
+    @property
+    def living(self) -> list[Combatant]:
+        return [f for f in self.foes if f.alive]
 
     @property
-    def enemy_defeated(self) -> bool:
-        return self.enemy_health <= 0
+    def defeated(self) -> bool:
+        return all(not f.alive for f in self.foes)
 
 
 @dataclass(frozen=True)
@@ -54,7 +84,7 @@ def crit_chance(attack: Attack, wear: float, luck: int) -> float:
 
 
 def block_chance(base: float, wear: float, speed: int, luck: int) -> float:
-    """Le blocage vient du bouclier : la Vitesse (et un peu la Chance) le multiplient, au plus par 3, sans l'atteindre."""
+    """Le blocage vient du bouclier : la Vitesse et la Chance le multiplient, au plus par 3, sans l'atteindre."""
     stat = speed + luck * BLOCK_LUCK_WEIGHT
     chance = base * wear * (1 + BLOCK_STAT_BONUS * stat / (stat + BLOCK_SCALE))
     return min(chance, BLOCK_CAP)

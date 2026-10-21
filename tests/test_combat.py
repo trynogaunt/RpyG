@@ -6,7 +6,8 @@ from core.enemies.base import Enemy
 from core.enemies.catalog import EnemyCatalog
 from core.enums import Screens, Stat
 from core.game.actions import AttackEnemy, Flee, Quit, StartCombat
-from core.game.combat import BLOCK_CAP, CRIT_CAP, Hit, CombatLogEntry, armor_ratio, block_chance, crit_chance, finalize, resolve_attack
+from core.game.combat import (BLOCK_CAP, CRIT_CAP, CombatLogEntry, CombatState, Combatant, Hit, armor_ratio,
+                              block_chance, crit_chance, finalize, resolve_attack)
 from core.game.game import Game
 from core.game.inventory import Equipped
 from core.game.player import Player
@@ -144,6 +145,49 @@ def test_each_hit_rolls_its_own_crit():
     attack = Attack(damage_multiplier=0.6, hits=2, crit_chance=0.5, crit_multiplier=2.0)
     hits = resolve_attack(10, 0, attack, 1.0, 0, 0.0, FixedRolls(0.1, 0.9))     # 1er coup crit, pas le 2e
     assert [(h.damage, h.crit) for h in hits] == [(12, True), (6, False)]
+
+
+# ----- exemplaires -----
+
+
+def test_spawn_starts_at_full_health():
+    rat = enemy("rat", 12, 3)
+    assert Combatant.spawn(rat) == Combatant(enemy=rat, health=12)
+
+
+@pytest.mark.parametrize("damage, expected", [(5, 7), (12, 0), (50, 0)])
+def test_take_damage_never_goes_below_zero(damage, expected):
+    foe = Combatant.spawn(enemy("rat", 12, 3))
+    foe.take_damage(damage)
+    assert foe.health == expected
+    assert foe.alive == (expected > 0)
+
+
+def test_same_enemy_twice_gives_independent_copies():
+    rat = enemy("rat", 12, 3)
+    combat = CombatState.start([rat, rat])
+    combat.foes[0].take_damage(5)
+    assert [f.health for f in combat.foes] == [7, 12]
+    assert combat.foes[0].enemy is combat.foes[1].enemy     # la définition reste partagée
+
+
+def test_living_skips_dead_foes_and_keeps_order():
+    combat = CombatState.start([enemy("rat", 12, 3), enemy("bat", 5, 1), enemy("wolf", 30, 2)])
+    combat.foes[1].take_damage(5)
+    assert [f.enemy.id for f in combat.living] == ["rat", "wolf"]
+
+
+def test_defeated_only_when_every_foe_is_down():
+    combat = CombatState.start([enemy("rat", 12, 3), enemy("bat", 5, 1)])
+    combat.foes[0].take_damage(12)
+    assert not combat.defeated
+    combat.foes[1].take_damage(5)
+    assert combat.defeated
+
+
+def test_cannot_start_combat_without_enemies():
+    with pytest.raises(ValueError):
+        CombatState.start([])
 
 
 # ----- déroulement -----

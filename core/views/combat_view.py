@@ -7,8 +7,6 @@ from core.views.player_summary import PlayerSummary
 
 @dataclass(frozen=True)
 class CombatView(BaseView):
-    enemy_id: str
-    enemy_health: int
-    enemy_max_health: int
+    enemies_list: list
     player_summary: PlayerSummary
     log: tuple[CombatLogEntry, ...] = ()
