@@ -25,6 +25,7 @@ class CombatLogEntry:
     damage: int
     crit: bool = False
     blocked: bool = False
+    foe: int = 0          # index dans CombatState.foes de l'ennemi qui frappe ou qui est frappé
 
 @dataclass
 class Combatant:
@@ -58,7 +59,7 @@ class CombatState:
             comb = Combatant.spawn(e)
             enemy_list.append(comb)
         
-        return enemy_list
+        return cls(foes=enemy_list, log=[])
     
     @property
     def living(self) -> list[Combatant]:

@@ -10,16 +10,18 @@ class CombatScreen(BaseConsoleScreen):
     def draw(self):
         v = self.view
         p = v.player_summary
-        enemy = self._enemy_name()
-        label_width = max(len(p.name), len(enemy))
+        names = [self._foe_name(i) for i in range(len(v.foes))]
+        label_width = max(len(p.name), *map(len, names))
 
-        lines = [
-            "",
-            f"{enemy:<{label_width}}  {self._bar(v.enemy_health, v.enemy_max_health, colors.RED)}",
+        lines = [""]
+        for name, foe in zip(names, v.foes):
+            lines.append(f"{name:<{label_width}}  {self._bar(foe.health, foe.max_health, colors.RED)}")
+        lines += [
             f"{p.name:<{label_width}}  {self._bar(p.health, p.max_health, colors.GREEN)}",
             "",
         ]
         for entry in v.log[-LOG_LINES:]:
+            enemy = names[entry.foe]
             if entry.blocked:
                 key = "ui.combat.player_blocked" if entry.attacker == "player" else "ui.combat.enemy_blocked"
                 lines.append(self.color(f"> {self.t(key, enemy=enemy)}", colors.CYAN))
@@ -37,8 +39,10 @@ class CombatScreen(BaseConsoleScreen):
         bar = "█" * filled + "░" * (BAR_WIDTH - filled)
         return f"{self.color(bar, code)} {health}/{max_health}"
 
-    def _enemy_name(self) -> str:
-        return self.t(f"enemies.{self.view.enemy_id}.name")
+    def _foe_name(self, index: int) -> str:
+        foe = self.view.foes[index]
+        name = self.t(f"enemies.{foe.enemy_id}.name")
+        return f"{name} {foe.tag}" if foe.tag else name
 
     def ask(self):
         return self.choose([

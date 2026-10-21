@@ -61,7 +61,7 @@ from core.enemies.catalog import EnemyCatalog
 from core.enums import Stat
 from core.game.combat import CombatLogEntry, CombatState, block_chance, resolve_attack
 from core.items.base import Attack
-from core.views.combat_view import CombatView
+from core.views.combat_view import CombatView, FoeView
 from core.game.effect import EFFECTS
 from core.items.base import Slot
 
@@ -193,8 +193,19 @@ class Game:
         )
 
     def _combat_to_view(self) -> CombatView:
+        foes = self.combat.foes
+        ids = [f.enemy.id for f in foes]
+        seen: dict[str, int] = {}
+        views = []
+        for foe in foes:
+            tag = ""
+            if ids.count(foe.enemy.id) > 1:            # deux rats : « Rat A », « Rat B »
+                rank = seen.get(foe.enemy.id, 0)
+                seen[foe.enemy.id] = rank + 1
+                tag = chr(ord("A") + rank)
+            views.append(FoeView(enemy_id=foe.enemy.id, health=foe.health, max_health=foe.enemy.max_health, tag=tag))
         return CombatView(
-            enemies_list=self.combat.foes,
+            foes=tuple(views),
             player_summary=self.player.to_summary(),
             log=tuple(self.combat.log),
         )
@@ -428,22 +439,6 @@ class Game:
 
     def _handle_combat(self, action: Action) -> None:
         match action:
-            case AttackEnemy():
-                # Le plus rapide frappe en premier ; le joueur gagne les égalités
-                foe = self.combat.foes[0]
-                enemy_first = foe.enemy.get_stat(Stat.SPEED) > self.player.get_stat(Stat.SPEED)
-                strikes = (self._enemy_strikes, self._player_strikes) if enemy_first \
-                    else (self._player_strikes, self._enemy_strikes)
-                for strike in strikes:
-                    strike()
-                    if self.combat.enemy_defeated:
-                        self._end_combat("ui.combat.victory")
-                        return
-                    if self.player.health <= 0:
-                        self.combat = None
-                        self.screen = Screens.GAME_OVER
-                        self._messages.append(Message(key="ui.combat.defeat"))
-                        return
             case Flee():
                 self._end_combat("ui.combat.fled")
             case _:

@@ -194,12 +194,14 @@ SlotsScreen {
 
 #combat-fighters      { layout: horizontal; height: auto; }
 #combat-fighters .panel { width: 1fr; height: auto; }
+#combat-enemies       { width: 1fr; height: auto; }
+#combat-enemies .panel { width: 100%; }
 .fighter-hp           { height: 1; }
 .fighter-hp ProgressBar { width: 1fr; }
 .fighter-hp ProgressBar Bar { width: 1fr; }
 .fighter-hp-text      { width: auto; margin-left: 1; }
-#combat-enemy         { border: round $error; border-title-color: $error; }
-#combat-enemy Bar > .bar--bar { color: $error; }
+.enemy                { border: round $error; border-title-color: $error; }
+.enemy Bar > .bar--bar { color: $error; }
 #combat-log           { height: 1fr; background: $background; }
 #combat-actions       { height: auto; align-horizontal: center; }
 #combat-actions Button { margin: 0 2; }

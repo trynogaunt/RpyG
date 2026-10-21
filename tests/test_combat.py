@@ -13,6 +13,7 @@ from core.game.inventory import Equipped
 from core.game.player import Player
 from core.items.base import Attack, Defense, Item, ItemInstance, Slot
 from core.items.catalog import ItemCatalog
+from core.views.combat_view import FoeView
 from core.world.models import Room, RoomRef, World, Zone
 
 DEN = RoomRef("cave", "den")
@@ -207,14 +208,14 @@ def test_cannot_fight_enemy_not_in_room(game, enemy_id):
 def test_start_combat(game):
     response = game.handle_action(StartCombat("rat"))
     assert response.screen is Screens.COMBAT
-    assert (response.view.enemy_id, response.view.enemy_health, response.view.enemy_max_health) == ("rat", 12, 12)
+    assert response.view.foes == (FoeView("rat", 12, 12),)
     assert response.view.log == ()
 
 
 def test_attack_then_enemy_strikes_back(game):
     game.handle_action(StartCombat("rat"))
     response = game.handle_action(AttackEnemy())
-    assert response.view.enemy_health == 12 - 5
+    assert response.view.foes[0].health == 12 - 5
     assert response.view.player_summary.health == 10 - 3
     assert response.view.log == (CombatLogEntry("player", 5), CombatLogEntry("enemy", 3))
 
@@ -222,7 +223,7 @@ def test_attack_then_enemy_strikes_back(game):
 def test_equipped_weapon_is_used(game):
     game.player.inventory.equipped.append(Equipped(slots=(Slot.RIGHT_HAND,), instance=ItemInstance("club")))
     game.handle_action(StartCombat("rat"))
-    assert game.handle_action(AttackEnemy()).view.enemy_health == 12 - 10
+    assert game.handle_action(AttackEnemy()).view.foes[0].health == 12 - 10
 
 
 def test_equipped_armor_adds_up_against_enemy_hits(game):

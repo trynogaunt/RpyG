@@ -24,7 +24,7 @@ class Fighter(Vertical):
 
 
 class CombatScreen(BaseScreen):
-    """Joueur à gauche, ennemi à droite, journal des coups en dessous."""
+    """Joueur à gauche, ennemis empilés à droite, journal des coups en dessous."""
 
     BINDINGS = [
         Binding("a,enter", "attack", "ui.combat.attack"),
@@ -39,7 +39,10 @@ class CombatScreen(BaseScreen):
     def compose(self):
         with Horizontal(id="combat-fighters"):
             yield Fighter(id="combat-player", classes="panel")
-            yield Fighter(id="combat-enemy", classes="panel")
+            # Les ennemis ne changent pas pendant un combat : un panneau chacun, morts compris
+            with Vertical(id="combat-enemies"):
+                for i in range(len(self.view.foes) if self.view else 0):
+                    yield Fighter(id=f"combat-enemy-{i}", classes="panel enemy")
         yield RichLog(id="combat-log", classes="panel", wrap=True, markup=True, min_width=0)
         with Horizontal(id="combat-actions"):
             yield Button(id="combat-attack", variant="error")
@@ -57,25 +60,29 @@ class CombatScreen(BaseScreen):
         self.view = view
         p = view.player_summary
         self.query_one("#combat-player", Fighter).set_health(p.name, p.health, p.max_health)
-        self.query_one("#combat-enemy", Fighter).set_health(self._enemy_name(), view.enemy_health, view.enemy_max_health)
+        for i, foe in enumerate(view.foes):
+            self.query_one(f"#combat-enemy-{i}", Fighter).set_health(self._foe_name(i), foe.health, foe.max_health)
 
         log = self.query_one("#combat-log", RichLog)
         for entry in view.log[self._logged:]:
+            enemy = self._foe_name(entry.foe)
             if entry.blocked:
                 key = "ui.combat.player_blocked" if entry.attacker == "player" else "ui.combat.enemy_blocked"
-                log.write(f"[cyan]#[/] [italic]{self.app.t(key, enemy=self._enemy_name())}[/]")
+                log.write(f"[cyan]#[/] [italic]{self.app.t(key, enemy=enemy)}[/]")
                 continue
             if entry.attacker == "player":
-                line = f"[#ffb000]>[/] {self.app.t('ui.combat.player_hits', enemy=self._enemy_name(), damage=entry.damage)}"
+                line = f"[#ffb000]>[/] {self.app.t('ui.combat.player_hits', enemy=enemy, damage=entry.damage)}"
             else:
-                line = f"[red]<[/] {self.app.t('ui.combat.enemy_hits', enemy=self._enemy_name(), damage=entry.damage)}"
+                line = f"[red]<[/] {self.app.t('ui.combat.enemy_hits', enemy=enemy, damage=entry.damage)}"
             if entry.crit:
                 line += f" [bold #ffb000]{self.app.t('ui.combat.critical')}[/]"
             log.write(line)
         self._logged = len(view.log)
 
-    def _enemy_name(self) -> str:
-        return self.app.t(f"enemies.{self.view.enemy_id}.name")
+    def _foe_name(self, index: int) -> str:
+        foe = self.view.foes[index]
+        name = self.app.t(f"enemies.{foe.enemy_id}.name")
+        return f"{name} {foe.tag}" if foe.tag else name
 
     def action_attack(self) -> None:
         self.app.dispatch(AttackEnemy())
